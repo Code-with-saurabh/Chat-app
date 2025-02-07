@@ -1,0 +1,33 @@
+@media screen and (max-width: 480px) {
+  
+}
+
+/* Tablet media query */
+@media screen and (max-width: 768px) {
+   .Navbar .navLogo {
+    display: none;
+  }
+  }
+
+
+/* Laptop media query */
+@media screen and (max-width: 1200px) {
+  
+}
+
+.Home{
+	background-color:#66a2c8;
+	height:100vh;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+}
+
+.Home .container{
+	/* border:1px solid white; */
+	border-radius:2px;
+	width:100%;
+	height:100%;
+	display:flex;
+	overflow:hidden;
+}

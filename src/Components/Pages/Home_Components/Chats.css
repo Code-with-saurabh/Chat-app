@@ -1,0 +1,45 @@
+.Chats{
+	border-bottom:1px solid #2d4752;
+}
+
+.Chats .Serachfor{
+	padding:10px;
+}
+.Chats .Serachfor input{
+	background-color:transparent;
+	border:none;
+	color:white;
+	outline:none;
+}
+.Chats .Serachfor input::placeholder{
+	color:#859dc2;
+}
+
+.Chats .userChat{
+	padding:10px;
+	display:flex;
+	align-items:center;
+	gap:10px;
+	color:white;
+	cursor:pointer;
+	
+}
+.Chats .userChat:hover{
+	background-color:#2d4752;
+}
+
+.Chats .userChat img{
+	width:50px;
+	height:50px;
+	border-radius:50px;
+	object-fit:cover;
+}
+.Chats .userChat .userInfo{}
+.Chats .userChat .userInfo span{
+	font-size:18px;
+	font-weight:bold;
+}
+.Chats .userChat .userInfo p{
+	font-size:14px;
+	color:#859dc2;
+}

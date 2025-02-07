@@ -1,0 +1,46 @@
+.Search{
+	border-bottom:1px solid #2d4752;
+}
+
+.Search .Serachfor{
+	padding:10px;
+}
+.Search .Serachfor input{
+	background-color:transparent;
+	border:none;
+	color:white;
+	outline:none;
+	padding:10px;
+	font-size:14px;
+}
+.Search .Serachfor input::placeholder{
+	color:#859dc2;
+}
+
+.Search .userChat{
+	padding:10px;
+	display:flex;
+	align-items:center;
+	gap:10px;
+	color:white;
+	cursor:pointer;
+	
+}
+.Search .userChat:hover{
+	background-color:#2d4752;
+}
+
+.Search .userChat img{
+	width:50px;
+	height:50px;
+	border-radius:50px;
+	object-fit:cover;
+}
+.Search .userChat .userInfo{}
+.Search .userChat .userInfo span{}
+
+.EPS {
+	color:red;
+	font-size:12px;
+	margin-left:10px;
+} 

@@ -1,0 +1,28 @@
+.Chat{
+	flex:2;
+	
+}
+
+.Chat .ChatInfo{
+	display:flex;
+	height:50px;
+	background-color:#5b748d;
+	align-items:center;
+	justify-content:space-between;
+	padding:10px;
+		color:#d1dce5;
+
+}
+.Chat .ChatInfo .nameP{
+		color:#d1dce5;
+}
+.Chat .ChatInfo .nameP{}
+.Chat .ChatInfo .ChatIcon{
+	display:flex;
+	gap:10px;
+	cursor:pointer;
+}
+.Chat .ChatInfo .ChatIcon span{}
+.Chat .ChatInfo .ChatIcon svg{}
+
+ 

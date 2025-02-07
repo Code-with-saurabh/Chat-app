@@ -1,0 +1,35 @@
+.input{
+	height:50px;
+	background-color:white;
+	padding:10px;
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
+}
+
+.input input{
+	width:100%;
+	border:none;
+	outline:none;
+	font-size:18px;
+	color:#2f2d52;
+}
+
+.input .send{
+	display:flex;
+	align-items:center;
+	gap:10px;
+}
+.input .send svg{
+	 height:24px;
+	 cursor:pointer;
+}
+.input .send button{
+	  border:none;
+	  padding:10px 15px ;
+	  color:white;
+	  background-color:#8dcff1;
+	  border-radius:2px;
+	  cursor:pointer;
+	  
+}

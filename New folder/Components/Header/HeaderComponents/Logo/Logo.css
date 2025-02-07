@@ -1,0 +1,41 @@
+.logo-img {
+  max-width: 100%;
+  height: auto;
+  display: inline-block;
+  margin: 0 auto;
+   background: linear-gradient(164deg, #caca2b 35%, #f73f3f 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.logo a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-img:hover {
+ 
+  background: linear-gradient(28deg, #f39c12 35%, #ee718e 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transform: translateY(-2px);
+}
+
+.logo-img:active {
+  top: 2px;
+  transform: translateY(0);
+}
+
+@media (min-width: 768px) {
+  .logo-img {
+    max-width: 200px;
+  }
+}
+
+.logo-img:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}

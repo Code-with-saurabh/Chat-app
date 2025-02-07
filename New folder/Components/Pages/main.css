@@ -1,0 +1,11 @@
+.mainPG {
+	color:white;
+	display:flex;
+	background-color:#3498db;	 
+}
+
+.mainPG .s1 .s2 .s3{
+	background-color:transparent;
+	border:2px solid white;
+}
+ 

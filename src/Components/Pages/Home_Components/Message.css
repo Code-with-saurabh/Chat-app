@@ -1,0 +1,108 @@
+.Message{
+	background-color:#ddeaf7;
+	padding:10px;
+	margin-bottom:20px;
+	display:flex;
+	gap:10px;
+	/* align-items:center; */
+	align-items:flex-end;
+	 
+}
+.Message .messageInfo{
+	 display:flex;
+	 flex-direction:column;
+	 color:gray;
+	 font-weight:300px;
+	 align-items: center;
+	 cursor:pointer;
+	 
+}
+.Message .messageInfo span{
+	 /* padding:10px; */
+}
+
+.Message .messageInfo img{
+	 width:40px;
+	 height:40px;
+	 border-radius:50%;
+	 object-fit:cover;
+}
+
+
+.Message .messageContenet{
+	max-width:80%;
+ 
+	display:flex;
+	flex-direction:column;
+	gap:10px;
+}
+.Message .messageContenet p{
+	 background-color:white;
+	 padding:10px;
+	 border-radius:0px 10px 10px 10px;
+	 max-width:max-content;
+}
+
+.Message .messageContenet img{
+	 /* width:34px; */
+	 /* border-radius:50%; */
+	  width: 149px;
+    height: 154px;
+}
+
+
+.Owner{
+	background-color:#ddeaf7;
+	padding:10px;
+	margin-bottom:20px;
+	display:flex;
+	gap:20px;
+	/* align-items:center; */
+	align-items:flex-end;
+	flex-direction:row-reverse;
+}
+.Owner .messageInfo{
+	 display:flex;
+	 
+	 flex-direction:column;
+	 color:gray;
+	 font-weight:300px;
+	 align-items: center;
+	  cursor:pointer;
+	 
+}
+.Owner .messageInfo span{
+	 /* padding:10px; */
+}
+
+.Owner .messageInfo img{
+	 width:40px;
+	 height:40px;
+	 border-radius:50%;
+	 object-fit:cover;
+}
+
+
+.Owner .messageContenet{
+	max-width:80%;
+	display:flex;
+	flex-direction:column;
+	gap:10px;
+	
+}
+.Owner .messageContenet p{
+	 background-color:#5b748d;
+	 padding:10px;
+	 border-radius:10px 0px 10px 10px;
+	 max-width:max-content;
+	 color :white;
+}
+
+.Owner .messageContenet img{
+	 /* width:180px; */
+	 width: 149px;
+    height: 154px;
+}
+ 
+ 
+/*i chnage the align-items:center to flex-end becz of img is upper to mesage*/
