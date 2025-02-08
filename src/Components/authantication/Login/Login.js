@@ -3,8 +3,11 @@ import React,{useState} from 'react';
 import './Login.css';  
 import {Link,useHistory} from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../../../store/userSlice.js';
 
 function Login() {
+	const dispatch = useDispatch();
 	const history = useHistory();
 	const [formErr,setFormErr]= useState("");
 	 
@@ -28,11 +31,15 @@ function Login() {
 		// console.log(res.data.profileImage);
 		const profileImage=res.data.profileImage;
 		const Username_session=res.data.Username;
+		const Username_s =res.data.Username;
+		 
 		
 		//localStorage.setItem('profileImage',profileImage);
 		sessionStorage.setItem('profileImage',profileImage);
 		sessionStorage.setItem('Username',Username_session);
-		
+		// dispatch(addUser(res.data.Username));
+		dispatch(addUser({ username: Username_s, profileImage }));
+	 
 		history.push("/");
 		}
 		if(res.status === 401){
@@ -67,10 +74,10 @@ function Login() {
 		<span className="logoup">Logo</span>
 		<span className="logoups">Login</span>
 			<form onSubmit={handleSubmit}>
-				<input type="text" placeholder="username" require="true"/>
-				<input type="password" placeholder="Password" require="true"/>
-				<button>Sing Up</button>
-			</form>
+				<input type="text" placeholder="username" required/>
+				<input type="password" placeholder="Password" required/>
+				<button>Sign Up</button>
+			</form> 
 			 {formErr && <p className="error-message" style={{ color: 'red' ,fontSize:'14px',margin:'0px',}}>{formErr}</p>} {/* Display error message */}
 			<p>you don't have an accoutn?<Link to="/singup">SingUp</Link></p>
 	  </div>

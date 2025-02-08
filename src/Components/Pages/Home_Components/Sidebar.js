@@ -9,7 +9,6 @@ import axios from 'axios';
 function Sidebar() {
  const [username,setUsername]=useState("Saurabh");
  const [users,setUser]=useState([]);
- // const [img,setImg]=useState(IMGP);
  const [message,setMessage]=useState("Hello");
  
   const handlaUsers = async()=>{
@@ -21,8 +20,8 @@ function Sidebar() {
     handlaUsers();
   }, []); // Empty dependency array means this runs once on mount
 	function setUsernamforChat(e){
-		sessionStorage.setItem("Username",username);
-		console.log(e);
+		// sessionStorage.setItem("Username",username);
+		// console.log(e);
 	}
  return (
     <div className="Sidebar">

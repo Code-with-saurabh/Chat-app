@@ -153,7 +153,7 @@ router.get("/search", async (req, res) => {
 		{ message: "Error on Username"});
 	}
 });
-
+/*
 router.get("/allUsers", async (req, res) => {
   try {
     const allUsers = await User.find();
@@ -182,6 +182,28 @@ router.get("/allUsers", async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: "Error retrieving users." });
   }
-});
+});*/
+router.get("/allUsers", async (req, res) => {
+  try {
+    const allUsers = await User.aggregate([
+      { $project: { Username: 1, ProfileImage: 1 } }, // Select only required fields
+    ]);
 
+    if (allUsers.length === 0) {
+      return res.status(404).json({ message: "There are no users." });
+    }
+
+    const usersWithImages = allUsers.map(user => ({
+      username: user.Username,
+      profileImage: user.ProfileImage ? user.ProfileImage.toString('base64') : null,
+    }));
+
+    res.status(200).json({
+      message: "All users retrieved successfully.",
+      users: usersWithImages,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Error retrieving users." });
+  }
+});
 module.exports = router;
