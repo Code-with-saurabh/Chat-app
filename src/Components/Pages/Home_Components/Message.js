@@ -35,7 +35,7 @@ function Message() {
 	  </div>
       <div className="messageContenet">
 	  {/*<img src={userData.profileImage} alt=""/> */}
-		   {/*<img src={MessageIMGP} alt=""/> */}
+		 <img src={MessageIMGP} alt=""/>  
 		<p>{userData.username}</p>
 	  </div>
     </div>

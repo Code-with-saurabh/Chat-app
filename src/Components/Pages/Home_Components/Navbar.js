@@ -2,21 +2,28 @@ import React from 'react';
 
 import './Navbar.css';  
 // import IMGP from'../../../assets/img/profile.jpg';
-import {Link} from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import {Link,useHistory} from 'react-router-dom';
+import { useSelector,useDispatch } from 'react-redux';
+import { removeSecondUser } from '../../../store/secondUserSlice .js';
 
 function Navbar() {
  
 const profileImage = sessionStorage.getItem('profileImage');
 const Username_session = sessionStorage.getItem('Username');
+const history = useHistory();
 
  
 const username = useSelector((state) => state.user.username);
+ if(Username_session === null || Username_session=='' || Username_session===""){
+	 history.push("/login");
+ }
 // const profileImage = useSelector((state) => state.user.profileImage);
 console.log("User : "+username);
  const handalLogout = (e)=>{
 	 console.log("This is handalLogout Function..");
 	 e.preventDefault();
+	 sessionStorage.removeItem('Username');
+	 sessionStorage.removeItem('profileImage');
  }
  // console.log("This is Navbar Componet \n\n\n : "+profileImage+"\n\n");
  return (
