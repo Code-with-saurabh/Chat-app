@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+// const axios = require('axios');
+const axios = require('axios');
+
 const bcrypt = require('bcryptjs');  
 const multer = require('multer');  
 const User = require('../models/User');
@@ -59,8 +62,41 @@ router.post("/register", upload.single('file'), async (req, res) => {
         } catch (err) {
             return res.status(500).json({ message: 'Error hashing password' });
         }
-		 const profileImage = req.file ? req.file.buffer : null;  
+		
+		 const profileImage = req.file ? req.file.buffer : null; 
+		 
+		let imageURL=null;
+		
+		 
+const FormData = require('form-data');
 
+if (req.file) {
+  const imgbbApiKey = process.env.IMGBB_API_KEY;
+  const imgbbUrl = 'https://api.imgbb.com/1/upload';
+  const uniqueFilename = `${Date.now()}-${req.file.originalname}`;
+
+  try {
+    const formData = new FormData();
+    formData.append('key', imgbbApiKey);
+    formData.append('name', uniqueFilename);
+    formData.append('image', req.file.buffer.toString('base64'));
+
+    const imgBBResponse = await axios.post(imgbbUrl, formData, {
+      headers: {
+        ...formData.getHeaders(), // Proper headers for multipart/form-data
+      },
+    });
+
+    const imageUrl = imgBBResponse.data.data.url;
+    console.log('Image uploaded successfully:', imageUrl);
+
+    // Save imageUrl to your database or send it back in the response
+    // res.status(200).json({ imageUrl });
+  } catch (error) {
+    console.error('Error uploading image to ImgBB:', error.message);
+    res.status(500).json({ message: 'Error uploading image' });
+  }
+}
         const newUser = new User({
             Username:username,  
             Password: hashedPassword,  

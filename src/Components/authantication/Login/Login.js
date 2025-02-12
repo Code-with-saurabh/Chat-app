@@ -35,6 +35,7 @@ function Login() {
 		 
 		
 		//localStorage.setItem('profileImage',profileImage);
+		//it must to store user to sessio donot delet the session line in futur becz of this authrizer access the '/' page 
 		sessionStorage.setItem('profileImage',profileImage);
 		sessionStorage.setItem('Username',Username_session);
 		// dispatch(addUser(res.data.Username));
@@ -74,7 +75,7 @@ function Login() {
 		<span className="logoup">Logo</span>
 		<span className="logoups">Login</span>
 			<form onSubmit={handleSubmit}>
-				<input type="text" placeholder="username" required/>
+				<input type="text" placeholder="Username" required/>
 				<input type="password" placeholder="Password" required/>
 				<button>Sign Up</button>
 			</form> 

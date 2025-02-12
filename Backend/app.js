@@ -2,10 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const User = require('./models/User'); // Assuming you have a User model
+require('dotenv').config();  // Load environment variables from .env file
 
+const User = require('./models/User'); // Assuming you have a User model
+const http = require('http');
+const socketIo = require('socket.io');
 
 const app = express();
+
+const ChatServer = http.createServer(app);
+const io = socketIo(ChatServer);
+
 // Middleware
 app.use(cors());
 app.use(express.json()); // Built-in JSON parser in Express
@@ -24,7 +31,8 @@ app.get("/", (req, res) => {
     res.send("Hello from the server!");
 });
 
-const MongoURL='mongodb+srv://gpgazhmrj:NiIAmKaqmT6CxKrz@cluster0.rdhlq.mongodb.net/sample_mflix?retryWrites=true&w=majority&appName=Cluster0';
+// const MongoURL='mongodb+srv://gpgazhmrj:NiIAmKaqmT6CxKrz@cluster0.rdhlq.mongodb.net/sample_mflix?retryWrites=true&w=majority&appName=Cluster0';
+const MongoURL= process.env.MONGO_URI;
 
 mongoose.connect(MongoURL, { useNewUrlParser: true, useUnifiedTopology: true });
 
