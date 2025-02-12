@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 // const axios = require('axios');
 const axios = require('axios');
-
+// const sharp = require('sharp');
 const bcrypt = require('bcryptjs');  
 const multer = require('multer');  
 const User = require('../models/User');
@@ -145,6 +145,8 @@ router.post("/login",async(req,res)=>{
 	console.log("User Login Successfully..");
 	 
 	 const profileImageBase64 = UserExist.ProfileImage ? UserExist.ProfileImage.toString('base64') : null;
+	 //const profileImageURL =UserExist.ProfileImage  ? UserExist.ProfileImage :null//becz its type will be String; 
+	 
 	return res.status(200).json({
 		message:"User Login Successfully..",
 		userId: UserExist._id,
@@ -174,7 +176,8 @@ router.get("/search", async (req, res) => {
     }
 	
 	const profileImageBase64 = user.ProfileImage ? user.ProfileImage.toString('base64') : null;
-	
+	 //const profileImageURL =UserExist.ProfileImage  ? UserExist.ProfileImage :null//becz its type will be String; 
+	 
     res.status(200).json(
 	{ message: `Searching for user: ${user.Username}`,
 	Username:user.Username,
