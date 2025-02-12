@@ -30,7 +30,7 @@ function Chats({ img, username, message }) {
     return (
         <div className="Chats">
             <div className="userChat" onClick={handleParticularUser}>
-                <img src={`data:image/jpeg;base64,${img}`} alt="Profile" /> 
+                <img src={img}alt="Profile" /> 
                 <div className="userInfo">
                     <span>{username}</span>
                     <p>{message}</p>

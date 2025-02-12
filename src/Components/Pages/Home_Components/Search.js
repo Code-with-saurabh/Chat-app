@@ -52,7 +52,7 @@ function Search() {
 	 {err && <span className="EPS">User not found!</span>}
 	 {user && <div className="userChat" onClick={handlaUser}>
 	 {/*} <img src={IMGP}/> //loading="lazy"*/}
-		 <img src={`data:image/jpeg;base64,${profileImage}`}  alt="Profile" />
+		 <img src={ profileImage }  alt="Profile" />
 		<div className="userInfo">
 			<span>
 				{username}

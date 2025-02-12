@@ -6,6 +6,8 @@ const axios = require('axios');
 const bcrypt = require('bcryptjs');  
 const multer = require('multer');  
 const User = require('../models/User');
+const FormData = require('form-data');
+
 /*
 //disk pe ki taraha se file to upoa karnha hai uske like diskStorage
 const storage = multer.diskStorage({
@@ -62,46 +64,43 @@ router.post("/register", upload.single('file'), async (req, res) => {
         } catch (err) {
             return res.status(500).json({ message: 'Error hashing password' });
         }
-		
-		 const profileImage = req.file ? req.file.buffer : null; 
-		 
-		let imageURL=null;
-		
-		 
-const FormData = require('form-data');
 
-if (req.file) {
-  const imgbbApiKey = process.env.IMGBB_API_KEY;
-  const imgbbUrl = 'https://api.imgbb.com/1/upload';
-  const uniqueFilename = `${Date.now()}-${req.file.originalname}`;
+        const profileImage = req.file ? req.file.buffer : null;
+        let imageUrl = null;
 
-  try {
-    const formData = new FormData();
-    formData.append('key', imgbbApiKey);
-    formData.append('name', uniqueFilename);
-    formData.append('image', req.file.buffer.toString('base64'));
+        // ImgBB API integration for image upload
+        if (req.file) {
+            const imgbbApiKey = process.env.IMGBB_API_KEY;
+            // const imgbbUrl = 'https://api.imgbb.com/1/upload';
+            const imgbbUrl =process.env.IMGBB_URL;
+            const uniqueFilename = `${Date.now()}-${req.file.originalname}`;
 
-    const imgBBResponse = await axios.post(imgbbUrl, formData, {
-      headers: {
-        ...formData.getHeaders(), // Proper headers for multipart/form-data
-      },
-    });
+            const formData = new FormData();
+            formData.append('key', imgbbApiKey);
+            formData.append('name', uniqueFilename);
+            formData.append('image', req.file.buffer.toString('base64'));
 
-    const imageUrl = imgBBResponse.data.data.url;
-    console.log('Image uploaded successfully:', imageUrl);
+            try {
+                const imgBBResponse = await axios.post(imgbbUrl, formData, {
+                    headers: {
+                        ...formData.getHeaders(), // Proper headers for multipart/form-data
+                    },
+					 maxBodyLength: Infinity, 
+                });
 
-    // Save imageUrl to your database or send it back in the response
-    // res.status(200).json({ imageUrl });
-  } catch (error) {
-    console.error('Error uploading image to ImgBB:', error.message);
-    res.status(500).json({ message: 'Error uploading image' });
-  }
-}
+                imageUrl = imgBBResponse.data.data.url;
+                console.log('Image uploaded successfully:', imageUrl);
+            } catch (error) {
+                console.error('Error uploading image to ImgBB:', error.message);
+                return res.status(500).json({ message: 'Error uploading image' });
+            }
+        }
+
         const newUser = new User({
-            Username:username,  
-            Password: hashedPassword,  
-            Email:email,  
-			ProfileImage:profileImage,
+            Username: username,
+            Password: hashedPassword,
+            Email: email,
+            ProfileImage: imageUrl, 
         });
 
         try {
@@ -119,79 +118,65 @@ if (req.file) {
     }
 });
 
-router.post("/login",async(req,res)=>{
-	const {username,password} = req.body;
-	try{
- 
-	const UserExist = await User.findOne({
-		Username:username
-	});
-	
- 
-	if(!UserExist){
-		return res.status(404).json({
-			message:"username not founded..",
-		});
-		console.log("\nuser not founded..");
-	}
-	
-	const PassMatched = await bcrypt.compare(password,UserExist.Password);
-	if(!PassMatched){
-	console.log("incurrect Password..");
-		return res.status(401).json({
-			message:"Wrong Password..",
-		});
-	} 
-	console.log("User Login Successfully..");
-	 
-	 const profileImageBase64 = UserExist.ProfileImage ? UserExist.ProfileImage.toString('base64') : null;
-	 //const profileImageURL =UserExist.ProfileImage  ? UserExist.ProfileImage :null//becz its type will be String; 
-	 
-	return res.status(200).json({
-		message:"User Login Successfully..",
-		userId: UserExist._id,
-		Username:UserExist.Username,
-		profileImage: profileImageBase64
-	});
-	
-	}catch(error){
-		return res.status(500).json({
-			message:"faild to load data",
-		});
-		console.log("Data not fatched.");
-	}
-	
+
+router.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const UserExist = await User.findOne({
+            Username: username
+        });
+
+        if (!UserExist) {
+            return res.status(404).json({
+                message: "username not found",
+            });
+        }
+
+        const PassMatched = await bcrypt.compare(password, UserExist.Password);
+        if (!PassMatched) {
+            return res.status(401).json({
+                message: "Wrong Password",
+            });
+        }
+
+        console.log("User Login Successfully..");
+
+        // Send profile image URL instead of Base64 data
+        return res.status(200).json({
+            message: "User Login Successfully",
+            userId: UserExist._id,
+            Username: UserExist.Username,
+            profileImage: UserExist.ProfileImage,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "failed to load data",
+        });
+    }
 });
 
 router.get("/search", async (req, res) => {
     const { username } = req.query;
-	
-	try{
-	const user  = await User.findOne({Username:username});
     
-    
-    if (!user) {
-        return res.status(400).json(
-		{ message: "Username is required"});
+    try {
+        const user = await User.findOne({ Username: username });
+
+        if (!user) {
+            return res.status(400).json({ message: "Username is required" });
+        }
+
+        res.status(200).json({
+            message: `Searching for user: ${user.Username}`,
+            Username: user.Username,
+            profileImage: user.ProfileImage, // Return ImgBB URL here
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json({ message: "Error on Username" });
     }
-	
-	const profileImageBase64 = user.ProfileImage ? user.ProfileImage.toString('base64') : null;
-	 //const profileImageURL =UserExist.ProfileImage  ? UserExist.ProfileImage :null//becz its type will be String; 
-	 
-    res.status(200).json(
-	{ message: `Searching for user: ${user.Username}`,
-	Username:user.Username,
-	profileImage:profileImageBase64,
-	});
-	
-	}
-	
-	catch(err){
-		 console.log(err);
-		return res.status(400).json(
-		{ message: "Error on Username"});
-	}
 });
+
 /*
 router.get("/allUsers", async (req, res) => {
   try {
@@ -234,7 +219,7 @@ router.get("/allUsers", async (req, res) => {
 
     const usersWithImages = allUsers.map(user => ({
       username: user.Username,
-      profileImage: user.ProfileImage ? user.ProfileImage.toString('base64') : null,
+      profileImage: user.ProfileImage || null,  // Directly return the ImgBB URL
     }));
 
     res.status(200).json({
@@ -245,4 +230,5 @@ router.get("/allUsers", async (req, res) => {
     return res.status(500).json({ message: "Error retrieving users." });
   }
 });
+
 module.exports = router;

@@ -22,7 +22,7 @@ function Sidebar() {
   const dontChageValue=0;
   useEffect(() => {
     handlaUsers();
-  },[users]);// i wnat that this one only run once in whole page on user login and user logout // user ke massage ka bad me dekhege // vesebhi vo might be dusre route se aayega 
+  },[]);// i wnat that this one only run once in whole page on user login and user logout // user ke massage ka bad me dekhege // vesebhi vo might be dusre route se aayega 
   //this one may be only work once when new user added
 	function setUsernamforChat(e){
 		// sessionStorage.setItem("Username",username);

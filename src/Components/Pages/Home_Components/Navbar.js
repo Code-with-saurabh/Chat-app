@@ -33,7 +33,8 @@ console.log("User : "+username);
       <span className="navLogo">Logo</span>
 	  <div className="user">
 	  {/*<img src={IMGP} alt=""/>*/}
-	   <img src={`data:image/jpeg;base64,${profileImage}`} alt="Profile" /> 
+	  <img src={profileImage} alt="Profile" />
+
 	  <span>{Username_session}</span>
 	  <button onClick={handalLogout}><Link to="/login">logout </Link></button>
 	  </div>
