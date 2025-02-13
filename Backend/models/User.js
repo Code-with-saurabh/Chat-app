@@ -9,5 +9,5 @@ const UserScema = mongoose.Schema({
 });
 
 // const User = mongoose.model("ChatUser",UserScema);
-const User = mongoose.model("AllChatUsersx",UserScema);
+const User = mongoose.model(process.env.DATABASE_NAME,UserScema);
 module.exports=User;

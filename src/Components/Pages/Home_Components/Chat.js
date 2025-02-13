@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Chat.css';  
 import Messages from './Messages.js';
-import Input from './input.js';
+import Input from './Input.js';
 import {useSelector} from 'react-redux';
 function Chat() {
 const userData = useSelector((state)=>state.secondUser);

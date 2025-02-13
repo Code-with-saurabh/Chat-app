@@ -15,11 +15,11 @@ function Message() {
 		// sessionStorage.removeItem('SecondUserData');
 		
  return (
-
-    isOwner ? (
+<>
+{/*} isOwner ? (*/}
     <div className="Owner">
       <div className="messageInfo">
-		 <img src={`data:image/jpeg;base64,${profileImage}`} alt="Profile" />
+		 <img src={profileImage} alt="Profile" />
 		<span className="timestamp ">just Now</span>
 	  </div>
       <div className="messageContenet">
@@ -27,7 +27,7 @@ function Message() {
 		<p>Hii How Are You!?</p>
 	  </div>
     </div>
-	):(
+	{/*}):(*/}
 	<div className="Message">
       <div className="messageInfo">
 		 <img src={userData.profileImage} alt=""/>
@@ -39,8 +39,8 @@ function Message() {
 		<p>{userData.username}</p>
 	  </div>
     </div>
-	)
-
+	{/*})*/}
+</>
   );
 }
 

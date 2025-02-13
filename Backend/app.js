@@ -15,7 +15,7 @@ const io = socketIo(ChatServer);
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // Built-in JSON parser in Express
+app.use(express.json());  
 app.use(express.urlencoded({ extended: true }));
 
 // Import routes
@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
     res.send("Hello from the server!");
 });
 
-// const MongoURL='mongodb+srv://gpgazhmrj:NiIAmKaqmT6CxKrz@cluster0.rdhlq.mongodb.net/sample_mflix?retryWrites=true&w=majority&appName=Cluster0';
+
 const MongoURL= process.env.MONGO_URI;
 
 mongoose.connect(MongoURL, { useNewUrlParser: true, useUnifiedTopology: true });
