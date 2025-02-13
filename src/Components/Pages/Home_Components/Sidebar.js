@@ -38,6 +38,7 @@ function Sidebar() {
 	key={index} 
     username={user.username} 
     img={user.profileImage} 
+	userId={user.id}
     message={message}
 	  isOwner={false}
   />

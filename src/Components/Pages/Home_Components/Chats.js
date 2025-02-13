@@ -3,7 +3,7 @@ import './Chats.css';
 import {useDispatch} from 'react-redux';
 import {addSecondUser} from '../../../store/secondUserSlice .js';
 
-function Chats({ img, username, message }) {
+function Chats({ img, username, message,userId }) {
 	const dispatch = useDispatch();
 	
      const [selectedUser, setSelectedUser] = useState({ img: '', username: '', message: '' });
@@ -19,6 +19,7 @@ function Chats({ img, username, message }) {
         };
 	*/
 	dispatch(addSecondUser({
+	id:userId,
     username: usernameNode.textContent,
     profileImage: profileImageNode.src
 	}));

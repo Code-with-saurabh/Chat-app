@@ -32,14 +32,16 @@ function Login() {
 		const profileImage=res.data.profileImage;
 		const Username_session=res.data.Username;
 		const Username_s =res.data.Username;
+		const UserId =res.data.id;
 		 
 		
 		//localStorage.setItem('profileImage',profileImage);
 		//it must to store user to sessio donot delet the session line in futur becz of this authrizer access the '/' page 
 		sessionStorage.setItem('profileImage',profileImage);
 		sessionStorage.setItem('Username',Username_session);
+		sessionStorage.setItem('id',UserId);
 		// dispatch(addUser(res.data.Username));
-		dispatch(addUser({ username: Username_s, profileImage }));
+		dispatch(addUser({ id:UserId,username: Username_s, profileImage }));
 	 
 		history.push("/");
 		}

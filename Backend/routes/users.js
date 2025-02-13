@@ -144,7 +144,7 @@ router.post("/login", async (req, res) => {
         // Send profile image URL instead of Base64 data
         return res.status(200).json({
             message: "User Login Successfully",
-            userId: UserExist._id,
+            id: UserExist._id,
             Username: UserExist.Username,
             profileImage: UserExist.ProfileImage,
         });
@@ -165,11 +165,13 @@ router.get("/search", async (req, res) => {
         if (!user) {
             return res.status(400).json({ message: "Username is required" });
         }
-
+		
         res.status(200).json({
             message: `Searching for user: ${user.Username}`,
+			id: user._id,
             Username: user.Username,
-            profileImage: user.ProfileImage, // Return ImgBB URL here
+            profileImage: user.ProfileImage,
+			// Return ImgBB URL here
         });
     } catch (err) {
         console.log(err);
@@ -216,8 +218,9 @@ router.get("/allUsers", async (req, res) => {
     if (allUsers.length === 0) {
       return res.status(404).json({ message: "There are no users." });
     }
-
+	 
     const usersWithImages = allUsers.map(user => ({
+	  id:user._id,
       username: user.Username,
       profileImage: user.ProfileImage || null,  // Directly return the ImgBB URL
     }));

@@ -12,6 +12,7 @@ function Search() {
 	const [user,setUser]=useState(null);
 	const [profileImage,setprofileImage]=useState(null);
 	const [err,setErr]=useState(null);
+	const [SecondUserId,SetsecondUserId]=useState(null);
 
 	 
 	const handleKey = async (e)=>{
@@ -21,6 +22,7 @@ function Search() {
 				 const res = await axios.get(`http://localhost:5000/api/users/search?username=${username}`);
 				 // setUser(res.data.user);
 				 setUser(res.data.Username);
+				 SetsecondUserId(res.data.id);
 				 setprofileImage(res.data.profileImage);
 				 // const profileIMG = res.data.profileImage;
 				 setErr(null);
@@ -37,8 +39,11 @@ function Search() {
 		// console.log(e.currentTarget);
 		const userChat=e.currentTarget;
 		const usernameNode = userChat.childNodes[1]?.childNodes[0];
+		
 		const profileImageNode = userChat.childNodes[0];
+		
 		dispatch(addSecondUser({
+	id:SecondUserId,
     username: usernameNode.textContent,
     profileImage: profileImageNode.src
 	}));

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import "./Input.css";
-
+import { useSelector} from 'react-redux';
 function Input() {
   const [currentMessage, setCurrentMessage] = useState("");
+	const currentUserId = useSelector((state) => state.user.id);
+
+	const secondUserId = useSelector((state) => state.secondUser.id);
 
   function handleMessage() {
     console.log(currentMessage);
@@ -13,10 +16,13 @@ function Input() {
   function handleCurrentMessage(e) {
     setCurrentMessage(e.target.value);
     e.preventDefault();
+	
   }
   function handleKeyDown(e) {
   if (e.key === "Enter") {
     handleMessage();
+	console.log("id User1 :"+currentUserId);
+	console.log("id User2 :"+secondUserId);
   }
 }
  return (
@@ -25,7 +31,8 @@ function Input() {
 	 placeholder="Type.." 
 	 value={currentMessage}
 	  onChange={handleCurrentMessage} 
-	  onKeyDown={handleKeyDown}/>
+	  onKeyDown={handleKeyDown}
+	 />
 	 <div className="send">
 		<input type="file" style={{display:"none"}} id="file"/>
 		<label htmlFor="file">
