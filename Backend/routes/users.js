@@ -6,6 +6,7 @@ const axios = require('axios');
 const bcrypt = require('bcryptjs');  
 const multer = require('multer');  
 const User = require('../models/User');
+const Chat = require('../models/Chat');
 const FormData = require('form-data');
 
 /*

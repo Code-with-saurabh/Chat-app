@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./Input.css";
 import { useSelector} from 'react-redux';
+import socketIOClient from "socket.io-client";
+
+
 function Input() {
+	
+const socket = socketIOClient("http://localhost:5000/");
+   
   const [currentMessage, setCurrentMessage] = useState("");
 	const currentUserId = useSelector((state) => state.user.id);
 
@@ -21,8 +27,15 @@ function Input() {
   function handleKeyDown(e) {
   if (e.key === "Enter") {
     handleMessage();
+	 
+	 socket.emit("sendMessage", {
+      senderId: currentUserId,
+      receiverId: secondUserId,
+      message: currentMessage,
+    }); 
 	console.log("id User1 :"+currentUserId);
 	console.log("id User2 :"+secondUserId);
+	console.log("id User2 :"+socket.id);
   }
 }
  return (
