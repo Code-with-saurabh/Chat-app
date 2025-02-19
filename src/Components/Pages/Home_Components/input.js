@@ -1,11 +1,12 @@
 import React, { useState,useEffect } from "react";
 import "./Input.css";
-import { useSelector} from 'react-redux';
+import { useSelector,useDispatch} from 'react-redux';
 import socketIOClient from "socket.io-client";
+import { setMessage } from '../../../store/userChat.js';
 
 
 function Input() {
-	
+	const disptch = useDispatch();
 const socket = socketIOClient("http://localhost:5000/");
    
   const [currentMessage, setCurrentMessage] = useState("");
@@ -28,14 +29,20 @@ const socket = socketIOClient("http://localhost:5000/");
   if (e.key === "Enter") {
     handleMessage();
 	 
-	 socket.emit("sendMessage", {
-      senderId: currentUserId,
-      receiverId: secondUserId,
-      message: currentMessage,
-    }); 
+	 // socket.emit("sendMessage", {
+      // senderId: currentUserId,
+      // receiverId: secondUserId,
+      // message: currentMessage,
+    // }); 
+	
+	disptch(setMessage({
+		senderId:currentUserId,
+		reciverId:secondUserId,
+		message:currentMessage,
+	}));
 	console.log("id User1 :"+currentUserId);
 	console.log("id User2 :"+secondUserId);
-	console.log("id User2 :"+socket.id);
+	// console.log("id User2 :"+socket.id);
   }
 }
  return (
