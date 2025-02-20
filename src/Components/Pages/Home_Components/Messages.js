@@ -1,25 +1,37 @@
-import React from 'react';
+import React,{ useEffect, useRef } from 'react';
 
 import './Messages.css';  
 import Message from './Message.js';
 import { useSelector} from 'react-redux';
 
 function Messages() {
-	const UserMessage = useSelector((state) => state.userChat.message);
-	const CurrectUser = useSelector((state) => state.userChat.senderId);
-	const SecondUser = useSelector((state) => state.userChat.reciverId);
-	const profileImage = sessionStorage.getItem("profileImage");
-	const UserMain = sessionStorage.getItem("id");
-	const userData = useSelector((state)=>state.secondUser);
 	
-  // const UserMessage = useSelector((state) => state.userChat.message);
-  // console.log("from Messages Component : " + UserMessage);
+  const userMessages = useSelector((state) => state.userChat.messages);  // Get the list of messages
+  const currentUser = useSelector((state) => state.userChat.senderId);
+  
+	 console.log("\n\nStore:"+userMessages)
+	 const messagesEndRef = useRef(null);
 
+  // Scroll to the bottom whenever messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [userMessages]); 
+ 
  return (
     <div className="Messages">
-       <Message/>
-      
+     {userMessages.map((message, index) => (
+        <Message 
+          key={index} 
+          message={message.message}  
+          senderId={message.senderId}
+          isOwner={message.senderId === currentUser}   
+        />
+      ))}
+	    <div ref={messagesEndRef} />
     </div>
+	
   );
 }
 

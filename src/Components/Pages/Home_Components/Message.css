@@ -94,8 +94,11 @@
 	 background-color:#5b748d;
 	 padding:10px;
 	 border-radius:10px 0px 10px 10px;
-	 max-width:max-content;
+	 /* max-width:max-content; */
 	 color :white;
+	 max-width:max-content; 
+  overflow-wrap: break-word; 
+  white-space: pre-wrap; 
 }
 
 .Owner .messageContenet img{

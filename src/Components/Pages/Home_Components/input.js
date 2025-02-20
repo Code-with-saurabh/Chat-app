@@ -15,11 +15,23 @@ const socket = socketIOClient("http://localhost:5000/");
 	const secondUserId = useSelector((state) => state.secondUser.id);
 
   function handleMessage() {
-    console.log(currentMessage);
-    // Reset the message after sending (optional)
-    setCurrentMessage("");
-  }
+    if (currentMessage.trim()) {
+      disptch(setMessage({
+        senderId: currentUserId,
+        reciverId: secondUserId,
+        message: currentMessage,
+      }));
 
+      // Emit the message to the backend if using socket.io
+      socket.emit("sendMessage", {
+        senderId: currentUserId,
+        receiverId: secondUserId,
+        message: currentMessage,
+      });
+
+      setCurrentMessage("");  
+    }
+  }
   function handleCurrentMessage(e) {
     setCurrentMessage(e.target.value);
     e.preventDefault();
@@ -29,20 +41,8 @@ const socket = socketIOClient("http://localhost:5000/");
   if (e.key === "Enter") {
     handleMessage();
 	 
-	 // socket.emit("sendMessage", {
-      // senderId: currentUserId,
-      // receiverId: secondUserId,
-      // message: currentMessage,
-    // }); 
-	
-	disptch(setMessage({
-		senderId:currentUserId,
-		reciverId:secondUserId,
-		message:currentMessage,
-	}));
-	console.log("id User1 :"+currentUserId);
-	console.log("id User2 :"+secondUserId);
-	// console.log("id User2 :"+socket.id);
+	console.log("fromInput Componet\nid User1 :"+currentUserId);
+	console.log("fromInput Componet\nid User2 :"+secondUserId);
   }
 }
  return (
