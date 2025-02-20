@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import "./Input.css";
 import { useSelector,useDispatch} from 'react-redux';
 import socketIOClient from "socket.io-client";
@@ -6,13 +6,43 @@ import { setMessage } from '../../../store/userChat.js';
 
 
 function Input() {
-	const disptch = useDispatch();
-const socket = socketIOClient("http://localhost:5000/");
-   
-  const [currentMessage, setCurrentMessage] = useState("");
+	const [currentMessage, setCurrentMessage] = useState("");
 	const currentUserId = useSelector((state) => state.user.id);
 
 	const secondUserId = useSelector((state) => state.secondUser.id);
+	const disptch = useDispatch();
+	 const socket = useRef(null)
+	// const socket = socketIOClient("http://localhost:5000/");
+	useEffect(() => {
+	if (!socket.current) {
+     socket.current = socketIOClient("http://localhost:5000/");
+    }
+	
+	
+	socket.current.on('connect', () => {
+        console.log("Socket connected! ID: ", socket.current.id);   
+        // socket.current.emit('userConnected', currentUserId);  // Inform the server that this user is connected
+      });
+	  
+	 socket.current.on("receiveMessage", (data) => {
+	if(data.receiverId === currentUserId){
+      disptch(
+        setMessage({
+          senderId: data.senderId,
+          receiverId: data.receiverId,
+          message: data.message,
+        })
+	);}
+	console.log("Data From Another User : "+data);
+    });
+    // Cleanup on unmount
+    return () => {
+       socket.current.disconnect();
+      console.log("Socket disconnected!");
+    };
+  }, [disptch]);
+   
+	
 
   function handleMessage() {
     if (currentMessage.trim()) {
@@ -23,7 +53,7 @@ const socket = socketIOClient("http://localhost:5000/");
       }));
 
       // Emit the message to the backend if using socket.io
-      socket.emit("sendMessage", {
+      socket.current.emit("sendMessage", {
         senderId: currentUserId,
         receiverId: secondUserId,
         message: currentMessage,

@@ -51,24 +51,40 @@ mongoose.connection.on('error', (err) => {
     console.log('Error connecting to MongoDB: ' + err);
 });
 
-
-io.on('connection', (socket) => {
-  console.log('A user connected');
  
-  
-   
-
-  socket.on('sendMessage', (data) => {
+io.on('connection', (socket) => {
+  console.log(socket.id+'. A user connected');
+ 
+  socket.on('sendMessage', async (data) => {
     console.log('Received message:', data);
+
+    try {
+      // Save the message to the database
+      const newMessage = new Chat({
+        sender: data.senderId,
+        receiver: data.receiverId,
+        message: data.message,
+        time: new Date(),
+        isRead: false,
+      });
+
+      await newMessage.save();  
+
+      // Emit the message to the receiver
+     io.to(data.receiverId).emit('receiveMessage', data);  // Emit to receiver
+     io.to(data.senderId).emit('receiveMessage', data);    // Emit back to sender
+	 
+      console.log('Message saved successfully');
+    } catch (error) {
+      console.error('Error saving message:', error);
+    }
   });
 
-
   socket.on('disconnect', () => {
+ 
     console.log('A user disconnected');
   });
 });
-
-
 
 const port = process.env.PORT || 5000;
 const server = ChatServer.listen(port, () => {

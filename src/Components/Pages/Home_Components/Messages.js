@@ -26,10 +26,12 @@ function Messages() {
           key={index} 
           message={message.message}  
           senderId={message.senderId}
-          isOwner={message.senderId === currentUser}   
+			  
+          isOwner={true}   
         />
       ))}
 	    <div ref={messagesEndRef} />
+		 
     </div>
 	
   );
