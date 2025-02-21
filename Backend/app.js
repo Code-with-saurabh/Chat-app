@@ -55,41 +55,32 @@ mongoose.connection.on('error', (err) => {
 const users  = {};
 
 io.on('connection', (socket) => {
-  console.log(socket.id+'. A user connected');
+  console.log('A user connected : '+socket.id);
  
- socket.on("userConnected",({userId})=>{
-	 users[userId] = socket.id;
- })
-  console.log('\nUsers : '+users);
- 
-  socket.on('sendMessage', async (data) => {
-    console.log('Received message:', data);
-
-    try {
-      // Save the message to the database
-      const newMessage = new Chat({
-        sender: data.senderId,
-        receiver: data.receiverId,
-        message: data.message,
-        time: new Date(),
-        isRead: false,
-      });
-
-      await newMessage.save();  
-
-      // Emit the message to the receiver
-     io.to(data.receiverId).emit('receiveMessage', data);  // Emit to receiver
-     io.to(data.senderId).emit('receiveMessage', data);    // Emit back to sender
+ socket.on("SetMessage",(data)=>{
+	 const {senderId,receiverId,message} = data;
 	 
-      console.log('Message saved successfully');
-    } catch (error) {
-      console.error('Error saving message:', error);
-    }
-  });
+	 users[senderId] = socket;
+	 
+	 if (users[receiverId]) {
+		  console.log(`Sending message to ${receiverId}`);
+		    users[receiverId].emit('receiveMessage', data);
+	 }else{
+		 console.log(`User ${receiverId} is not connected.`);
+	 }
+	 // console.log(data);
+ });
+  
 
   socket.on('disconnect', () => {
  
-    console.log('A user disconnected');
+    console.log('A user disconnected : '+socket.id);
+	 for (let userId in users) {
+      if (users[userId] === socket) {
+        delete users[userId]; 
+        break;
+      }
+    }
   });
 });
 

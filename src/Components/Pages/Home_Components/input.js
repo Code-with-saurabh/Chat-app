@@ -54,15 +54,14 @@ function Input() {
         reciverId: secondUserId,
         message: currentMessage,
       }));
-
-      // Emit the message to the backend if using socket.io
-      socket.current.emit("sendMessage", {
-        senderId: currentUserId,
-		senderName : senderUsername,
-        receiverId: secondUserId,
-        message: currentMessage,
-      });
-
+ 
+	socket.current.emit('SetMessage', {
+		senderId: currentUserId,
+		receiverId: secondUserId,
+		message: currentMessage,
+	});
+		
+	
       setCurrentMessage("");  
     }
   }
