@@ -5,7 +5,7 @@ import MessageIMGP from'../../../assets/img/profile.jpg';
 import IMGP from'../../../assets/img/profile.jpg'; 
 import {useSelector} from 'react-redux';
 
-function Message({ message, senderId, isOwner }) {
+function Message({ message, senderId, isOwner ,timestamp}) {
 	 
  
    
@@ -22,6 +22,20 @@ function Message({ message, senderId, isOwner }) {
 		 
 		// sessionStorage.removeItem('SecondUserData');
 		
+	const formatTimestamp = (timestamp) => {
+    const messageDate = new Date(timestamp); 
+    
+    let hours = messageDate.getHours();
+    const minutes = messageDate.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    // Convert hours from 24-hour to 12-hour format
+    hours = hours % 12;
+    hours = hours ? hours : 12; // 12:00 AM/PM instead of 0:00
+    const minutesFormatted = minutes < 10 ? `0${minutes}` : minutes;
+    
+    return `${hours}:${minutesFormatted} ${ampm}`; // Format as HH:MM AM/PM
+  };
  
   return (
     <div className={isOwner ? "Owner" : "Message"}>
@@ -30,7 +44,7 @@ function Message({ message, senderId, isOwner }) {
           src={isOwner ? profileImage : userData.profileImage || MessageIMGP} 
           alt="Profile" 
         />
-        <span className="timestamp">just Now</span>
+        <span className="timestamp">{formatTimestamp(timestamp)}</span>
       </div>
       <div className="messageContenet">
         <p>{message}</p>
