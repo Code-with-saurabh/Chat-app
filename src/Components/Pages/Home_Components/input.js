@@ -7,9 +7,12 @@ import { setMessage } from '../../../store/userChat.js';
 
 function Input() {
 	const [currentMessage, setCurrentMessage] = useState("");
-	const currentUserId = useSelector((state) => state.user.id);
+	// const currentUserId = useSelector((state) => state.user.id);
+	const currentUserId = sessionStorage.getItem("id");
+	const senderUsername = sessionStorage.getItem("Username");
 
 	const secondUserId = useSelector((state) => state.secondUser.id);
+	
 	const disptch = useDispatch();
 	 const socket = useRef(null)
 	// const socket = socketIOClient("http://localhost:5000/");
@@ -55,6 +58,7 @@ function Input() {
       // Emit the message to the backend if using socket.io
       socket.current.emit("sendMessage", {
         senderId: currentUserId,
+		senderName : senderUsername,
         receiverId: secondUserId,
         message: currentMessage,
       });

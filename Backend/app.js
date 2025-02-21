@@ -51,9 +51,16 @@ mongoose.connection.on('error', (err) => {
     console.log('Error connecting to MongoDB: ' + err);
 });
 
- 
+
+const users  = {};
+
 io.on('connection', (socket) => {
   console.log(socket.id+'. A user connected');
+ 
+ socket.on("userConnected",({userId})=>{
+	 users[userId] = socket.id;
+ })
+  console.log('\nUsers : '+users);
  
   socket.on('sendMessage', async (data) => {
     console.log('Received message:', data);
