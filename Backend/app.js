@@ -56,11 +56,15 @@ const users  = {};
 
 io.on('connection', (socket) => {
   console.log('A user connected : '+socket.id);
- 
+	
+	socket.on("join",(data)=>{
+		users[data.userId] = socket;
+		console.log(`\nUser[${data.userId}] Added To Users : ${socket.id} \n`);
+	});
  socket.on("SetMessage",(data)=>{
 	 const {senderId,receiverId,message} = data;
 	 
-	 users[senderId] = socket;
+	 // users[senderId] = socket;
 	 
 	 if (users[receiverId]) {
 		  console.log(`Sending message to ${receiverId}`);

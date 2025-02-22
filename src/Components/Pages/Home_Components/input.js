@@ -26,7 +26,11 @@ function Input() {
         console.log("Socket connected! ID: ", socket.current.id);   
         // socket.current.emit('userConnected', currentUserId);  // Inform the server that this user is connected
       });
-	  
+	 
+	socket.current.emit("join",{
+		userId:currentUserId,
+	});
+	 
 	 socket.current.on("receiveMessage", (data) => {
 	if(data.receiverId === currentUserId){
       disptch(
