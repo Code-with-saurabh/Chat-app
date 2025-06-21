@@ -7,6 +7,15 @@ import {useSelector} from 'react-redux';
 function Chat() {
 const userData = useSelector((state)=>state.secondUser);
  const currentUsername = sessionStorage.getItem("Username");
+ 
+ /*if(!userData.id){
+	 return(<>
+		<div className="Chat noChatSelected">
+			<p>select a user to start Chatting....</p>
+		</div>
+	 </>);
+ }*/
+ 
  return (
     <div className="Chat">
       <div className="ChatInfo">

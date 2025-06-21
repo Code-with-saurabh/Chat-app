@@ -20,14 +20,18 @@ const io = socketIo(ChatServer, {
   },
 });
 // Middleware
-app.use(cors());
-app.use(express.json());  
-app.use(express.urlencoded({ extended: true }));
+app.use(cors());//jub 2 diff router pese req bhejna ho to server reject kar deta hai , isliye ham cros use karte hai
+app.use(express.json());  //json
+app.use(express.urlencoded({ extended: true }));//html
 
 // Import routes
 const usersRouter = require('./routes/users');
-
 app.use('/api/users', usersRouter);
+
+const messagesRouter = require('./routes/messages');
+app.use('/api/messages',messagesRouter);
+
+
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).send({ error: 'Something went wrong!' });
@@ -61,10 +65,10 @@ io.on('connection', (socket) => {
 		users[data.userId] = socket;
 		console.log(`\nUser[${data.userId}] Added To Users : ${socket.id} \n`);
 	});
- socket.on("SetMessage",(data)=>{
+ /*socket.on("SetMessage", (data)=>{
 	 const {senderId,receiverId,message} = data;
 	 
-	 // users[senderId] = socket;
+	 users[senderId] = socket;
 	 
 	 if (users[receiverId]) {
 		  console.log(`Sending message to ${receiverId}`);
@@ -74,6 +78,38 @@ io.on('connection', (socket) => {
 	 }
 	 // console.log(data);
  });
+  */
+  socket.on("SetMessage",async (data)=>{
+	 const {senderId,receiverId,message} = data;
+	 
+	 // save to DB
+	 try{
+		 const newMessage = new Chat({
+			 sender : senderId,
+			 receiver:receiverId,
+			 message
+		 });
+		const resutltData =  await newMessage.save();
+		 // console.log("message Save",resutltData);
+		 console.log("message Save");
+	 }catch(err){
+		 console.error("Error saving message : ",err);
+	 }
+	 
+	 if(users[receiverId]){
+		 users[receiverId].emit("receiveMessage",data);
+	 }else{
+		 console.log(`User ${receiverId} is not online`);
+	 }
+	 
+	 console.log(data);
+ });
+ 
+   socket.on("typing",({senderId,receiverId})=>{
+	   if(users[receiverId]){
+		   users[receiverId].emit("showTyping",{senderId});
+	   }
+   });
   
 
   socket.on('disconnect', () => {

@@ -8,5 +8,5 @@ const MessageSchema = mongoose.Schema({
   isRead: { type: Boolean, default: false },
 });
 
-const Message = mongoose.model("ChatMessage", MessageSchema);
-module.exports = Message;
+const Chat = mongoose.model("ChatMessage", MessageSchema);
+module.exports = Chat;

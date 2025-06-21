@@ -30,9 +30,9 @@ function Messages() {
         <Message 
           key={index} 
           message={message.message}  
-          senderId={message.senderId}
-          isOwner={message.senderId === currentUser} 
-		  timestamp = {TimeC}
+          senderId={message.sender}
+          isOwner={message.sender=== currentUser || message.senderId=== currentUser} 
+		  timestamp = {message.time} 
         />
       ))}
 	    <div ref={messagesEndRef} />

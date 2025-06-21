@@ -10,7 +10,9 @@ function Input() {
 	// const currentUserId = useSelector((state) => state.user.id);
 	const currentUserId = sessionStorage.getItem("id");
 	const senderUsername = sessionStorage.getItem("Username");
-
+	// const timestamp = new Date.now();
+	const timestamp = new Date().toISOString();
+	
 	const secondUserId = useSelector((state) => state.secondUser.id);
 	
 	const disptch = useDispatch();
@@ -55,14 +57,17 @@ function Input() {
     if (currentMessage.trim()) {
       disptch(setMessage({
         senderId: currentUserId,
-        reciverId: secondUserId,
+        // reciverId: secondUserId,
+        receiverId: secondUserId,
         message: currentMessage,
+		time : timestamp,
       }));
  
 	socket.current.emit('SetMessage', {
 		senderId: currentUserId,
 		receiverId: secondUserId,
 		message: currentMessage,
+		time:timestamp,
 	});
 		
 	
@@ -73,7 +78,12 @@ function Input() {
     setCurrentMessage(e.target.value);
     e.preventDefault();
 	
+	socket.current.emit("typing",{
+		senderId:currentUserId,
+		receiverId:secondUserId
+	});
   }
+  
   function handleKeyDown(e) {
   if (e.key === "Enter") {
     handleMessage();
