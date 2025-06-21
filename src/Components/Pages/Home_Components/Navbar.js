@@ -25,6 +25,7 @@ console.log("User : "+username);
 	 // e.preventDefault();
 	 sessionStorage.removeItem('Username');
 	 sessionStorage.removeItem('profileImage');
+	 sessionStorage.removeItem('id');
 	 
  }
  // console.log("This is Navbar Componet \n\n\n : "+profileImage+"\n\n");

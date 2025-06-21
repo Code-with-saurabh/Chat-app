@@ -32,7 +32,7 @@ function Messages() {
           message={message.message}  
           senderId={message.sender}
           isOwner={message.sender=== currentUser || message.senderId=== currentUser} 
-		  timestamp = {message.time} 
+		  timestamp = {message.time || message.timestamp} 
         />
       ))}
 	    <div ref={messagesEndRef} />

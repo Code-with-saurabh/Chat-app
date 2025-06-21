@@ -50,6 +50,8 @@ function Message({ message, senderId, isOwner ,timestamp}) {
   hours = hours ? hours : 12;  // 12:00 AM/PM instead of 0:00
   const minutesFormatted = minutes < 10 ? `0${minutes}` : minutes;
   
+  console.log(`The TIme : ${hours}:${minutesFormatted} ${ampm}`);
+  
   return `${hours}:${minutesFormatted} ${ampm}`;  // HH:MM AM/PM
 };
 

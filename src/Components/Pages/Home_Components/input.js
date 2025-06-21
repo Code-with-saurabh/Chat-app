@@ -40,6 +40,7 @@ function Input() {
           senderId: data.senderId,
           receiverId: data.receiverId,
           message: data.message,
+		  time : data.time,
         })
 	);}
 	console.log("Data From Another User : "+data);
