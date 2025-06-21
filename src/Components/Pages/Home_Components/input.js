@@ -11,7 +11,7 @@ function Input() {
 	const currentUserId = sessionStorage.getItem("id");
 	const senderUsername = sessionStorage.getItem("Username");
 	// const timestamp = new Date.now();
-	const timestamp = new Date().toISOString();
+	// const timestamp = new Date().toISOString();
 	
 	const secondUserId = useSelector((state) => state.secondUser.id);
 	
@@ -54,6 +54,7 @@ function Input() {
 	
 
   function handleMessage() {
+	    const timestamp = new Date().toISOString();
     if (currentMessage.trim()) {
       disptch(setMessage({
         senderId: currentUserId,

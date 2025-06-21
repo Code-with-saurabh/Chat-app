@@ -22,7 +22,7 @@ function Message({ message, senderId, isOwner ,timestamp}) {
 		 
 		// sessionStorage.removeItem('SecondUserData');
 		
-	const formatTimestamp = (timestamp) => {
+/*	const formatTimestamp = (timestamp) => {
     const messageDate = new Date(timestamp); 
     
     let hours = messageDate.getHours();
@@ -35,8 +35,24 @@ function Message({ message, senderId, isOwner ,timestamp}) {
     const minutesFormatted = minutes < 10 ? `0${minutes}` : minutes;
     
     return `${hours}:${minutesFormatted} ${ampm}`; // Format as HH:MM AM/PM
-  };
+  };*/
  
+ const formatTimestamp = (timestamp) => {
+  const messageDate = new Date(timestamp); 
+  if (isNaN(messageDate)) {
+    return "Invalid time";  // Handle invalid date
+  }
+  let hours = messageDate.getHours();
+  const minutes = messageDate.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  
+  hours = hours % 12;
+  hours = hours ? hours : 12;  // 12:00 AM/PM instead of 0:00
+  const minutesFormatted = minutes < 10 ? `0${minutes}` : minutes;
+  
+  return `${hours}:${minutesFormatted} ${ampm}`;  // HH:MM AM/PM
+};
+
   return (
     <div className={isOwner ? "Owner" : "Message"}>
       <div className="messageInfo">
