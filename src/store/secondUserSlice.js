@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+	id:'',
   username: '',
   profileImage: '',
 };
@@ -10,10 +11,12 @@ export const secondUserSlice = createSlice({
   initialState,
   reducers: {
     addSecondUser: (state, action) => {
+      state.id = action.payload.id;  
       state.username = action.payload.username;  
       state.profileImage = action.payload.profileImage;  
     },
     removeSecondUser: (state) => {
+      state.id = '';  
       state.username = '';  
       state.profileImage = '';
     },

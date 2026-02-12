@@ -1,13 +1,10 @@
 const mongoose = require('mongoose');
 
-const UserScema = mongoose.Schema({
-	Username:{type:String,require:true,unique:true},
-	Password:{type:String,require:true,unique:true},
-	Email:{type:String,require:true,unique:true},
-	
-	ProfileImage: { type: Buffer},
+const UserSchema = new mongoose.Schema({
+	Username: { type: String, required: true, unique: true },
+	Password: { type: String, required: true },
+	Email: { type: String, required: true, unique: true },
+	ProfileImage: { type: String },
 });
 
-// const User = mongoose.model("ChatUser",UserScema);
-const User = mongoose.model("AllChatUsers",UserScema);
-module.exports=User;
+module.exports = mongoose.model("User", UserSchema);
