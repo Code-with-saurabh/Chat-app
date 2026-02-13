@@ -8,6 +8,7 @@ const multer = require('multer');
 const User = require('../models/User');
 const Chat = require('../models/Chat');
 const FormData = require('form-data');
+const { register, login } = require('../Controller/User.Auth.Controller.js');
 
 /*
 //disk pe ki taraha se file to upoa karnha hai uske like diskStorage
@@ -26,7 +27,7 @@ const upload = multer({ storage: storage });// this is a middelware jo /register
 const storage = multer.memoryStorage();
 const upload = multer({storage:storage});
 
-
+/*
 
 router.post("/register", upload.single('file'), async (req, res) => {
     console.log("\n\nThis is register page\n\n");
@@ -156,6 +157,11 @@ router.post("/login", async (req, res) => {
         });
     }
 });
+'
+*/
+
+router.post("/register",upload.single('file'),register)
+router.post("/login",login)
 
 router.get("/search", async (req, res) => {
     const { username } = req.query;

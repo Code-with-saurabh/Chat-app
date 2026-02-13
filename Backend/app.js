@@ -129,6 +129,15 @@ const server = ChatServer.listen(port, () => {
 	console.log(`Server running on port ${port}`);
 });
 
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+
+    return res.status(statusCode).json({
+        success: false,
+        message: err.message || "Internal Server Error",
+        errors: err.errors || [],
+    });
+});
 
 
 module.exports = app;

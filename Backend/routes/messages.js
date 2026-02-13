@@ -7,7 +7,6 @@ router.post('/',async (req,res)=>{
 		const {sender,reciver,message} = req.body;
 		const newMessage = new Chat({sender,reciver,message});
 		await newMessage.save();
-		
 		res.status(201).json(newMessage);
 	}catch(err){
 		res.status(500).json({error : "Failed to  save message"});
