@@ -1,13 +1,14 @@
 const multer = require("multer");
 const ApiError = require("../Utilities/ApiError");
+const path = require("path");
 
- 
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "./public/temp");
+        cb(null, path.join(__dirname, "../uploads/"));
     },
     filename: function (req, file, cb) {
-        const uniqueName = `${Date.now()}-${file.originalname}`;
+        const uniqueName = `${Date.now()}-${file.originalname.replace(/\s+/g, "-").replace(/[^\w.-]/g, "")}`;//  remove spaces & unsafe chars
         cb(null, uniqueName);
     },
 });

@@ -3,29 +3,29 @@ const router = express.Router();
 // const axios = require('axios');
 const axios = require('axios');
 // const sharp = require('sharp');
-const bcrypt = require('bcryptjs');  
-const multer = require('multer');  
+const bcrypt = require('bcryptjs');
+const multer = require('multer');
 const User = require('../models/User');
 const Chat = require('../models/Chat');
 const FormData = require('form-data');
 const { register, login } = require('../Controller/User.Auth.Controller.js');
+const { upload } = require('../Middleware/Multer.middleware.js');
 
 /*
 //disk pe ki taraha se file to upoa karnha hai uske like diskStorage
 const storage = multer.diskStorage({
-	destination:(req,file,cb)=>{
-		cb(null,"uploads/");//tow fileds first is error and second one is a destination where we want to store our img
-	},
-	filename:(req,file,cb)=>{
-		cb(null,Date.now() + ' - '+file.originalname);
-	},
+    destination:(req,file,cb)=>{
+        cb(null,"uploads/");//tow fileds first is error and second one is a destination where we want to store our img
+    },
+    filename:(req,file,cb)=>{
+        cb(null,Date.now() + ' - '+file.originalname);
+    },
 });
  
 const upload = multer({ storage: storage });// this is a middelware jo /register pe koyi req aaye use se pahale chagea
 */
 
-const storage = multer.memoryStorage();
-const upload = multer({storage:storage});
+
 
 /*
 
@@ -54,14 +54,14 @@ router.post("/register", upload.single('file'), async (req, res) => {
         let salt;
         try {
             salt = await bcrypt.genSalt(10);
-			console.log("salt ,try");
+            console.log("salt ,try");
         } catch (err) {
             return res.status(500).json({ message: 'Error generating salt' });
         }
 
         let hashedPassword;
         try {
-			console.log("has the pass");
+            console.log("has the pass");
             hashedPassword = await bcrypt.hash(password, salt);
         } catch (err) {
             return res.status(500).json({ message: 'Error hashing password' });
@@ -87,7 +87,7 @@ router.post("/register", upload.single('file'), async (req, res) => {
                     headers: {
                         ...formData.getHeaders(), // Proper headers for multipart/form-data
                     },
-					 maxBodyLength: Infinity, 
+                     maxBodyLength: Infinity, 
                 });
 
                 imageUrl = imgBBResponse.data.data.url;
@@ -160,25 +160,25 @@ router.post("/login", async (req, res) => {
 '
 */
 
-router.post("/register",upload.single('file'),register)
-router.post("/login",login)
+router.post("/register", upload.single('file'), register)
+router.post("/login", login)
 
 router.get("/search", async (req, res) => {
     const { username } = req.query;
-    
+
     try {
         const user = await User.findOne({ Username: username });
 
         if (!user) {
             return res.status(400).json({ message: "Username is required" });
         }
-		
+
         res.status(200).json({
             message: `Searching for user: ${user.Username}`,
-			id: user._id,
+            id: user._id,
             Username: user.Username,
             profileImage: user.ProfileImage,
-			// Return ImgBB URL here
+            // Return ImgBB URL here
         });
     } catch (err) {
         console.log(err);
@@ -217,28 +217,28 @@ router.get("/allUsers", async (req, res) => {
   }
 });*/
 router.get("/allUsers", async (req, res) => {
-  try {
-    const allUsers = await User.aggregate([
-      { $project: { Username: 1, ProfileImage: 1 } }, // Select only required fields
-    ]);
+    try {
+        const allUsers = await User.aggregate([
+            { $project: { Username: 1, ProfileImage: 1 } }, // Select only required fields
+        ]);
 
-    if (allUsers.length === 0) {
-      return res.status(404).json({ message: "There are no users." });
+        if (allUsers.length === 0) {
+            return res.status(404).json({ message: "There are no users." });
+        }
+
+        const usersWithImages = allUsers.map(user => ({
+            id: user._id,
+            username: user.Username,
+            profileImage: user.ProfileImage || null,  // Directly return the ImgBB URL
+        }));
+
+        res.status(200).json({
+            message: "All users retrieved successfully.",
+            users: usersWithImages,
+        });
+    } catch (error) {
+        return res.status(500).json({ message: "Error retrieving users." });
     }
-	 
-    const usersWithImages = allUsers.map(user => ({
-	  id:user._id,
-      username: user.Username,
-      profileImage: user.ProfileImage || null,  // Directly return the ImgBB URL
-    }));
-
-    res.status(200).json({
-      message: "All users retrieved successfully.",
-      users: usersWithImages,
-    });
-  } catch (error) {
-    return res.status(500).json({ message: "Error retrieving users." });
-  }
 });
 
 module.exports = router;

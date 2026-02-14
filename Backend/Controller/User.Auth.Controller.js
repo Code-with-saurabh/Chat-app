@@ -2,18 +2,21 @@ const ApiError = require("../Utilities/ApiError");
 const ApiResponse = require("../Utilities/ApiResponse");
 const asyncHandler = require("../Utilities/AsyncHandler");
 
+
+const { uploadOnCloudinary } = require("../Utilities/Cloudinary");
+
 const axios = require('axios');
 const FormData = require('form-data');
 
-const bcrypt = require('bcryptjs');  
-const multer = require('multer');  
+const bcrypt = require('bcryptjs');
+const multer = require('multer');
 const User = require('../models/User');
 const Chat = require('../models/Chat');
 
 
 
 const register = asyncHandler(async (req, res) => {
-    console.log("\n\nThis is register page\n\n",req.body);
+    console.log("\n\nThis is register page\n\n", req.body);
 
     const { username, email, password } = req.body;
 
@@ -37,40 +40,53 @@ const register = asyncHandler(async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    let imageUrl = null;
 
     // Upload profile image to ImgBB if provided
-    if (req.file) {
-        const formData = new FormData();
-        formData.append("key", process.env.IMGBB_API_KEY);
-        formData.append(
-            "name",
-            `${Date.now()}-${req.file.originalname}`
-        );
-        formData.append(
-            "image",
-            req.file.buffer.toString("base64")
-        );
+    // if (req.file) {
+    //     const formData = new FormData();
+    //     formData.append("key", process.env.IMGBB_API_KEY);
+    //     formData.append(
+    //         "name",
+    //         `${Date.now()}-${req.file.originalname}`
+    //     );
+    //     formData.append(
+    //         "image",
+    //         req.file.buffer.toString("base64")
+    //     );
 
-        const response = await axios.post(
-            process.env.IMGBB_URL,
-            formData,
-            {
-                headers: formData.getHeaders(),
-                maxBodyLength: Infinity,
-            }
-        );
+    //     const response = await axios.post(
+    //         process.env.IMGBB_URL,
+    //         formData,
+    //         {
+    //             headers: formData.getHeaders(),
+    //             maxBodyLength: Infinity,
+    //         }
+    //     );
 
-        imageUrl = response.data.data.url;
-    }
+    //     imageUrl = response.data.data.url;
+    // }
 
     // Create user
+
+    let imageUrl = null;
+
+    // ✅ Cloudinary Upload
+    if (req.file?.path) {
+        const uploadedFile = await uploadOnCloudinary(req.file.path);
+
+        if (uploadedFile) {
+            imageUrl = uploadedFile.secure_url;
+        }
+    }
+
+    // create user
     const newUser = await User.create({
         Username: username,
         Email: email,
         Password: hashedPassword,
         ProfileImage: imageUrl,
     });
+
 
     return res.status(201).json(
         new ApiResponse(201, {
@@ -118,4 +134,6 @@ const login = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = { register,login };
+module.exports = { register, login };
+
+//Test the git 
