@@ -5,15 +5,15 @@ const asyncHandler = require("../Utilities/AsyncHandler");
 const axios = require('axios');
 const FormData = require('form-data');
 
-const bcrypt = require('bcryptjs');  
-const multer = require('multer');  
+const bcrypt = require('bcryptjs');
+const multer = require('multer');
 const User = require('../models/User');
 const Chat = require('../models/Chat');
 
 
 
 const register = asyncHandler(async (req, res) => {
-    console.log("\n\nThis is register page\n\n",req.body);
+    console.log("\n\nThis is register page\n\n", req.body);
 
     const { username, email, password } = req.body;
 
@@ -118,4 +118,6 @@ const login = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = { register,login };
+module.exports = { register, login };
+
+//Test the git 
