@@ -28,6 +28,8 @@ function Login() {
 			);
 
 			if (res.status === 200) {
+				console.log(res);//maybe parse into
+				
 				const { profileImage, Username, id } = res.data;
 
 				// Store in session

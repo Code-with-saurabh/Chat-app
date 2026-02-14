@@ -136,6 +136,67 @@ const login = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = { register, login };
+const searchUser = asyncHandler(async (req, res) => {
+    const { username } = req.query;
+
+    // Validate query
+    if (!username) {
+        throw new ApiError(400, "Username query parameter is required");
+    }
+
+    // Find user
+    const user = await User.findOne({ Username: username });
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            {
+                id: user._id,
+                username: user.Username,
+                profileImage: user.ProfileImage,
+            },
+            `User found: ${user.Username}`
+        )
+    );
+});
+
+
+const getAllUsers = asyncHandler(async (req, res) => {
+
+    const allUsers = await User.aggregate([
+        {
+            $project: {
+                Username: 1,
+                ProfileImage: 1,
+            },
+        },
+    ]);
+
+    console.log("allUsers : ",allUsers);
+    
+    if (!allUsers || allUsers.length === 0) {
+        throw new ApiError(404, "No users found");
+    }
+
+    const users = allUsers.map(user => ({
+        id: user._id,
+        username: user.Username,
+        profileImage: user.ProfileImage || null,
+    }));
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            users,
+            "All users retrieved successfully"
+        )
+    );
+});
+
+module.exports = { register, login , searchUser , getAllUsers };
 
 //Test the git 

@@ -15,26 +15,49 @@ function Search() {
 	const [SecondUserId, SetsecondUserId] = useState(null);
 
 
+	// const handleKey = async (e) => {
+	// 	if (e.code === "Enter" && username) {
+	// 		e.target.value = "";
+	// 		try {
+	// 			const res = await axios.get(`http://localhost:5000/api/users/search?username=${username}`);
+	// 			// setUser(res.data.user);
+	// 			setUser(res.data.Username);
+	// 			SetsecondUserId(res.data.id);
+	// 			setprofileImage(res.data.profileImage);
+	// 			// const profileIMG = res.data.profileImage;
+	// 			setErr(null);
+
+	// 			// console.log(res.data);
+	// 		} catch (error) {
+	// 			setErr(error.response?.data?.message || "Failed to search user");
+	// 			setUser(null);
+	// 		}
+	// 	}
+
+	// }
 	const handleKey = async (e) => {
-		if (e.code === "Enter" && username) {
-			e.target.value = "";
-			try {
-				const res = await axios.get(`http://localhost:5000/api/users/search?username=${username}`);
-				// setUser(res.data.user);
-				setUser(res.data.Username);
-				SetsecondUserId(res.data.id);
-				setprofileImage(res.data.profileImage);
-				// const profileIMG = res.data.profileImage;
-				setErr(null);
+    if (e.code === "Enter" && username) {
+        e.target.value = "";
 
-				// console.log(res.data);
-			} catch (error) {
-				setErr(error.response?.data?.message || "Failed to search user");
-				setUser(null);
-			}
-		}
+        try {
+            const res = await axios.get(
+                `http://localhost:5000/api/users/search?username=${username}`
+            );
 
-	}
+            const userData = res.data.data; // 👈 IMPORTANT
+
+            setUser(userData.username);
+            SetsecondUserId(userData.id);
+            setprofileImage(userData.profileImage);
+            setErr(null);
+
+        } catch (error) {
+            setErr(error.response?.data?.message || "Failed to search user");
+            setUser(null);
+        }
+    }
+};
+
 	function handlaUser(e) {
 		// console.log(e.currentTarget);
 		const userChat = e.currentTarget;

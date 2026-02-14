@@ -13,8 +13,9 @@ function Sidebar() {
 
   const handlaUsers = async () => {
     const res = await axios("http://localhost:5000/api/users/allUsers");
-    console.log(res.data.users);
-    setUser(res.data.users);
+    console.log("USER : ",res.data);
+    // console.log("USER : ",res.data.users);
+    setUser(res.data.data);
   }
   /*useEffect(() => {
     handlaUsers();
