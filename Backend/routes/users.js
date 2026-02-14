@@ -216,6 +216,7 @@ router.get("/allUsers", async (req, res) => {
     return res.status(500).json({ message: "Error retrieving users." });
   }
 });*/
+
 router.get("/allUsers", async (req, res) => {
     try {
         const allUsers = await User.aggregate([

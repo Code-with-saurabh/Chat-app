@@ -79,6 +79,8 @@ const register = asyncHandler(async (req, res) => {
         }
     }
 
+    console.log(req.file?.path);
+    
     // create user
     const newUser = await User.create({
         Username: username,
