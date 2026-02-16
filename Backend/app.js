@@ -32,30 +32,14 @@ const messagesRouter = require('./routes/messages');
 app.use('/api/messages', messagesRouter);
 
 
-app.use((err, req, res, next) => {
-	console.error(err);
-	res.status(500).send({ error: 'Something went wrong!' });
-});
+ 
 
 app.get("/", (req, res) => {
 	res.send("Hello from the server!");
 });
 
 
-
-const MongoURL = process.env.MONGO_URI;
-
-mongoose.connect(MongoURL);
-
-mongoose.connection.on('connected', () => {
-	console.log('\n\nConnected to MongoDB\n\n');
-});
-
-mongoose.connection.on('error', (err) => {
-	console.log('Error connecting to MongoDB: ' + err);
-});
-
-
+ 
 const users = {};
 
 io.on('connection', (socket) => {
@@ -124,11 +108,7 @@ io.on('connection', (socket) => {
 	});
 });
 
-const port = process.env.PORT || 5000;
-const server = ChatServer.listen(port, () => {
-	console.log(`Server running on port ${port}`);
-});
-
+ 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
 
@@ -140,4 +120,4 @@ app.use((err, req, res, next) => {
 });
 
 
-module.exports = app;
+module.exports = {app};
