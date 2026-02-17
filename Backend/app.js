@@ -110,14 +110,18 @@ io.on('connection', (socket) => {
 
  
 app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
+	const statusCode = err.statusCode || 500;
 
-    return res.status(statusCode).json({
-        success: false,
-        message: err.message || "Internal Server Error",
-        errors: err.errors || [],
-    });
+	return res.status(statusCode).json({
+		success: false,
+		message: err.message || "Internal Server Error",
+		errors: err.errors || [],
+	});
 });
 
 
+<<<<<<< HEAD
 module.exports = {app};
+=======
+module.exports = app;
+>>>>>>> ab81648 (App)
