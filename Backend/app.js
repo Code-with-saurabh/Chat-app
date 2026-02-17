@@ -32,14 +32,14 @@ const messagesRouter = require('./routes/messages');
 app.use('/api/messages', messagesRouter);
 
 
- 
+
 
 app.get("/", (req, res) => {
 	res.send("Hello from the server!");
 });
 
 
- 
+
 const users = {};
 
 io.on('connection', (socket) => {
@@ -108,7 +108,7 @@ io.on('connection', (socket) => {
 	});
 });
 
- 
+
 app.use((err, req, res, next) => {
 	const statusCode = err.statusCode || 500;
 
@@ -120,8 +120,6 @@ app.use((err, req, res, next) => {
 });
 
 
-<<<<<<< HEAD
-module.exports = {app};
-=======
-module.exports = app;
->>>>>>> ab81648 (App)
+
+module.exports = { app };
+
