@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
- 
-const { register, login , searchUser, getAllUsers } = require('../Controller/User.Auth.Controller.js');
+
+const { register, login, searchUser, getAllUsers } = require('../Controller/User.Auth.Controller.js');
 const { upload } = require('../Middleware/Multer.middleware.js');
+const verifyJWT = require('../Middleware/Auth.middleware.js');
 
 
 router.post("/register", upload.single('file'), register)
 router.post("/login", login)
-router.get("/search", searchUser )
-router.get("/allUsers", getAllUsers)
+router.get("/search", verifyJWT, searchUser)
+router.get("/allUsers", verifyJWT, getAllUsers)
 
 module.exports = router;
 
@@ -55,7 +56,7 @@ const storage = multer.diskStorage({
         cb(null,Date.now() + ' - '+file.originalname);
     },
 });
- 
+
 const upload = multer({ storage: storage });// this is a middelware jo /register pe koyi req aaye use se pahale chagea
 */
 
@@ -121,7 +122,7 @@ router.post("/register", upload.single('file'), async (req, res) => {
                     headers: {
                         ...formData.getHeaders(), // Proper headers for multipart/form-data
                     },
-                     maxBodyLength: Infinity, 
+                     maxBodyLength: Infinity,
                 });
 
                 imageUrl = imgBBResponse.data.data.url;
@@ -136,7 +137,7 @@ router.post("/register", upload.single('file'), async (req, res) => {
             Username: username,
             Password: hashedPassword,
             Email: email,
-            ProfileImage: imageUrl, 
+            ProfileImage: imageUrl,
         });
 
         try {
@@ -208,19 +209,19 @@ router.get("/allUsers", async (req, res) => {
       return res.status(404).json({ message: "There are no users." });
     }
 
-     
+
     const usersWithImages = allUsers.map(user => {
       const profileImageBase64 = user.ProfileImage
-        ? user.ProfileImage.toString('base64')  
+        ? user.ProfileImage.toString('base64')
         : null; // If no image, set to null
 
       return {
-        username: user.Username,  
-        profileImage: profileImageBase64  
+        username: user.Username,
+        profileImage: profileImageBase64
       };
     });
 
-     
+
     res.status(200).json({
       message: "All users retrieved successfully.",
       users: usersWithImages,

@@ -29,13 +29,15 @@ function Login() {
 
 			if (res.status === 200) {
 				console.log(res);//maybe parse into
-				
-				const { profileImage, Username, id } = res.data;
+
+				const { profileImage, Username, id, accessToken, refreshToken } = res.data.data;
 
 				// Store in session
 				sessionStorage.setItem("profileImage", profileImage);
 				sessionStorage.setItem("Username", Username);
 				sessionStorage.setItem("id", id);
+				sessionStorage.setItem("accessToken", accessToken);
+				sessionStorage.setItem("refreshToken", refreshToken);
 
 				// Store in Redux
 				dispatch(addUser({ id, username: Username, profileImage }));

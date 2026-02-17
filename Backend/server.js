@@ -3,7 +3,7 @@ require("dotenv").config();
 const http = require("http");
 const { Server } = require("socket.io");
 
-const {app} = require("./app");
+const { app } = require("./app");
 const connectDB = require("./Utilities/DatabaseConnection");
 
 // 1️⃣ Create HTTP server from Express app

@@ -3,15 +3,15 @@ const ApiResponse = require("../Utilities/ApiResponse");
 const asyncHandler = require("../Utilities/AsyncHandler");
 
 
+
 const { uploadOnCloudinary } = require("../Utilities/Cloudinary");
 
-const axios = require('axios');
-const FormData = require('form-data');
 
-const bcrypt = require('bcryptjs');
-const multer = require('multer');
-const User = require('../models/User');
-const Chat = require('../models/Chat');
+
+// const User = require('../models/User');
+const User = require('../models/userSchema.models.js');
+const RefreshToken = require('../models/refreshTokenSchema.models.js');
+
 
 
 
@@ -19,6 +19,8 @@ const register = asyncHandler(async (req, res) => {
     console.log("\n\nThis is register page\n\n", req.body);
 
     const { username, email, password } = req.body;
+    console.log("\n\nUSERRRRR : ", req.body);
+
 
     // Validate input
     if (!username || !email || !password) {
@@ -37,36 +39,9 @@ const register = asyncHandler(async (req, res) => {
         throw new ApiError(409, `${errorField} already in use`);
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
 
 
-    // Upload profile image to ImgBB if provided
-    // if (req.file) {
-    //     const formData = new FormData();
-    //     formData.append("key", process.env.IMGBB_API_KEY);
-    //     formData.append(
-    //         "name",
-    //         `${Date.now()}-${req.file.originalname}`
-    //     );
-    //     formData.append(
-    //         "image",
-    //         req.file.buffer.toString("base64")
-    //     );
 
-    //     const response = await axios.post(
-    //         process.env.IMGBB_URL,
-    //         formData,
-    //         {
-    //             headers: formData.getHeaders(),
-    //             maxBodyLength: Infinity,
-    //         }
-    //     );
-
-    //     imageUrl = response.data.data.url;
-    // }
-
-    // Create user
 
     let imageUrl = null;
 
@@ -77,26 +52,47 @@ const register = asyncHandler(async (req, res) => {
         if (uploadedFile) {
             imageUrl = uploadedFile.secure_url;
         }
+
     }
 
     console.log(req.file?.path);
-    
+
     // create user
     const newUser = await User.create({
         Username: username,
         Email: email,
-        Password: hashedPassword,
+        Password: password,
         ProfileImage: imageUrl,
     });
 
+
+    const accessToken = await newUser.accessToken();
+    const refreshToken = await newUser.refershhToken();
+
+    await RefreshToken.create({
+        user: newUser._id,
+        token: refreshToken,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+    });
 
     return res.status(201).json(
         new ApiResponse(201, {
             userId: newUser._id,
             username: newUser.Username,
             email: newUser.Email,
+            accessToken,
+            refreshToken,
         }, "User registered successfully")
     );
+
+
+    // return res.status(201).json(
+    //     new ApiResponse(201, {
+    //         userId: newUser._id,
+    //         username: newUser.Username,
+    //         email: newUser.Email,
+    //     }, "User registered successfully")
+    // );
 });
 
 const login = asyncHandler(async (req, res) => {
@@ -115,16 +111,29 @@ const login = asyncHandler(async (req, res) => {
     }
 
     // Compare password
-    const isPasswordMatched = await bcrypt.compare(
-        password,
-        user.Password
-    );
+    const isPasswordMatched = user.comparePassword(password);
 
     if (!isPasswordMatched) {
         throw new ApiError(401, "Invalid credentials");
     }
 
+    const accessToken = await user.accessToken();
+    const refreshToken = await user.refershhToken();
+
+    await RefreshToken.create({
+        user: user._id,
+        token: refreshToken,
+        expiresAt: new Date(
+            Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 days
+        )
+    });
+
+    user.isOnline = true;
+    user.lastSeen = new Date();
+    await user.save();
+
     console.log("User logged in successfully");
+
 
     return res.status(200).json(
         new ApiResponse(200, {
@@ -132,6 +141,8 @@ const login = asyncHandler(async (req, res) => {
             username: user.Username,
             email: user.Email,
             profileImage: user.ProfileImage,
+            accessToken,
+            refreshToken,
         }, "User login successful")
     );
 });
@@ -167,17 +178,21 @@ const searchUser = asyncHandler(async (req, res) => {
 
 const getAllUsers = asyncHandler(async (req, res) => {
 
-    const allUsers = await User.aggregate([
-        {
-            $project: {
-                Username: 1,
-                ProfileImage: 1,
-            },
-        },
-    ]);
+    const allUsers = await User
+        .find({})
+        .select("Username ProfileImage")
 
-    console.log("allUsers : ",allUsers);
-    
+    // const allUsers = await User.aggregate([
+    //     {
+    //         $project: {
+    //             Username: 1,
+    //             ProfileImage: 1,
+    //         },
+    //     },
+    // ]);
+
+    console.log("allUsers : ", allUsers);
+
     if (!allUsers || allUsers.length === 0) {
         throw new ApiError(404, "No users found");
     }
@@ -197,6 +212,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = { register, login , searchUser , getAllUsers };
+module.exports = { register, login, searchUser, getAllUsers };
 
 //Test the git 
