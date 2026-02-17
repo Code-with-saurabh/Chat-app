@@ -21,20 +21,42 @@ function Navbar() {
 		}
 	}, [usernameSession, navigate]);
 
-	const handleLogout = () => {
-		// Clear session storage
-		sessionStorage.removeItem("Username");
-		sessionStorage.removeItem("profileImage");
-		sessionStorage.removeItem("id");
+	// const handleLogout = () => {
+	// 	// Clear session storage
+	// 	sessionStorage.removeItem("Username");
+	// 	sessionStorage.removeItem("profileImage");
+	// 	sessionStorage.removeItem("id");
 
-		// Clear redux state
-		dispatch(removeUser());
-		dispatch(removeSecondUser());
+	// 	// Clear redux state
+	// 	dispatch(removeUser());
+	// 	dispatch(removeSecondUser());
 
-		// Redirect to login
-		navigate("/login");
-	};
+	// 	// Redirect to login
+	// 	navigate("/login");
+	// };
+const handleLogout = async () => {
+	try {
+		const refreshToken = sessionStorage.getItem("refreshToken");
 
+		if (refreshToken) {
+			await axios.post("/logout", {
+				refreshToken
+			});
+		}
+	} catch (error) {
+		console.log("Logout API failed:", error);
+	}
+
+	// 🔥 Clear session storage
+	sessionStorage.clear();
+
+	// 🔥 Clear redux state
+	dispatch(removeUser());
+	dispatch(removeSecondUser());
+
+	// 🔥 Redirect to login
+	navigate("/login");
+};
 	return (
 		<div className="Navbar">
 			<span className="navLogo">Logo</span>

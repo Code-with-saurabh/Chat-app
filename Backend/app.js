@@ -18,7 +18,11 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 // Import routes
+const refreshTokenRoutes = require("./routes/refreshToken.routes");
+app.use("/api", refreshTokenRoutes);
+
 const usersRouter = require('./routes/users');
 app.use('/api/users', usersRouter);
 
