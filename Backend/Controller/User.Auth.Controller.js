@@ -5,13 +5,13 @@ const asyncHandler = require("../Utilities/AsyncHandler");
 
 const { uploadOnCloudinary } = require("../Utilities/Cloudinary");
 
-const axios = require('axios');
-const FormData = require('form-data');
+
 
 const bcrypt = require('bcryptjs');
-const multer = require('multer');
-const User = require('../models/User');
-const Chat = require('../models/Chat');
+
+// const User = require('../models/User');
+const User = require('../models/userSchema.models.js');
+
 
 
 
@@ -19,6 +19,8 @@ const register = asyncHandler(async (req, res) => {
     console.log("\n\nThis is register page\n\n", req.body);
 
     const { username, email, password } = req.body;
+    console.log("\n\nUSERRRRR : ", req.body);
+
 
     // Validate input
     if (!username || !email || !password) {
@@ -80,7 +82,7 @@ const register = asyncHandler(async (req, res) => {
     }
 
     console.log(req.file?.path);
-    
+
     // create user
     const newUser = await User.create({
         Username: username,
@@ -176,8 +178,8 @@ const getAllUsers = asyncHandler(async (req, res) => {
         },
     ]);
 
-    console.log("allUsers : ",allUsers);
-    
+    console.log("allUsers : ", allUsers);
+
     if (!allUsers || allUsers.length === 0) {
         throw new ApiError(404, "No users found");
     }
@@ -197,6 +199,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = { register, login , searchUser , getAllUsers };
+module.exports = { register, login, searchUser, getAllUsers };
 
 //Test the git 
