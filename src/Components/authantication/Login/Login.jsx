@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
+import axios from '../../../Utilities/axios.js'
 import { useDispatch } from "react-redux";
 import { addUser } from "../../../store/userSlice";
 
@@ -23,24 +24,24 @@ function Login() {
 
 		try {
 			const res = await axios.post(
-				"http://localhost:5000/api/users/login",
+				"/users/login",
 				{ username, password }
 			);
 
 			if (res.status === 200) {
 				console.log(res);//maybe parse into
 
-				const { profileImage, Username, id, accessToken, refreshToken } = res.data.data;
+				const { profileImage, username, id, accessToken, refreshToken } = res.data.data;
 
 				// Store in session
 				sessionStorage.setItem("profileImage", profileImage);
-				sessionStorage.setItem("Username", Username);
+				sessionStorage.setItem("Username", username);
 				sessionStorage.setItem("id", id);
 				sessionStorage.setItem("accessToken", accessToken);
 				sessionStorage.setItem("refreshToken", refreshToken);
 
 				// Store in Redux
-				dispatch(addUser({ id, username: Username, profileImage }));
+				dispatch(addUser({ id, username, profileImage }));
 
 				// Redirect to home
 				navigate("/");

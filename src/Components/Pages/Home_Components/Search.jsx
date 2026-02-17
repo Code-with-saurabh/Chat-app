@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 
 import './Search.css';
 // import IMGP from'../../../assets/img/profile.jpg';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../../Utilities/axios.js';
 import { useDispatch } from 'react-redux';
 import { addSecondUser } from '../../../store/secondUserSlice.js';
 
@@ -41,7 +42,7 @@ function Search() {
 
         try {
             const res = await axios.get(
-                `http://localhost:5000/api/users/search?username=${username}`
+                `/users/search?username=${username}`
             );
 
             const userData = res.data.data; // 👈 IMPORTANT

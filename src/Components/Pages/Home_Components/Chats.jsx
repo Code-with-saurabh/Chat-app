@@ -3,7 +3,8 @@ import './Chats.css';
 import { useDispatch } from 'react-redux';
 import { addSecondUser } from '../../../store/secondUserSlice.js';
 import { setAllMessages } from '../../../store/userChat.js';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../../Utilities/axios.js';
 
 function Chats({ img, username, message, userId }) {
 
@@ -47,7 +48,7 @@ useEffect(() => {
         //here 10 june
         const currentUserId = sessionStorage.getItem("id");
         try {
-            const res = await axios.get(`http://localhost:5000/api/messages/${currentUserId}/${userId}`);
+            const res = await axios.get(`/messages/${currentUserId}/${userId}`);
             // const res = await axios.get("http://localhost:5000/api/messages/67ad03004b3560032caf7300/67ad042b4b3560032caf7821");
             dispatch(setAllMessages(res.data));
             /*
