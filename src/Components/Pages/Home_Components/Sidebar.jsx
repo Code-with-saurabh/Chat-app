@@ -12,8 +12,12 @@ function Sidebar() {
   const [message, setMessage] = useState("Hello");
 
   const handlaUsers = async () => {
-    const res = await axios("http://localhost:5000/api/users/allUsers");
-    console.log("USER : ",res.data);
+    const res = await axios("http://localhost:5000/api/users/allUsers", {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
+      }
+    });
+    console.log("USER : ", res.data);
     // console.log("USER : ",res.data.users);
     setUser(res.data.data);
   }

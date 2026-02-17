@@ -1,6 +1,7 @@
-const bcryptjs = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken")
+require("dotenv").config();
 
 const userSchema = new mongoose.Schema({
     Username: {
@@ -34,7 +35,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', function (next) {
     if (this.isModified('Password')) {
-        this.Password = bcryptjs.hashSync(this.Password, 10);
+        this.Password = bcrypt.hashSync(this.Password, 10);
     }
     next();
 });

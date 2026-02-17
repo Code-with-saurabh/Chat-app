@@ -1,7 +1,6 @@
 const ApiError = require("../Utilities/ApiError");
 const ApiResponse = require("../Utilities/ApiResponse");
 const asyncHandler = require("../Utilities/AsyncHandler");
-const fs = require("fs");
 
 
 
@@ -53,7 +52,7 @@ const register = asyncHandler(async (req, res) => {
         if (uploadedFile) {
             imageUrl = uploadedFile.secure_url;
         }
-        fs.unlinkSync(req.file.path);
+
     }
 
     console.log(req.file?.path);
@@ -142,6 +141,8 @@ const login = asyncHandler(async (req, res) => {
             username: user.Username,
             email: user.Email,
             profileImage: user.ProfileImage,
+            accessToken,
+            refreshToken,
         }, "User login successful")
     );
 });
@@ -180,7 +181,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
     const allUsers = await User
         .find({})
         .select("Username ProfileImage")
-        .select("-Password");
 
     // const allUsers = await User.aggregate([
     //     {
@@ -191,7 +191,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
     //     },
     // ]);
 
-    // console.log("allUsers : ", allUsers);
+    console.log("allUsers : ", allUsers);
 
     if (!allUsers || allUsers.length === 0) {
         throw new ApiError(404, "No users found");
