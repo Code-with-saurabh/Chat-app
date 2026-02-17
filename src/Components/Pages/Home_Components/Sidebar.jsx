@@ -5,18 +5,22 @@ import Navbar from './Navbar.jsx';
 import Search from './Search.jsx';
 import Chats from './Chats.jsx';
 // import IMGP from'../../../assets/img/profile.jpg';
-import axios from 'axios';
+// import axios from 'axios';
+
+import axios from '../../../Utilities/axios.js';
+
 function Sidebar() {
   const [username, setUsername] = useState("Saurabh");
   const [users, setUser] = useState([]);
   const [message, setMessage] = useState("Hello");
 
   const handlaUsers = async () => {
-    const res = await axios("http://localhost:5000/api/users/allUsers", {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
-      }
-    });
+    // const res = await axios("http://localhost:5000/api/users/allUsers", {
+    //   headers: {
+    //     Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
+    //   }
+    // });
+    const res = await axios.get("/users/allUsers");
     console.log("USER : ", res.data);
     // console.log("USER : ",res.data.users);
     setUser(res.data.data);
