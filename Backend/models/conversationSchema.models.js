@@ -4,7 +4,7 @@ const conversationSchema = new mongoose.Schema({
     members: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            ref: "MainUser",
         }
     ],
     isGroup: {
@@ -20,4 +20,4 @@ const conversationSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-module.exports = mongoose.model("conversation",conversationSchema)
+module.exports = mongoose.model("conversation", conversationSchema)

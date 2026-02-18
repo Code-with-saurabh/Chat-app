@@ -8,7 +8,7 @@ const messageSchema = new mongoose.Schema({
     },
     sender: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "MainUser",
         required: true,
     },
     text: {
@@ -29,4 +29,4 @@ const messageSchema = new mongoose.Schema({
     }]
 }, { timestamps: true });
 
-module.exports = mongoose.model("message",messageSchema)
+module.exports = mongoose.model("message", messageSchema)

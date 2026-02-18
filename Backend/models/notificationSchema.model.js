@@ -2,11 +2,11 @@ const mongoose = require("mongoose")
 const notificationSchema = new mongoose.Schema({
     recipient: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "MainUser",
     },
     sender: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "MainUser",
     },
     type: {
         type: String,
@@ -18,4 +18,4 @@ const notificationSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model("notification",notificationSchema)
+module.exports = mongoose.model("notification", notificationSchema)
