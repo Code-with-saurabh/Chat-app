@@ -1,4 +1,4 @@
-const Conversation = require("../models/conversation");
+const Conversation = require("../models/conversationSchema.models.js");
 const ApiResponse = require("../Utilities/ApiResponse");
 const asyncHandler = require("../Utilities/AsyncHandler");
 
@@ -35,3 +35,4 @@ const createOrGetConversation = asyncHandler(async (req, res) => {
 });
 
 module.exports = { createOrGetConversation };
+
