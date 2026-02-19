@@ -44,7 +44,7 @@ module.exports = (io, socket) => {
                     io.to(receiverSocketId).emit("receiveMessage", newMessage);
                 }
 
-                // 5️⃣ Create Notification
+                // Notification
                 Notification.create({
                     recipient: receiverId,
                     sender: senderId,

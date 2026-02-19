@@ -6,6 +6,16 @@ import { setMessage } from '../../../store/userChat.js';
 
 
 function Input() {
+
+
+	const activeConversation = useSelector(
+		(state) => state.chat.activeConversation
+	);
+
+	const conversationId = activeConversation?._id;
+
+
+
 	const [currentMessage, setCurrentMessage] = useState("");
 	// const currentUserId = useSelector((state) => state.user.id);
 	const currentUserId = sessionStorage.getItem("id");
@@ -25,63 +35,98 @@ function Input() {
 
 
 		socket.current.on('connect', () => {
+
 			console.log("Socket connected! ID: ", socket.current.id);
+
+			// socket.current.emit("join", {
+			// 	userId: currentUserId,
+			// });
+			socket.current.emit("join", currentUserId);
+
 			// socket.current.emit('userConnected', currentUserId);  // Inform the server that this user is connected
 		});
 
-		socket.current.emit("join", {
-			userId: currentUserId,
-		});
 
-		socket.current.on("receiveMessage", (data) => {
-			if (
-				data.receiverId === currentUserId ||
-				data.senderId === currentUserId
-			) {
 
-				dispatch(
-					setMessage({
-						senderId: data.senderId,
-						receiverId: data.receiverId,
-						message: data.message,
-						time: data.time,
-					})
-				);
-			}
-			console.log("Data From Another User : " + data);
-		});
+
+		// socket.current.on("receiveMessage", (data) => {
+		// 	if (
+		// 		data.receiverId === currentUserId ||
+		// 		data.senderId === currentUserId
+		// 	) {
+
+		// 		dispatch(
+		// 			setMessage({
+		// 				senderId: data.senderId,
+		// 				receiverId: data.receiverId,
+		// 				message: data.message,
+		// 				time: data.time,
+		// 			})
+		// 		);
+		// 	}
+		// 	console.log("Data From Another User : ", data);
+		// });
 		// Cleanup on unmount
+		socket.current.on("receiveMessage", (data) => {
+
+			dispatch(setMessage({
+				senderId: data.sender,
+				message: data.text,
+				time: data.createdAt,
+				conversationId: data.conversationId
+			}));
+
+			console.log("Realtime message:", data);
+		});
+
 		return () => {
 			socket.current.disconnect();
 			console.log("Socket disconnected!");
 		};
-	}, [dispatch]);
+	}, []);
 
 
 
 	function handleMessage() {
-		if (!secondUserId) return;
+		if (!conversationId) {
+			console.log("No conversation selected");
+			return;
+		}
+
+		if (!currentMessage.trim()) return;
+
 		const timestamp = new Date().toISOString();
-		if (currentMessage.trim()) {
-			dispatch(setMessage({
+
+
+		dispatch(
+			setMessage({
 				senderId: currentUserId,
-				// reciverId: secondUserId,
-				receiverId: secondUserId,
 				message: currentMessage,
 				time: timestamp,
-			}));
+				conversationId,
+			})
+		);
 
-			socket.current.emit('SetMessage', {
-				senderId: currentUserId,
-				receiverId: secondUserId,
-				message: currentMessage,
-				time: timestamp,
-			});
+		socket.current.emit("sendMessage", {
+			conversationId: conversationId,
+			senderId: currentUserId,
+			text: currentMessage,
+			messageType: "text"
+		});
 
 
-			setCurrentMessage("");
+
+
+		setCurrentMessage("");
+
+	}
+
+	function handleKeyDown(e) {
+		if (e.key === "Enter") {
+			handleMessage();
 		}
 	}
+
 	function handleCurrentMessage(e) {
 		if (!socket.current) return;
 

@@ -132,8 +132,7 @@ const login = asyncHandler(async (req, res) => {
     user.lastSeen = new Date();
     await user.save();
 
-    console.log("User logged in successfully");
-
+log
 
     return res.status(200).json(
         new ApiResponse(200, {
@@ -191,7 +190,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
     //     },
     // ]);
 
-    console.log("allUsers : ", allUsers);
+    // console.log("allUsers : ", allUsers);
 
     if (!allUsers || allUsers.length === 0) {
         throw new ApiError(404, "No users found");

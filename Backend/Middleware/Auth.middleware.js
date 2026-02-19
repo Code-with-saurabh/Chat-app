@@ -20,7 +20,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
     // Bearer TOKEN
     const token = authHeader.split(" ")[1];
 
-    console.log("TOKEN : ", token);
+    // console.log("TOKEN : ", token);
 
 
     // =========================
