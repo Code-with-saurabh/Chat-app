@@ -12,9 +12,10 @@ const app = express();
 
 // Middleware
 app.use(cors({
-	origin:["http://localhost:5173","*"],
-	credentials:true
+	origin: ["http://localhost:5173", "*"],
+	credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -49,75 +50,3 @@ app.use((err, req, res, next) => {
 
 
 module.exports = { app };
-
-
-/*
-const users = {};
-
-io.on('connection', (socket) => {
-	console.log('A user connected : ' + socket.id);
-
-	socket.on("join", (data) => {
-		users[data.userId] = socket;
-		console.log(`\nUser[${data.userId}] Added To Users : ${socket.id} \n`);
-	});
-	/*socket.on("SetMessage", (data)=>{
-		const {senderId,receiverId,message} = data;
-	    
-		users[senderId] = socket;
-	    
-		if (users[receiverId]) {
-			 console.log(`Sending message to ${receiverId}`);
-			   users[receiverId].emit('receiveMessage', data);
-		}else{
-			console.log(`User ${receiverId} is not connected.`);
-		}
-		// console.log(data);
-	});
-	  
-socket.on("SetMessage", async (data) => {
-	const { senderId, receiverId, message } = data;
-
-	// save to DB
-	try {
-		const newMessage = new Chat({
-			sender: senderId,
-			receiver: receiverId,
-			message
-		});
-		const resutltData = await newMessage.save();
-		// console.log("message Save",resutltData);
-		console.log("message Save");
-	} catch (err) {
-		console.error("Error saving message : ", err);
-	}
-
-	if (users[receiverId]) {
-		users[receiverId].emit("receiveMessage", data);
-	} else {
-		console.log(`User ${receiverId} is not online`);
-	}
-
-	console.log(data);
-});
-
-socket.on("typing", ({ senderId, receiverId }) => {
-	if (users[receiverId]) {
-		users[receiverId].emit("showTyping", { senderId });
-	}
-});
-
-
-socket.on('disconnect', () => {
-
-	console.log('A user disconnected : ' + socket.id);
-	for (let userId in users) {
-		if (users[userId] === socket) {
-			delete users[userId];
-			break;
-		}
-	}
-});
-});
-
-*/
