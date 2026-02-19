@@ -11,19 +11,24 @@ function Input() {
 	const activeConversation = useSelector(
 		(state) => state.chat.activeConversation
 	);
+	const currentUserId = sessionStorage.getItem("id");
 
 	const conversationId = activeConversation?._id;
+
+	const secondUserId =
+		activeConversation?.members?.find(
+			(id) => id !== currentUserId
+		);
 
 
 
 	const [currentMessage, setCurrentMessage] = useState("");
 	// const currentUserId = useSelector((state) => state.user.id);
-	const currentUserId = sessionStorage.getItem("id");
 	// const senderUsername = sessionStorage.getItem("Username");
 	// const timestamp = new Date.now();
 	// const timestamp = new Date().toISOString();
 
-	const secondUserId = useSelector((state) => state.secondUser?.id);
+	// const secondUserId = useSelector((state) => state.secondUser?.id);
 
 	const dispatch = useDispatch();
 	const socket = useRef(null)

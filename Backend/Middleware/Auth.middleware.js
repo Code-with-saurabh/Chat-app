@@ -11,7 +11,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
     // =========================
     const authHeader = req.headers.authorization;
 
-    console.log("Auth Header : ", authHeader);
+    // console.log("Auth Header : ", authHeader);
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         throw new ApiError(401, "Unauthorized request - No token");
