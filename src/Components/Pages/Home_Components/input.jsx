@@ -17,8 +17,9 @@ function Input() {
 
 	const secondUserId =
 		activeConversation?.members?.find(
-			(id) => id !== currentUserId
+			(id) => id.toString() !== currentUserId.toString()
 		);
+
 
 
 
@@ -46,7 +47,11 @@ function Input() {
 			// socket.current.emit("join", {
 			// 	userId: currentUserId,
 			// });
-			socket.current.emit("join", currentUserId);
+
+			if (currentUserId) {
+				socket.current.emit("join", currentUserId);
+			}
+
 
 			// socket.current.emit('userConnected', currentUserId);  // Inform the server that this user is connected
 		});
@@ -84,10 +89,10 @@ function Input() {
 			console.log("Realtime message:", data);
 		});
 
-		return () => {
-			socket.current.disconnect();
-			console.log("Socket disconnected!");
-		};
+		// return () => {
+		// 	socket.current.disconnect();
+		// 	console.log("Socket disconnected!");
+		// };
 	}, []);
 
 
@@ -102,7 +107,14 @@ function Input() {
 
 		const timestamp = new Date().toISOString();
 
+		// console.log(
+		// 	{
+		// 		senderId: currentUserId,
+		// 		message: currentMessage,
+		// 		time: timestamp,
+		// 		conversationId,
 
+		// 	})
 		dispatch(
 			setMessage({
 				senderId: currentUserId,

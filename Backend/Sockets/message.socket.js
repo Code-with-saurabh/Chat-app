@@ -15,6 +15,13 @@ module.exports = (io, socket) => {
 
         try {
 
+            console.log("\n\n\n............Received message:", {
+                conversationId,
+                senderId,
+                text,
+                media,
+                messageType
+            });
             // 1️⃣ Save Message
             const newMessage = await Message.create({
                 conversationId,
