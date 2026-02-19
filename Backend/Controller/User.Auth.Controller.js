@@ -132,7 +132,7 @@ const login = asyncHandler(async (req, res) => {
     user.lastSeen = new Date();
     await user.save();
 
-log
+
 
     return res.status(200).json(
         new ApiResponse(200, {
