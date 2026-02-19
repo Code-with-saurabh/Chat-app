@@ -35,6 +35,7 @@ function Chats({ img, username, message, userId }) {
             /* ==============================
                2️⃣ Save Active Conversation
             ============================== */
+            console.log("Active Conversation:", conversation);
             dispatch(setActiveConversation(conversation));
 
             /* ==============================
