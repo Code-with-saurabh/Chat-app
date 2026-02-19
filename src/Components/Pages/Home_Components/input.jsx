@@ -9,13 +9,13 @@ function Input() {
 	const [currentMessage, setCurrentMessage] = useState("");
 	// const currentUserId = useSelector((state) => state.user.id);
 	const currentUserId = sessionStorage.getItem("id");
-	const senderUsername = sessionStorage.getItem("Username");
+	// const senderUsername = sessionStorage.getItem("Username");
 	// const timestamp = new Date.now();
 	// const timestamp = new Date().toISOString();
 
-	const secondUserId = useSelector((state) => state.secondUser.id);
+	const secondUserId = useSelector((state) => state.secondUser?.id);
 
-	const disptch = useDispatch();
+	const dispatch = useDispatch();
 	const socket = useRef(null)
 	// const socket = socketIOClient("http://localhost:5000/");
 	useEffect(() => {
@@ -34,8 +34,12 @@ function Input() {
 		});
 
 		socket.current.on("receiveMessage", (data) => {
-			if (data.receiverId === currentUserId) {
-				disptch(
+			if (
+				data.receiverId === currentUserId ||
+				data.senderId === currentUserId
+			) {
+
+				dispatch(
 					setMessage({
 						senderId: data.senderId,
 						receiverId: data.receiverId,
@@ -51,14 +55,15 @@ function Input() {
 			socket.current.disconnect();
 			console.log("Socket disconnected!");
 		};
-	}, [disptch]);
+	}, [dispatch]);
 
 
 
 	function handleMessage() {
+		if (!secondUserId) return;
 		const timestamp = new Date().toISOString();
 		if (currentMessage.trim()) {
-			disptch(setMessage({
+			dispatch(setMessage({
 				senderId: currentUserId,
 				// reciverId: secondUserId,
 				receiverId: secondUserId,
@@ -78,6 +83,8 @@ function Input() {
 		}
 	}
 	function handleCurrentMessage(e) {
+		if (!socket.current) return;
+
 		setCurrentMessage(e.target.value);
 		e.preventDefault();
 

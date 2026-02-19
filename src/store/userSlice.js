@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  id:'',
+  id: '',
   username: '',
-  profileImage:'',
+  profileImage: '',
 };
 
 export const userSlice = createSlice({
@@ -11,14 +11,14 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     addUser: (state, action) => {
-      state.id = action.payload.id;  
-      state.username = action.payload.username;  
-      state.profileImage = action.payload.profileImage;  
+      state.id = action.payload.id;
+      state.username = action.payload.username;
+      state.profileImage = action.payload.profileImage;
     },
     removeUser: (state) => {
-      state.id = '';  
-      state.username = '';  
-	  state.profileImage='';
+      state.id = '';
+      state.username = '';
+      state.profileImage = '';
     },
   },
 });

@@ -1,8 +1,11 @@
 const Conversation = require("../models/conversationSchema.models.js");
 const ApiResponse = require("../Utilities/ApiResponse");
 const asyncHandler = require("../Utilities/AsyncHandler");
+const ApiError = require("../Utilities/ApiError.js");
+const Message = require("../models/messageSchema.models.js");
 
 const createOrGetConversation = asyncHandler(async (req, res) => {
+    console.log("createOrGetConversation called with body:", req.body);
 
     const senderId = req.user._id; // from verifyJWT
     const { receiverId } = req.body;
@@ -34,5 +37,32 @@ const createOrGetConversation = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = { createOrGetConversation };
+
+
+const getMessagesByConversation = asyncHandler(async (req, res) => {
+
+    const { conversationId } = req.params;
+
+    if (!conversationId) {
+        throw new Error("ConversationId required");
+    }
+
+    // find messages
+    const messages = await Message.find({
+        conversationId: conversationId,
+    })
+        .sort({ createdAt: 1 }); // oldest → newest
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            messages,
+            "Messages fetched successfully"
+        )
+    );
+});
+
+
+
+module.exports = { createOrGetConversation, getMessagesByConversation };
 
