@@ -1,46 +1,56 @@
-import React,{ useEffect, useRef } from 'react';
-
-import './Messages.css';  
-import Message from './Message.jsx';
-import { useSelector} from 'react-redux';
+import React, { useEffect, useRef } from "react";
+import "./Messages.css";
+import Message from "./Message.jsx";
+import { useSelector } from "react-redux";
 
 function Messages() {
- 
- const TimeC =  Date.now();
-  const userMessages = useSelector((state) => state.userChat.messages);  
- 
-  
-  const currentUser = sessionStorage.getItem("id");
-  
-   
-	 
-	 console.log("\n\nStore:"+userMessages)
-	 const messagesEndRef = useRef(null);
 
-  // Scroll to the bottom whenever messages change
+  const messages = useSelector(
+    (state) => state.chat.messages
+  );
+
+  const userMessages = useSelector(
+    (state) => state.userChat?.messages || []
+  );
+  const activeConversation = useSelector(
+    (state) => state.chat.activeConversation
+  );
+  const filteredMessages = messages.filter(
+    msg => msg.conversationId === activeConversation?._id
+  );
+  // ✅ Safe Redux selector (prevents undefined error)
+
+  // ✅ Current logged-in user
+  const currentUser = sessionStorage.getItem("id");
+
+  // ✅ Auto scroll reference
+  const messagesEndRef = useRef(null);
+
+  // ✅ Scroll to bottom when new message arrives
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [userMessages]); 
- 
- return (
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [filteredMessages]);
+
+  return (
     <div className="Messages">
-     {userMessages.map((message, index) => (
-        <Message 
-          key={index} 
-          message={message.message}  
-          senderId={message.sender}
-          isOwner={message.sender=== currentUser || message.senderId=== currentUser} 
-		  timestamp = {message.time || message.timestamp} 
+
+      {filteredMessages.map((msg, index) => (
+        <Message
+          key={msg?._id || index}
+          senderId={msg?.senderId || msg?.sender}
+          isOwner={(msg?.senderId || msg?.sender) === currentUser}
+          message={msg?.message || msg?.text}
+          timestamp={msg?.timestamp || msg?.createdAt}
         />
       ))}
-	    <div ref={messagesEndRef} />
-		 
+
+      {/* ✅ Scroll anchor */}
+      <div ref={messagesEndRef} />
+
     </div>
-	
   );
 }
-
 
 export default Messages;

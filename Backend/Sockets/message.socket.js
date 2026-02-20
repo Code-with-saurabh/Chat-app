@@ -15,6 +15,13 @@ module.exports = (io, socket) => {
 
         try {
 
+            console.log("\n\n\n............Received message:", {
+                conversationId,
+                senderId,
+                text,
+                media,
+                messageType
+            });
             // 1️⃣ Save Message
             const newMessage = await Message.create({
                 conversationId,
@@ -33,7 +40,7 @@ module.exports = (io, socket) => {
             const conversation = await Conversation.findById(conversationId);
 
             const receivers = conversation.members.filter(
-                member => member.toString() !== senderId
+                member => member.toString() !== senderId.toString()
             );
 
             // 4️⃣ Emit to all receivers
@@ -44,7 +51,7 @@ module.exports = (io, socket) => {
                     io.to(receiverSocketId).emit("receiveMessage", newMessage);
                 }
 
-                // 5️⃣ Create Notification
+                // Notification
                 Notification.create({
                     recipient: receiverId,
                     sender: senderId,

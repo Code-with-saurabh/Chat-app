@@ -3,19 +3,35 @@ import "./Input.css";
 import { useSelector, useDispatch } from 'react-redux';
 import socketIOClient from "socket.io-client";
 import { setMessage } from '../../../store/userChat.js';
-
+import { addMessage } from '../../../store/chatSlice.js';
 
 function Input() {
+
+
+	const activeConversation = useSelector(
+		(state) => state.chat.activeConversation
+	);
+	const currentUserId = sessionStorage.getItem("id");
+
+	const conversationId = activeConversation?._id;
+
+	const secondUserId =
+		activeConversation?.members?.find(
+			(id) => id.toString() !== currentUserId.toString()
+		);
+
+
+
+
 	const [currentMessage, setCurrentMessage] = useState("");
 	// const currentUserId = useSelector((state) => state.user.id);
-	const currentUserId = sessionStorage.getItem("id");
-	const senderUsername = sessionStorage.getItem("Username");
+	// const senderUsername = sessionStorage.getItem("Username");
 	// const timestamp = new Date.now();
 	// const timestamp = new Date().toISOString();
 
-	const secondUserId = useSelector((state) => state.secondUser.id);
+	// const secondUserId = useSelector((state) => state.secondUser?.id);
 
-	const disptch = useDispatch();
+	const dispatch = useDispatch();
 	const socket = useRef(null)
 	// const socket = socketIOClient("http://localhost:5000/");
 	useEffect(() => {
@@ -25,59 +41,121 @@ function Input() {
 
 
 		socket.current.on('connect', () => {
+
 			console.log("Socket connected! ID: ", socket.current.id);
+
+			// socket.current.emit("join", {
+			// 	userId: currentUserId,
+			// });
+
+			if (currentUserId) {
+				socket.current.emit("join", currentUserId);
+			}
+
+
 			// socket.current.emit('userConnected', currentUserId);  // Inform the server that this user is connected
 		});
 
-		socket.current.emit("join", {
-			userId: currentUserId,
+
+
+
+		// socket.current.on("receiveMessage", (data) => {
+		// 	if (
+		// 		data.receiverId === currentUserId ||
+		// 		data.senderId === currentUserId
+		// 	) {
+
+		// 		dispatch(
+		// 			setMessage({
+		// 				senderId: data.senderId,
+		// 				receiverId: data.receiverId,
+		// 				message: data.message,
+		// 				time: data.time,
+		// 			})
+		// 		);
+		// 	}
+		// 	console.log("Data From Another User : ", data);
+		// });
+		// Cleanup on unmount
+		socket.current.on("receiveMessage", (data) => {
+
+			dispatch(addMessage({
+				_id: data._id,
+				senderId: data.sender,
+				message: data.text,
+				timestamp: data.createdAt,
+				conversationId: data.conversationId
+			}));
+
+			console.log("Realtime message:", data);
 		});
 
-		socket.current.on("receiveMessage", (data) => {
-			if (data.receiverId === currentUserId) {
-				disptch(
-					setMessage({
-						senderId: data.senderId,
-						receiverId: data.receiverId,
-						message: data.message,
-						time: data.time,
-					})
-				);
-			}
-			console.log("Data From Another User : " + data);
-		});
-		// Cleanup on unmount
 		return () => {
-			socket.current.disconnect();
-			console.log("Socket disconnected!");
+			socket.current.off("receiveMessage");
 		};
-	}, [disptch]);
+
+		// return () => {
+		// 	socket.current.disconnect();
+		// 	console.log("Socket disconnected!");
+		// };
+	}, []);
 
 
 
 	function handleMessage() {
+		if (!conversationId) {
+			console.log("No conversation selected");
+			return;
+		}
+
+		if (!currentMessage.trim()) return;
+
 		const timestamp = new Date().toISOString();
-		if (currentMessage.trim()) {
-			disptch(setMessage({
+
+		// console.log(
+		// 	{
+		// 		senderId: currentUserId,
+		// 		message: currentMessage,
+		// 		time: timestamp,
+		// 		conversationId,
+
+		// 	})
+		dispatch(
+			addMessage({
+				_id: Date.now(), // temporary id
 				senderId: currentUserId,
-				// reciverId: secondUserId,
-				receiverId: secondUserId,
 				message: currentMessage,
-				time: timestamp,
-			}));
+				timestamp: timestamp,
+				conversationId,
+			})
+		);
 
-			socket.current.emit('SetMessage', {
-				senderId: currentUserId,
-				receiverId: secondUserId,
-				message: currentMessage,
-				time: timestamp,
-			});
+		socket.current.emit("sendMessage", {
+			conversationId: conversationId,
+			senderId: currentUserId,
+			text: currentMessage,
+			messageType: "text"
+		});
 
 
-			setCurrentMessage("");
+
+
+		setCurrentMessage("");
+
+	}
+
+	function handleKeyDown(e) {
+		if (e.key === "Enter") {
+			handleMessage();
+
+			console.log("User1:", currentUserId);
+			console.log("User2:", secondUserId);
 		}
 	}
+
 	function handleCurrentMessage(e) {
+		if (!socket.current) return;
+
 		setCurrentMessage(e.target.value);
 		e.preventDefault();
 

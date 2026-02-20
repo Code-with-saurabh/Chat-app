@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const ApiError = require("../Utilities/ApiError");
+const ApiError = require("../Utilities/ApiError.js");
 const asyncHandler = require("../Utilities/AsyncHandler");
 
 const User = require("../models/userSchema.models.js");
@@ -11,6 +11,8 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
     // =========================
     const authHeader = req.headers.authorization;
 
+    // console.log("Auth Header : ", authHeader);
+
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         throw new ApiError(401, "Unauthorized request - No token");
     }
@@ -18,7 +20,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
     // Bearer TOKEN
     const token = authHeader.split(" ")[1];
 
-    console.log("TOKEN : ", token);
+    // console.log("TOKEN : ", token);
 
 
     // =========================
