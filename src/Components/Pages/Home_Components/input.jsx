@@ -3,7 +3,7 @@ import "./Input.css";
 import { useSelector, useDispatch } from 'react-redux';
 import socketIOClient from "socket.io-client";
 import { setMessage } from '../../../store/userChat.js';
-
+import { addMessage } from '../../../store/chatSlice.js';
 
 function Input() {
 
@@ -79,7 +79,7 @@ function Input() {
 		// Cleanup on unmount
 		socket.current.on("receiveMessage", (data) => {
 
-			dispatch(setMessage({
+			dispatch(addMessage({
 				_id: data._id,
 				senderId: data.sender,
 				message: data.text,
@@ -121,7 +121,7 @@ function Input() {
 
 		// 	})
 		dispatch(
-			setMessage({
+			addMessage({
 				_id: Date.now(), // temporary id
 				senderId: currentUserId,
 				message: currentMessage,
