@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { removeSecondUser } from "../../../store/secondUserSlice";
+import { clearSecondUser } from "../../../store/secondUserSlice";
 import { removeUser } from "../../../store/userSlice";
 
 function Navbar() {
@@ -52,7 +52,7 @@ const handleLogout = async () => {
 
 	// 🔥 Clear redux state
 	dispatch(removeUser());
-	dispatch(removeSecondUser());
+	dispatch(clearSecondUser());
 
 	// 🔥 Redirect to login
 	navigate("/login");
