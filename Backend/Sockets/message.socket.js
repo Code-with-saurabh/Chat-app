@@ -40,7 +40,7 @@ module.exports = (io, socket) => {
             const conversation = await Conversation.findById(conversationId);
 
             const receivers = conversation.members.filter(
-                member => member.toString() !== senderId
+                member => member.toString() !== senderId.toString()
             );
 
             // 4️⃣ Emit to all receivers

@@ -80,14 +80,19 @@ function Input() {
 		socket.current.on("receiveMessage", (data) => {
 
 			dispatch(setMessage({
+				_id: data._id,
 				senderId: data.sender,
 				message: data.text,
-				time: data.createdAt,
+				timestamp: data.createdAt,
 				conversationId: data.conversationId
 			}));
 
 			console.log("Realtime message:", data);
 		});
+
+		return () => {
+			socket.current.off("receiveMessage");
+		};
 
 		// return () => {
 		// 	socket.current.disconnect();
@@ -117,9 +122,10 @@ function Input() {
 		// 	})
 		dispatch(
 			setMessage({
+				_id: Date.now(), // temporary id
 				senderId: currentUserId,
 				message: currentMessage,
-				time: timestamp,
+				timestamp: timestamp,
 				conversationId,
 			})
 		);
@@ -141,6 +147,9 @@ function Input() {
 	function handleKeyDown(e) {
 		if (e.key === "Enter") {
 			handleMessage();
+
+			console.log("User1:", currentUserId);
+			console.log("User2:", secondUserId);
 		}
 	}
 

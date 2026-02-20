@@ -5,10 +5,20 @@ import { useSelector } from "react-redux";
 
 function Messages() {
 
-  // ✅ Safe Redux selector (prevents undefined error)
+  const messages = useSelector(
+    (state) => state.chat.messages
+  );
+
   const userMessages = useSelector(
     (state) => state.userChat?.messages || []
   );
+  const activeConversation = useSelector(
+    (state) => state.chat.activeConversation
+  );
+  const filteredMessages = messages.filter(
+    msg => msg.conversationId === activeConversation?._id
+  );
+  // ✅ Safe Redux selector (prevents undefined error)
 
   // ✅ Current logged-in user
   const currentUser = sessionStorage.getItem("id");
@@ -21,18 +31,18 @@ function Messages() {
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth",
     });
-  }, [userMessages]);
+  }, [filteredMessages]);
 
   return (
     <div className="Messages">
 
-      {userMessages.map((msg, index) => (
+      {filteredMessages.map((msg, index) => (
         <Message
           key={msg?._id || index}
-          message={msg?.message}
           senderId={msg?.senderId || msg?.sender}
           isOwner={(msg?.senderId || msg?.sender) === currentUser}
-          timestamp={msg?.time || msg?.timestamp || msg?.createdAt}
+          message={msg?.message || msg?.text}
+          timestamp={msg?.timestamp || msg?.createdAt}
         />
       ))}
 
