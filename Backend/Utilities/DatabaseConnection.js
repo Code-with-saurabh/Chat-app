@@ -9,7 +9,7 @@ const connectDB = async () => {
         console.log(`MongoDB Connected: ${conn.connection.host}`);
         return true
     } catch (error) {
-        console.error("Database connection failed:", error.message);
+        console.error(" (┬┬﹏┬┬) Database connection failed:", error.message);
         process.exit(1); // Stop server if DB fails
         return false
     }
