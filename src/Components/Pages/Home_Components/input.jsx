@@ -36,7 +36,8 @@ function Input() {
 	// const socket = socketIOClient("http://localhost:5000/");
 	useEffect(() => {
 		if (!socket.current) {
-			socket.current = socketIOClient("http://localhost:5000/");
+			// socket.current = socketIOClient("http://localhost:5000/");
+			socket.current = socketIOClient(import.meta.env.VITE_SOCKET_URL);
 		}
 
 
@@ -81,7 +82,8 @@ function Input() {
 
 			dispatch(addMessage({
 				_id: data._id,
-				senderId: data.sender,
+				senderId: data.sender._id,
+				senderProfileImage: data.sender.profileImage,
 				message: data.text,
 				timestamp: data.createdAt,
 				conversationId: data.conversationId
