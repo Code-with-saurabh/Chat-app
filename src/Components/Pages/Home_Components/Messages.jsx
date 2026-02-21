@@ -42,7 +42,6 @@ function Messages() {
           senderId={msg?.senderId || msg?.sender}
           isOwner={(msg?.senderId || msg?.sender) === currentUser}
           message={msg?.message || msg?.text}
-          senderProfileImage={msg.senderProfileImage}
           timestamp={msg?.timestamp || msg?.createdAt}
         />
       ))}

@@ -5,7 +5,7 @@ import MessageIMGP from '../../../assets/img/profile.jpg';
 import IMGP from '../../../assets/img/profile.jpg';
 import { useSelector } from 'react-redux';
 
-function Message({ message, senderId, isOwner, timestamp, senderProfileImage }) {
+function Message({ message, senderId, isOwner, timestamp }) {
 
 
 
@@ -60,11 +60,7 @@ function Message({ message, senderId, isOwner, timestamp, senderProfileImage }) 
     <div className={isOwner ? "Owner" : "Message"}>
       <div className="messageInfo">
         <img
-          src={
-            isOwner
-              ? profileImage
-              : senderProfileImage || MessageIMGP
-          }
+          src={isOwner ? profileImage : userData.profileImage || MessageIMGP}
           alt="Profile"
         />
         <span className="timestamp">
