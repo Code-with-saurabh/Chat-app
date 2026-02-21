@@ -1,27 +1,27 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-	id:'',
-  username: '',
-  profileImage: '',
+  id: null,
+  username: null,
+  profileImage: null,
 };
 
-export const secondUserSlice = createSlice({
-	 name: 'secondUser',
+const secondUserSlice = createSlice({
+  name: "secondUser",
   initialState,
   reducers: {
-    addSecondUser: (state, action) => {
-      state.id = action.payload.id;  
-      state.username = action.payload.username;  
-      state.profileImage = action.payload.profileImage;  
+    setSecondUser: (state, action) => {
+      state.id = action.payload.id;
+      state.username = action.payload.username;
+      state.profileImage = action.payload.profileImage;
     },
-    removeSecondUser: (state) => {
-      state.id = '';  
-      state.username = '';  
-      state.profileImage = '';
+    clearSecondUser: (state) => {
+      state.id = null;
+      state.username = null;
+      state.profileImage = null;
     },
   },
 });
 
-export const { addSecondUser, removeSecondUser } = secondUserSlice.actions;
+export const { setSecondUser, clearSecondUser } = secondUserSlice.actions;
 export default secondUserSlice.reducer;

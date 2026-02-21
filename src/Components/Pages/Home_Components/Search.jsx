@@ -5,7 +5,7 @@ import './Search.css';
 // import axios from 'axios';
 import axios from '../../../Utilities/axios.js';
 import { useDispatch } from 'react-redux';
-import { addSecondUser } from '../../../store/secondUserSlice.js';
+import { setSecondUser } from '../../../store/secondUserSlice.js';
 
 function Search() {
 	const dispatch = useDispatch();
@@ -66,7 +66,7 @@ function Search() {
 
 		const profileImageNode = userChat.childNodes[0];
 
-		dispatch(addSecondUser({
+		dispatch(setSecondUser({
 			id: SecondUserId,
 			username: usernameNode.textContent,
 			profileImage: profileImageNode.src
