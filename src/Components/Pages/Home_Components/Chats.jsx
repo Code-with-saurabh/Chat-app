@@ -82,4 +82,4 @@ function Chats({ img, username, message, userId }) {
   );
 }
 
-export default Chats;
+export default React.memo(Chats);

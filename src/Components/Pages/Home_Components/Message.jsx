@@ -9,9 +9,9 @@ function Message({ message, senderId, isOwner, timestamp }) {
 
 
 
-  console.log("\n\nfrom   massage : " + message);
-  console.log("from  id sender : " + senderId);
-  console.log("\n\n\nIs Ownaer : " + isOwner);
+  console.log("%c\n\nfrom   massage : " ,"color:green" ,message);
+  console.log("%cfrom  id sender : " ,"color:yellow", senderId);
+  console.log("%c\n\n\nIs Ownaer : " ,"color:pink", isOwner);
 
 
 

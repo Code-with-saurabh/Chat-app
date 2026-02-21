@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, lazy, useEffect } from "react";
 
-import './Home.css';
-import Sidebar from './Home_Components/Sidebar.jsx';
-import Chat from './Home_Components/Chat.jsx';
+import "./Home.css";
+// import Sidebar from "./Home_Components/Sidebar.jsx";
+// import Chat from './Home_Components/Chat.jsx';
+const Chat = lazy(() => import("./Home_Components/Chat.jsx"));
+const Sidebar = lazy(() => import("./Home_Components/Sidebar.jsx"));
 import { socket } from "../../socket.js";
 // import { useSelector } from 'react-redux';
 // Home_Components
 // import io from 'socket.io-client';
 function Home() {
   // const socket = io('http://localhost:5000');
-
 
   useEffect(() => {
     socket.connect();
@@ -20,12 +21,16 @@ function Home() {
   return (
     <div className="Home">
       <div className="container">
+        <Suspense fallback={<div style={{width:"65%"}}>Loading Chat...</div>}>
         <Sidebar />
-        <Chat />
+          {/* <Chat /> */}
+        </Suspense>
+        <Suspense fallback={<div style={{width:"65%"}}>Loading Chat...</div>}>
+          <Chat />
+        </Suspense>
       </div>
     </div>
   );
 }
 
-
-export default Home;
+export default React.memo(Home);

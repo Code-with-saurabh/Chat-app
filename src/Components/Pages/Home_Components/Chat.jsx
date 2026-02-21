@@ -1,7 +1,7 @@
 import React from "react";
 import "./Chat.css";
 import Messages from "./Messages.jsx";
-import Input from "./Input.jsx";
+import Input from "./input.jsx";
 import { useSelector } from "react-redux";
 
 function Chat() {

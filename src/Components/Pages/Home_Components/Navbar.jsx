@@ -77,4 +77,4 @@ const handleLogout = async () => {
 	);
 }
 
-export default Navbar;
+export default React.memo(Navbar);

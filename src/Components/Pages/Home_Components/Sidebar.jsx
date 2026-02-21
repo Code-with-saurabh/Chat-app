@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import './Sidebar.css';
 import Navbar from './Navbar.jsx';
@@ -6,10 +6,11 @@ import Search from './Search.jsx';
 import Chats from './Chats.jsx';
 // import IMGP from'../../../assets/img/profile.jpg';
 // import axios from 'axios';
-
+import { useVirtualizer } from "@tanstack/react-virtual";
 import axios from '../../../Utilities/axios.js';
 
 function Sidebar() {
+  const parentRef = useRef(null)
   // const [username, setUsersname] = useState("Saurabh");
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("Hello");
@@ -17,13 +18,20 @@ function Sidebar() {
   const handlaUsers = async () => {
     try {
       const res = await axios.get("/users/allUsers");
-      console.log("USER : ", res.data);
+      console.log("%cUSER : ","color:lightblue", res.data);
       setUsers(res.data.data || []);
     } catch (error) {
       console.log("Error fetching users:", error);
     }
   };
+const rowVirtualizer = useVirtualizer({
+  count: users.length,
+  getScrollElement: () => parentRef.current,
+  estimateSize: () => 70,
+  overscan: 5,
+});
 
+ 
 
   useEffect(() => {
     handlaUsers();
@@ -39,20 +47,51 @@ function Sidebar() {
       <Navbar />
       <Search />
 
-      {users?.map((user, index) => (
-        <Chats onClick={setUsernamforChat}
-          key={user.id || index}
-          username={user.username}
-          img={user.profileImage}
-          userId={user.id}
-          message={message}
-          isOwner={false}
-        />
-      ))}
+       <div
+  ref={parentRef}
+  style={{ overflowY: "auto", flex: 1 }}
+>
+  <div
+    style={{
+      height: `${rowVirtualizer.getTotalSize()}px`,
+      position: "relative",
+      width: "100%",
+    }}
+  >
+    {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+      
+const user = users[virtualRow.index];
+if (!user) return null;
+      return (
+        <div
+          key={user.id}
+          ref={rowVirtualizer.measureElement}
+          data-index={virtualRow.index}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            transform: `translateY(${virtualRow.start}px)`,
+          }}
+        >
+          <Chats
+            onClick={setUsernamforChat}
+            username={user.username}
+            img={user.profileImage}
+            userId={user.id}
+            message={message}
+            isOwner={false}
+          />
+        </div>
+      );
+    })}
+  </div>
+</div>
 
     </div>
   );
 }
 
 
-export default Sidebar;
+export default React.memo(Sidebar);;
