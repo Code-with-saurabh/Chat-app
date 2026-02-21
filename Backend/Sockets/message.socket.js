@@ -31,8 +31,6 @@ module.exports = (io, socket) => {
                 messageType,
             });
 
-            const populatedMessage = await Message.findById(newMessage._id)
-                .populate("sender", "Username profileImage");
             // 2️⃣ Update conversation lastMessage
             await Conversation.findByIdAndUpdate(conversationId, {
                 lastMessage: newMessage._id
@@ -50,7 +48,7 @@ module.exports = (io, socket) => {
                 const receiverSocketId = onlineUsers.get(receiverId.toString());
 
                 if (receiverSocketId) {
-                    io.to(receiverSocketId).emit("receiveMessage", populatedMessage);
+                    io.to(receiverSocketId).emit("receiveMessage", newMessage);
                 }
 
                 // Notification
