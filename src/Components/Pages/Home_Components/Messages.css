@@ -11,3 +11,87 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+ /* ===============================
+   Skeleton Message Styles
+================================ */
+
+.Skeltoe-message-wrapper {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Row Layout */
+.Skeltoe-message-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+
+/* LEFT SIDE */
+.Skeltoe-message-row.receiver {
+  justify-content: flex-start;
+}
+
+/* RIGHT SIDE */
+.Skeltoe-message-row.owner {
+  justify-content: flex-end;
+}
+
+/* Avatar */
+.Skeltoe-message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    #e0e0e0 25%,
+    #f2f2f2 50%,
+    #e0e0e0 75%
+  );
+  background-size: 200% 100%;
+  animation: Skeltoe-message-shimmer 1.5s infinite;
+}
+
+/* Bubble */
+.Skeltoe-message-bubble {
+  max-width: 60%;
+  height: 38px;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    #e0e0e0 25%,
+    #f2f2f2 50%,
+    #e0e0e0 75%
+  );
+  background-size: 200% 100%;
+  animation: Skeltoe-message-shimmer 1.5s infinite;
+}
+
+/* Owner bubble little smaller */
+.Skeltoe-message-row.owner .Skeltoe-message-bubble {
+  max-width: 50%;
+}
+
+/* Shimmer Animation */
+@keyframes Skeltoe-message-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.Skeltoe-message-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.Skeltoe-message-bubble {
+  width: 250px;
+}

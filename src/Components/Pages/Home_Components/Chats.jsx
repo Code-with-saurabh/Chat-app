@@ -7,7 +7,7 @@ import {
   setActiveConversation,
   setMessages,
 } from "../../../store/chatSlice.js";
-
+import { setLoadingMessages } from "../../../store/chatSlice";
 import axios from "../../../Utilities/axios.js";
 
 function Chats({ img, username, message, userId }) {
@@ -22,6 +22,9 @@ function Chats({ img, username, message, userId }) {
       setLoading(true);
 
       //  Create OR Get Conversation
+      dispatch(setLoadingMessages(true)); // ✅ START LOADER
+    dispatch(setMessages([])); // optional clear
+
       const { data } = await axios.post("/messages/conversation", {
         receiverId: userId,
       });
@@ -61,7 +64,8 @@ function Chats({ img, username, message, userId }) {
         error.response?.data || error.message,
       );
     } finally {
-      setLoading(false);
+      dispatch(setLoadingMessages(false)); // ✅ STOP LOADER
+    setLoading(false);
     }
   };
 
@@ -71,7 +75,7 @@ function Chats({ img, username, message, userId }) {
         className={`userChat ${loading ? "disabled" : ""}`}
         onClick={handleParticularUser}
       >
-        <img src={img} alt={username} />
+        <img src={img} alt={username} loading="lazy" />
 
         <div className="userInfo">
           <span>{username}</span>

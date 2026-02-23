@@ -6,7 +6,9 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 
 function Messages() {
   const parentRef = useRef(null);
-
+const loadingMessages = useSelector(
+  (state) => state.chat.loadingMessages
+);
   const messages = useSelector((state) => state.chat.messages);
 
   const userMessages = useSelector((state) => state.userChat?.messages || []);
@@ -43,6 +45,38 @@ function Messages() {
       rowVirtualizer.scrollToIndex(filteredMessages.length - 1);
     }
   }, [filteredMessages.length]);
+
+   if (loadingMessages) {
+  return (
+    <div className="Messages">
+      <div className="Skeltoe-message-wrapper">
+        {Array.from({ length: 12 }).map((_, index) => {
+          const isOwner = index % 2 === 0; // alternate left-right
+
+          return (
+            <div
+              key={index}
+              className={`Skeltoe-message-row ${
+                isOwner ? "owner" : "receiver"
+              }`}
+            >
+              {!isOwner && (
+                <div className="Skeltoe-message-avatar"></div>
+              )}
+
+              <div className="Skeltoe-message-bubble"></div>
+
+              {isOwner && (
+                <div className="Skeltoe-message-avatar"></div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
   return (
     <div className="Messages" ref={parentRef}>
       <div

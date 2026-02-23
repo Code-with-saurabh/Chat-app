@@ -62,6 +62,7 @@ function Message({ message, senderId, isOwner, timestamp }) {
         <img
           src={isOwner ? profileImage : userData.profileImage || MessageIMGP}
           alt="Profile"
+           loading="lazy"
         />
         <span className="timestamp">
           {timestamp ? formatTimestamp(timestamp) : ""}

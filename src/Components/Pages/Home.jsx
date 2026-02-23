@@ -6,6 +6,8 @@ import "./Home.css";
 const Chat = lazy(() => import("./Home_Components/Chat.jsx"));
 const Sidebar = lazy(() => import("./Home_Components/Sidebar.jsx"));
 import { socket } from "../../socket.js";
+import SidebarSkeleton from "../Skeleton/SidebarSkeleton.jsx";
+import ChatSkeleton from "../Skeleton/ChatSkeleton.jsx";
 // import { useSelector } from 'react-redux';
 // Home_Components
 // import io from 'socket.io-client';
@@ -21,11 +23,12 @@ function Home() {
   return (
     <div className="Home">
       <div className="container">
-        <Suspense fallback={<div style={{width:"65%"}}>Loading Chat...</div>}>
-        <Sidebar />
+          <Suspense fallback={<SidebarSkeleton/>}>
+        <Sidebar  />
+        
           {/* <Chat /> */}
         </Suspense>
-        <Suspense fallback={<div style={{width:"65%"}}>Loading Chat...</div>}>
+        <Suspense fallback={<ChatSkeleton/>}>
           <Chat />
         </Suspense>
       </div>

@@ -8,13 +8,14 @@ const Home = lazy(()=>import("./Components/Pages/Home"))
 import Login from "./Components/authantication/Login/Login";
 
 import { Routes, Route } from "react-router-dom";
+import HomeSkeleton from "./Components/Skeleton/HomeSkeleton";
 
 function App() {
 	return (
 		<div className="App">
 			<Routes>
 				<Route path="/" element={
-					<Suspense fallback={<div style={{width:"100%"}}>Loading Chat...</div>}>
+					<Suspense fallback={<div style={{width:"100%"}}><HomeSkeleton/></div>}>
 						<Home />
 					</Suspense>
 					} />
