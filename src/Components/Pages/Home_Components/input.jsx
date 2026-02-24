@@ -165,14 +165,14 @@ function Input() {
 		});
 	}
 
-	function handleKeyDown(e) {
-		if (e.key === "Enter") {
-			handleMessage();
+	// function handleKeyDown(e) {
+	// 	if (e.key === "Enter") {
+	// 		handleMessage();
 
-			console.log("fromInput Componet\nid User1 :" + currentUserId);
-			console.log("fromInput Componet\nid User2 :" + secondUserId);
-		}
-	}
+	// 		console.log("fromInput Componet\nid User1 :" + currentUserId);
+	// 		console.log("fromInput Componet\nid User2 :" + secondUserId);
+	// 	}
+	// }
 	return (
 		<div className="input">
 			<input type="text"

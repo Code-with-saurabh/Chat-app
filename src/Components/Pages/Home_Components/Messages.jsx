@@ -44,7 +44,7 @@ const loadingMessages = useSelector(
     if (filteredMessages.length > 0) {
       rowVirtualizer.scrollToIndex(filteredMessages.length - 1);
     }
-  }, [filteredMessages.length]);
+  }, [filteredMessages.length,rowVirtualizer]);
 
    if (loadingMessages) {
   return (

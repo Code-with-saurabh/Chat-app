@@ -8,17 +8,34 @@ const Sidebar = lazy(() => import("./Home_Components/Sidebar.jsx"));
 import { socket } from "../../socket.js";
 import SidebarSkeleton from "../Skeleton/SidebarSkeleton.jsx";
 import ChatSkeleton from "../Skeleton/ChatSkeleton.jsx";
+import { addNotification } from "../../store/notificationSlice.js";
+
+import { useDispatch } from "react-redux";
+
 // import { useSelector } from 'react-redux';
 // Home_Components
 // import io from 'socket.io-client';
 function Home() {
   // const socket = io('http://localhost:5000');
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     socket.connect();
 
     return () => socket.disconnect();
   }, []);
+
+useEffect(() => {
+  socket.on("newNotification", (data) => {
+    dispatch(addNotification(data));
+  });
+
+  return () => {
+    socket.off("newNotification");
+  };
+}, []);
+
 
   return (
     <div className="Home">

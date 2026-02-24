@@ -4,3 +4,12 @@
 	overflow:scroll;
 }
  
+.lastMessage {
+  font-size: 14px;
+  color: gray;
+
+  white-space: nowrap;        /* ek hi line me */
+  overflow: hidden;           /* overflow hide */
+  text-overflow: ellipsis;    /* ... show kare */
+  max-width: 180px;           /* width limit */
+}

@@ -10,7 +10,7 @@ import {
 import { setLoadingMessages } from "../../../store/chatSlice";
 import axios from "../../../Utilities/axios.js";
 
-function Chats({ img, username, message, userId }) {
+function Chats({ img, username, message, userId,unreadCount  }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
@@ -71,6 +71,7 @@ function Chats({ img, username, message, userId }) {
 
   return (
     <div className="Chats">
+      
       <div
         className={`userChat ${loading ? "disabled" : ""}`}
         onClick={handleParticularUser}
@@ -79,7 +80,12 @@ function Chats({ img, username, message, userId }) {
 
         <div className="userInfo">
           <span>{username}</span>
-          <p>{message || "Start conversation..."}</p>
+          <p className="lastMessage">{message || "Start conversation..."}</p>
+          {unreadCount > 0 && (
+  <div className="chatBadge">
+    {unreadCount}
+  </div>
+)}
         </div>
       </div>
     </div>

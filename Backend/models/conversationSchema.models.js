@@ -15,7 +15,7 @@ const conversationSchema = new mongoose.Schema({
     groupImage: String,
     lastMessage: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Message",
+        ref: "message",
     }
 }, { timestamps: true });
 

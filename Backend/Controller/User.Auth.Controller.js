@@ -10,6 +10,7 @@ const { uploadOnCloudinary } = require("../Utilities/Cloudinary");
 
 // const User = require('../models/User');
 const User = require('../models/userSchema.models.js');
+const Conversation = require('../models/conversationSchema.models.js');
 const RefreshToken = require('../models/refreshTokenSchema.models.js');
 
 
@@ -174,7 +175,7 @@ const searchUser = asyncHandler(async (req, res) => {
     );
 });
 
-
+/*
 const getAllUsers = asyncHandler(async (req, res) => {
 
     const allUsers = await User
@@ -210,7 +211,60 @@ const getAllUsers = asyncHandler(async (req, res) => {
         )
     );
 });
+*/
+const getAllUsers = asyncHandler(async (req, res) => {
+    if (!req.user) {
+        throw new ApiError(401, "User not authenticated");
+    }
 
+    const currentUserId = req.user._id;
+
+    const conversations = await Conversation.find({
+        members: currentUserId
+    })
+    .populate({
+        path: "lastMessage",
+        select: "text sender createdAt"
+    })
+    .populate({
+        path: "members",
+        select: "Username ProfileImage"
+    })
+    .sort({ updatedAt: -1 }); // 🔥 Latest conversation on top
+
+    const users = conversations.map((conv) => {
+
+        if (!conv.members || conv.members.length === 0) return null;
+
+        const otherUser = conv.members.find(
+            member => member._id.toString() !== currentUserId.toString()
+        );
+
+        if (!otherUser) return null;
+
+        return {
+            conversationId: conv._id,  // 🔥 important for unread count
+            id: otherUser._id,
+            username: otherUser.Username,
+            profileImage: otherUser.ProfileImage || null,
+            lastMessage: conv.lastMessage
+                ? {
+                    text: conv.lastMessage.text || "",
+                    sender: conv.lastMessage.sender || null,
+                    createdAt: conv.lastMessage.createdAt || null
+                }
+                : null
+        };
+    }).filter(Boolean);
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            users,
+            "Conversations fetched successfully"
+        )
+    );
+});
 module.exports = { register, login, searchUser, getAllUsers };
 
 //Test the git 
