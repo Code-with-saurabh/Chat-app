@@ -212,6 +212,61 @@ const getAllUsers = asyncHandler(async (req, res) => {
     );
 });
 */
+// const getAllUsers = asyncHandler(async (req, res) => {
+//     if (!req.user) {
+//         throw new ApiError(401, "User not authenticated");
+//     }
+
+//     const currentUserId = req.user._id;
+
+//     const conversations = await Conversation.find({
+//         members: currentUserId
+//     })
+//     .populate({
+//         path: "lastMessage",
+//         select: "text sender createdAt"
+//     })
+//     .populate({
+//         path: "members",
+//         select: "Username ProfileImage"
+//     })
+//     .sort({ updatedAt: -1 }); // 🔥 Latest conversation on top
+
+//     const users = conversations.map((conv) => {
+
+//         if (!conv.members || conv.members.length === 0) return null;
+
+//         const otherUser = conv.members.find(
+//             member => member._id.toString() !== currentUserId.toString()
+//         );
+
+//         if (!otherUser) return null;
+
+//         return {
+//             conversationId: conv._id,  // 🔥 important for unread count
+//             id: otherUser._id,
+//             username: otherUser.Username,
+//             profileImage: otherUser.ProfileImage || null,
+//             lastMessage: conv.lastMessage
+//                 ? {
+//                     text: conv.lastMessage.text || "",
+//                     sender: conv.lastMessage.sender || null,
+//                     createdAt: conv.lastMessage.createdAt || null
+//                 }
+//                 : null
+//         };
+//     }).filter(Boolean);
+
+//     return res.status(200).json(
+//         new ApiResponse(
+//             200,
+//             users,
+//             "Conversations fetched successfully"
+//         )
+//     );
+// });
+
+
 const getAllUsers = asyncHandler(async (req, res) => {
     if (!req.user) {
         throw new ApiError(401, "User not authenticated");
@@ -219,23 +274,22 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
     const currentUserId = req.user._id;
 
+    // 🔥 1. Get conversations
     const conversations = await Conversation.find({
         members: currentUserId
     })
-    .populate({
-        path: "lastMessage",
-        select: "text sender createdAt"
-    })
-    .populate({
-        path: "members",
-        select: "Username ProfileImage"
-    })
-    .sort({ updatedAt: -1 }); // 🔥 Latest conversation on top
+        .populate({
+            path: "lastMessage",
+            select: "text sender createdAt"
+        })
+        .populate({
+            path: "members",
+            select: "Username ProfileImage"
+        })
+        .sort({ updatedAt: -1 });
 
-    const users = conversations.map((conv) => {
-
-        if (!conv.members || conv.members.length === 0) return null;
-
+    // 🔥 2. Extract conversation users
+    const conversationUsers = conversations.map((conv) => {
         const otherUser = conv.members.find(
             member => member._id.toString() !== currentUserId.toString()
         );
@@ -243,7 +297,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
         if (!otherUser) return null;
 
         return {
-            conversationId: conv._id,  // 🔥 important for unread count
+            conversationId: conv._id,
             id: otherUser._id,
             username: otherUser.Username,
             profileImage: otherUser.ProfileImage || null,
@@ -257,12 +311,29 @@ const getAllUsers = asyncHandler(async (req, res) => {
         };
     }).filter(Boolean);
 
+    // 🔥 3. Get ALL users except current user
+    const allUsers = await User.find({
+        _id: { $ne: currentUserId }
+    }).select("Username ProfileImage");
+
+    // 🔥 4. Find users with NO conversation
+    const conversationUserIds = conversationUsers.map(u => u.id.toString());
+
+    const newUsers = allUsers
+        .filter(user => !conversationUserIds.includes(user._id.toString()))
+        .map(user => ({
+            conversationId: null,
+            id: user._id,
+            username: user.Username,
+            profileImage: user.ProfileImage || null,
+            lastMessage: null
+        }));
+
+    // 🔥 5. Merge both
+    const finalUsers = [...conversationUsers, ...newUsers];
+
     return res.status(200).json(
-        new ApiResponse(
-            200,
-            users,
-            "Conversations fetched successfully"
-        )
+        new ApiResponse(200, finalUsers, "Users fetched successfully")
     );
 });
 module.exports = { register, login, searchUser, getAllUsers };
