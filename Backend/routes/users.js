@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { register, login, searchUser, getAllUsers } = require('../Controller/User.Auth.Controller.js');
+const { register, login, searchUser, getAllUsers, updateProfile } = require('../Controller/User.Auth.Controller.js');
 const { upload } = require('../Middleware/Multer.middleware.js');
 
 const verifyJWT =
@@ -16,6 +16,7 @@ router.post("/login", login)
 router.get("/search", verifyJWT, searchUser)
 router.get("/allUsers", verifyJWT, getAllUsers)
 router.post("/conversation", verifyJWT, createOrGetConversation);
+router.post("/updateProfile", verifyJWT, upload.single('file'), updateProfile);
 
 module.exports = router;
 

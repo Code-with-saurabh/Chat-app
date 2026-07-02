@@ -169,6 +169,7 @@ const searchUser = asyncHandler(async (req, res) => {
                 id: user._id,
                 username: user.Username,
                 profileImage: user.ProfileImage,
+                email: user.Email,
             },
             `User found: ${user.Username}`
         )
@@ -336,6 +337,63 @@ const getAllUsers = asyncHandler(async (req, res) => {
         new ApiResponse(200, finalUsers, "Users fetched successfully")
     );
 });
-module.exports = { register, login, searchUser, getAllUsers };
+
+const updateProfile = asyncHandler(async (req, res) => {
+    const { username, email, password } = req.body;
+    try {
+        const userId = req.user._id;
+        if (!username || !email || !userId) {
+            throw new ApiError(400, "Username, email, and password are required");
+        }
+
+        const existingUser = await User.findById(userId);
+
+        if (!existingUser) {
+            throw new ApiError(404, "User not found");
+        }
+
+        let imageUrl = null;
+
+        // ✅ Cloudinary Upload
+        if (req.file?.path) {
+            const uploadedFile = await uploadOnCloudinary(req.file.path);
+
+            if (uploadedFile) {
+                imageUrl = uploadedFile.secure_url;
+            }
+
+        }
+
+        console.log(req.file?.path);
+
+        // Update user
+        existingUser.Username = username;
+        existingUser.Email = email;
+        if (password) {
+            existingUser.Password = password;
+        }
+        if (imageUrl) {
+            existingUser.ProfileImage = imageUrl;
+        }
+
+        await existingUser.save();
+
+        return res.status(200).json(
+            new ApiResponse(200, {
+                userId: existingUser._id,
+                username: existingUser.Username,
+                email: existingUser.Email,
+                profileImage: existingUser.ProfileImage,
+            }, "Profile updated successfully")
+        );
+
+    } catch (error) {
+        throw new ApiError(500, error.message || "Failed to update profile");
+    }
+});
+
+
+
+module.exports = { register, login, searchUser, getAllUsers, updateProfile };
 
 //Test the git 
