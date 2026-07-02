@@ -1,32 +1,33 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import "./Chat.css";
 import Messages from "./Messages.jsx";
 import Input from "./input.jsx";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { markConversationRead } from "../../../store/notificationSlice.js";
+import { setActiveConversation } from "../../../store/chatSlice.js";
 
 function Chat() {
 
-	const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-	const unreadCount = useSelector(
-  (state) => state.notification.unreadCount
-);
+  const unreadCount = useSelector(
+    (state) => state.notification.unreadCount
+  );
   // ✅ NEW SOURCE OF TRUTH
   const activeConversation = useSelector(
     (state) => state.chat.activeConversation,
   );
 
   /* =========================
-	   NO CHAT SELECTED
-	========================= */
+     NO CHAT SELECTED
+  ========================= */
 
 
-useEffect(() => {
-  if (activeConversation?._id) {
-    dispatch(markConversationRead(activeConversation._id));
-  }
-}, [activeConversation?._id]);
+  useEffect(() => {
+    if (activeConversation?._id) {
+      dispatch(markConversationRead(activeConversation._id));
+    }
+  }, [activeConversation?._id]);
 
 
   // if (!activeConversation) {
@@ -42,6 +43,8 @@ useEffect(() => {
     <div className="Chat">
       {/* HEADER */}
       <div className="ChatInfo">
+
+
         <span className="nameP">
           {activeConversation?.groupName ||
             activeConversation?.username ||
@@ -62,9 +65,9 @@ useEffect(() => {
           </span>
 
           <span className="notification">
-			 {unreadCount > 0 && (
-    <span className="badge">{unreadCount}</span>
-  )}
+            {unreadCount > 0 && (
+              <span className="badge">{unreadCount}</span>
+            )}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="24px"
@@ -88,13 +91,13 @@ useEffect(() => {
           </span>
         </div>
       </div>
-  {
-    !activeConversation ? <div className="Chat noChatSelected">
-        <p>Select a user to start chatting...</p>
-      </div>:<Messages />
-  }
+      {
+        !activeConversation ? <div className="Chat noChatSelected">
+          <p>Select a user to start chatting...</p>
+        </div> : <Messages />
+      }
       {/* BODY */}
-      
+
       <Input />
     </div>
   );

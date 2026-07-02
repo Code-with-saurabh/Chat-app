@@ -1,33 +1,72 @@
 @media screen and (max-width: 480px) {
-  
+	.Home .container {
+		flex-direction: row;
+	}
+
+	.Sidebar {
+		flex: 0 0 42%;
+		max-width: 42%;
+	}
+
+	.Chat {
+		flex: 1;
+		min-width: 0;
+		/* flex item ko shrink hone do, text wrap sahi rahega */
+	}
+
+	.Navbar .user button {
+		padding: 4px 6px;
+		font-size: 10px;
+	}
 }
 
 /* Tablet media query */
 @media screen and (max-width: 768px) {
-   .Navbar .navLogo {
-    display: none;
-  }
-  }
+	.Navbar .navLogo {
+		display: none;
+	}
+
+	.Home {
+		height: 100vh;
+	}
+
+	.Home .container {
+		width: 100%;
+		height: 100%;
+	}
+
+	.Sidebar {
+		flex: 0 0 38%;
+		max-width: 320px;
+	}
+
+	.Chat {
+		flex: 1;
+		min-width: 0;
+	}
+}
 
 
 /* Laptop media query */
 @media screen and (max-width: 1200px) {
-  
+	.Home .container {
+		width: 100%;
+	}
 }
 
-.Home{
-	background-color:#66a2c8;
-	height:100vh;
-	display:flex;
-	align-items:center;
-	justify-content:center;
+.Home {
+	background-color: #66a2c8;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-.Home .container{
+.Home .container {
 	/* border:1px solid white; */
-	border-radius:2px;
-	width:100%;
-	height:100%;
-	display:flex;
-	overflow:hidden;
+	border-radius: 2px;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	overflow: hidden;
 }

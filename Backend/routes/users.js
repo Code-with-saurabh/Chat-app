@@ -16,7 +16,7 @@ router.post("/login", login)
 router.get("/search", verifyJWT, searchUser)
 router.get("/allUsers", verifyJWT, getAllUsers)
 router.post("/conversation", verifyJWT, createOrGetConversation);
-router.post("/updateProfile", verifyJWT, upload.single('file'), updateProfile);
+router.post("/update-profile", verifyJWT, upload.single('file'), updateProfile);
 
 module.exports = router;
 

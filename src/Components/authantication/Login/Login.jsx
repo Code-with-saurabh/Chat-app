@@ -39,10 +39,11 @@ function Login() {
 				sessionStorage.setItem("id", id);
 				sessionStorage.setItem("accessToken", accessToken);
 				sessionStorage.setItem("refreshToken", refreshToken);
- 
 
+				localStorage.setItem("name", res.data.data.username);
 				// Store in Redux
 				dispatch(addUser({ id, username, profileImage }));
+
 
 				// Redirect to home
 				navigate("/");

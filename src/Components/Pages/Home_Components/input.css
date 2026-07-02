@@ -1,35 +1,93 @@
-.input{
-	height:50px;
-	background-color:white;
-	padding:10px;
-	display:flex;
-	align-items:center;
-	justify-content:space-between;
+.input {
+	height: 50px;
+	background-color: white;
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
-.input input{
-	width:100%;
-	border:none;
-	outline:none;
-	font-size:18px;
-	color:#2f2d52;
+.input input {
+	width: 100%;
+	border: none;
+	outline: none;
+	font-size: 18px;
+	color: #2f2d52;
 }
 
-.input .send{
-	display:flex;
-	align-items:center;
-	gap:10px;
+.input .send {
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
-.input .send svg{
-	 height:24px;
-	 cursor:pointer;
+
+.input .send svg {
+	height: 24px;
+	cursor: pointer;
 }
-.input .send button{
-	  border:none;
-	  padding:10px 15px ;
-	  color:white;
-	  background-color:#8dcff1;
-	  border-radius:2px;
-	  cursor:pointer;
-	  
+
+.input .send button {
+	border: none;
+	padding: 10px 15px;
+	color: white;
+	background-color: #8dcff1;
+	border-radius: 2px;
+	cursor: pointer;
+
+}
+
+/* ---------- Responsive additions (no color/value changes above) ---------- */
+
+@media (max-width: 768px) {
+	.input {
+		height: 46px;
+		padding: 8px;
+		gap: 8px;
+	}
+
+	.input input {
+		font-size: 15px;
+	}
+
+	.input .send {
+		gap: 6px;
+	}
+
+	.input .send svg {
+		height: 20px;
+	}
+
+	.input .send button {
+		padding: 8px 10px;
+		font-size: 13px;
+	}
+}
+
+@media (max-width: 480px) {
+	.input {
+		height: 44px;
+		padding: 6px 8px;
+	}
+
+	.input input {
+		font-size: 14px;
+	}
+
+	.input .send {
+		gap: 4px;
+	}
+
+	.input .send svg {
+		height: 18px;
+	}
+
+	.input .send button {
+		padding: 6px 8px;
+		font-size: 12px;
+	}
+
+	.input .send button span {
+		display: none;
+		/* agar button me icon+text dono hain, chhoti screen pe sirf icon dikhega */
+	}
 }

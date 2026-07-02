@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import "./Navbar.css";
-import { useNavigate } from "react-router-dom";
+
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { clearSecondUser } from "../../../store/secondUserSlice";
 import { removeUser } from "../../../store/userSlice";
@@ -34,40 +35,44 @@ function Navbar() {
 	// 	// Redirect to login
 	// 	navigate("/login");
 	// };
-const handleLogout = async () => {
-	try {
-		const refreshToken = sessionStorage.getItem("refreshToken");
+	const handleLogout = async () => {
+		try {
+			const refreshToken = sessionStorage.getItem("refreshToken");
 
-		if (refreshToken) {
-			await axios.post("/logout", {
-				refreshToken
-			});
+			if (refreshToken) {
+				await axios.post("/logout", {
+					refreshToken
+				});
+			}
+		} catch (error) {
+			console.log("Logout API failed:", error);
 		}
-	} catch (error) {
-		console.log("Logout API failed:", error);
-	}
 
-	// 🔥 Clear session storage
-	sessionStorage.clear();
+		// 🔥 Clear session storage
+		sessionStorage.clear();
 
-	// 🔥 Clear redux state
-	dispatch(removeUser());
-	dispatch(clearSecondUser());
+		// 🔥 Clear redux state
+		dispatch(removeUser());
+		dispatch(clearSecondUser());
 
-	// 🔥 Redirect to login
-	navigate("/login");
-};
+		// 🔥 Redirect to login
+		navigate("/login");
+	};
 	return (
 		<div className="Navbar">
 			<span className="navLogo">Logo</span>
 
 			<div className="user">
-				<img
-					src={profileImage || "/default-avatar.png"}
-					alt="Profile"
-				/>
+				<Link to="/update-profile" className="profile-link">
+					<img
+						src={profileImage || "/default-avatar.png"}
+						alt="Profile"
+					/>
+				</Link>
 
-				<span>{usernameSession || usernameRedux}</span>
+				<Link to="/update-profile" className="profile-link">
+					<span>{usernameSession || usernameRedux}</span>
+				</Link>
 
 				<button onClick={handleLogout}>
 					Logout

@@ -1,0 +1,346 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+.UP-uvp {
+    box-sizing: border-box;
+}
+
+.UP-profile-page {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 15% 10%, #eaf3fa 0%, transparent 45%),
+        linear-gradient(160deg, #eef4f8 0%, #dfebf3 100%);
+    padding: 40px 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+.UP-profile-loading {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: #4a6a80;
+}
+
+.UP-profile-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    width: 100%;
+    max-width: 880px;
+    min-height: 560px;
+    background: #fdfdfd;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow:
+        0 40px 70px -30px rgba(24, 60, 87, 0.4),
+        0 2px 0 rgba(255, 255, 255, 0.6) inset;
+}
+
+/* ---------- Back button ---------- */
+
+.UP-back-btn {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 5;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.UP-back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateX(-2px);
+}
+
+.UP-back-btn:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+/* ---------- LEFT: identity panel ---------- */
+
+.UP-profile-side {
+    position: relative;
+    background: linear-gradient(165deg, #1c3f5c 0%, #35719c 55%, #66a2c8 100%);
+    padding: 36px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.UP-side-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+    background-size: 16px 16px;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.UP-side-glow {
+    position: absolute;
+    bottom: -80px;
+    left: -60px;
+    width: 240px;
+    height: 240px;
+    background: radial-gradient(circle, rgba(217, 164, 65, 0.22) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.UP-side-eyebrow {
+    align-self: flex-start;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    color: #ffffff;
+    opacity: 0.9;
+    margin: 8px 0 44px 30px;
+    z-index: 1;
+}
+
+.UP-avatar-wrap {
+    position: relative;
+    width: 128px;
+    height: 128px;
+    margin-bottom: 20px;
+    z-index: 1;
+}
+
+.UP-avatar-img {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgba(255, 255, 255, 0.92);
+    outline: 2px solid rgba(217, 164, 65, 0.55);
+    outline-offset: 4px;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+    background: #ffffff;
+}
+
+.UP-avatar-edit {
+    position: absolute;
+    bottom: 2px;
+    right: -2px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #d9a441;
+    color: #1c3f5c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 2px solid #fdfdfd;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.UP-avatar-edit:hover {
+    transform: scale(1.08);
+    background: #eab75c;
+}
+
+.UP-side-username {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 4px 0 2px;
+    word-break: break-word;
+    z-index: 1;
+}
+
+.UP-side-email {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0;
+    word-break: break-word;
+    z-index: 1;
+}
+
+.UP-side-hint {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #1c3f5c;
+    font-weight: 600;
+    background: #d9a441;
+    padding: 6px 14px;
+    border-radius: 999px;
+    z-index: 1;
+}
+
+/* ---------- RIGHT: form panel ---------- */
+
+.UP-profile-form-panel {
+    padding: 48px 46px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.UP-form-header {
+    margin-bottom: 20px;
+}
+
+.UP-form-eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #35719c;
+    margin-bottom: 8px;
+}
+
+.UP-form-header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 27px;
+    font-weight: 700;
+    color: #1c3345;
+    margin: 0 0 6px;
+}
+
+.UP-form-header p {
+    font-size: 13.5px;
+    color: #7c8c9a;
+    margin: 0;
+}
+
+.UP-form-divider {
+    height: 1px;
+    background: linear-gradient(90deg, #dde6ee 0%, transparent 100%);
+    margin-bottom: 26px;
+}
+
+.UP-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.UP-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.UP-field label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #4a6a80;
+}
+
+.UP-field input {
+    border: 1.5px solid #dce6ee;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #1c3345;
+    background: #f7fafc;
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.UP-field input::placeholder {
+    color: #a3b4c2;
+}
+
+.UP-field input:focus {
+    border-color: #35719c;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(102, 162, 200, 0.22);
+}
+
+.UP-form-error {
+    background: #fdf1ef;
+    color: #b0472f;
+    border: 1px solid #f3d2c9;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin: 0;
+}
+
+.UP-submit-btn {
+    margin-top: 6px;
+    background: linear-gradient(135deg, #35719c, #1c3f5c);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 13px 20px;
+    font-size: 14.5px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 12px 26px -8px rgba(28, 63, 92, 0.55);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.UP-submit-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 30px -8px rgba(28, 63, 92, 0.65);
+}
+
+.UP-submit-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.UP-submit-btn:focus-visible,
+.UP-avatar-edit:focus-visible,
+.UP-field input:focus-visible {
+    outline: 2px solid #35719c;
+    outline-offset: 2px;
+}
+
+
+
+@media (max-width: 720px) {
+    .UP-profile-card {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+    }
+
+    .UP-profile-side {
+        padding: 30px 24px;
+    }
+
+    .UP-side-eyebrow {
+        margin: 4px 0 26px 4px;
+    }
+
+    .UP-profile-form-panel {
+        padding: 34px 28px;
+    }
+
+    .UP-back-btn {
+        background: rgba(28, 63, 92, 0.35);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .UP-submit-btn,
+    .UP-avatar-edit,
+    .UP-back-btn {
+        transition: none;
+    }
+}

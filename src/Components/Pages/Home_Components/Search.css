@@ -1,46 +1,110 @@
-.Search{
-	border-bottom:1px solid #2d4752;
+.Search {
+	border-bottom: 1px solid #2d4752;
 }
 
-.Search .Serachfor{
-	padding:10px;
-}
-.Search .Serachfor input{
-	background-color:transparent;
-	border:none;
-	color:white;
-	outline:none;
-	padding:10px;
-	font-size:14px;
-}
-.Search .Serachfor input::placeholder{
-	color:#859dc2;
+.Search .Serachfor {
+	padding: 10px;
 }
 
-.Search .userChat{
-	padding:10px;
-	display:flex;
-	align-items:center;
-	gap:10px;
-	color:white;
-	cursor:pointer;
-	
-}
-.Search .userChat:hover{
-	background-color:#2d4752;
+.Search .Serachfor input {
+	background-color: transparent;
+	border: none;
+	color: white;
+	outline: none;
+	padding: 10px;
+	font-size: 14px;
 }
 
-.Search .userChat img{
-	width:50px;
-	height:50px;
-	border-radius:50px;
-	object-fit:cover;
+.Search .Serachfor input::placeholder {
+	color: #859dc2;
 }
-.Search .userChat .userInfo{}
-.Search .userChat .userInfo span{}
+
+.Search .userChat {
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: white;
+	cursor: pointer;
+
+}
+
+.Search .userChat:hover {
+	background-color: #2d4752;
+}
+
+.Search .userChat img {
+	width: 50px;
+	height: 50px;
+	border-radius: 50px;
+	object-fit: cover;
+}
+
+.Search .userChat .userInfo {}
+
+.Search .userChat .userInfo span {}
 
 .EPS {
-	color:red;
-	font-size:12px;
-	margin-left:10px;
-} 
+	color: red;
+	font-size: 12px;
+	margin-left: 10px;
+}
+
+/* ---------- Responsive additions (no color/value changes above) ---------- */
+
+@media (max-width: 768px) {
+	.Search .Serachfor {
+		padding: 8px;
+	}
+
+	.Search .Serachfor input {
+		padding: 8px;
+		font-size: 13px;
+		width: 100%;
+	}
+
+	.Search .userChat {
+		padding: 8px;
+		gap: 8px;
+	}
+
+	.Search .userChat img {
+		width: 42px;
+		height: 42px;
+	}
+
+	.Search .userChat .userInfo span {
+		font-size: 14px;
+	}
+
+	.EPS {
+		font-size: 11px;
+		margin-left: 8px;
+	}
+}
+
+@media (max-width: 480px) {
+	.Search .Serachfor input {
+		padding: 6px;
+		font-size: 12px;
+	}
+
+	.Search .userChat {
+		padding: 6px;
+		gap: 6px;
+	}
+
+	.Search .userChat img {
+		width: 36px;
+		height: 36px;
+	}
+
+	.Search .userChat .userInfo span {
+		font-size: 13px;
+	}
+
+	.EPS {
+		font-size: 10px;
+		margin-left: 6px;
+	}
+}

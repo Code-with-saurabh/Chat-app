@@ -340,41 +340,46 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 const updateProfile = asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
+    const userId = req.user._id;
+
+    if (!username || !email || !userId) {
+        throw new ApiError(400, "Username and email are required");
+    }
+
     try {
-        const userId = req.user._id;
-        if (!username || !email || !userId) {
-            throw new ApiError(400, "Username, email, and password are required");
-        }
-
         const existingUser = await User.findById(userId);
-
         if (!existingUser) {
             throw new ApiError(404, "User not found");
         }
 
-        let imageUrl = null;
+        const duplicateUser = await User.findOne({
+            _id: { $ne: userId }, // apna khud ka record exclude karo
+            $or: [
+                { Username: username },
+                { Email: email },
+            ],
+        });
 
-        // ✅ Cloudinary Upload
+        if (duplicateUser) {
+            if (duplicateUser.Username === username) {
+                throw new ApiError(409, "Username already taken");
+            }
+            if (duplicateUser.Email === email) {
+                throw new ApiError(409, "Email already registered");
+            }
+        }
+
+
+        let imageUrl = null;
         if (req.file?.path) {
             const uploadedFile = await uploadOnCloudinary(req.file.path);
-
-            if (uploadedFile) {
-                imageUrl = uploadedFile.secure_url;
-            }
-
+            if (uploadedFile) imageUrl = uploadedFile.secure_url;
         }
 
-        console.log(req.file?.path);
-
-        // Update user
         existingUser.Username = username;
         existingUser.Email = email;
-        if (password) {
-            existingUser.Password = password;
-        }
-        if (imageUrl) {
-            existingUser.ProfileImage = imageUrl;
-        }
+        if (password) existingUser.Password = password;
+        if (imageUrl) existingUser.ProfileImage = imageUrl;
 
         await existingUser.save();
 
@@ -386,12 +391,10 @@ const updateProfile = asyncHandler(async (req, res) => {
                 profileImage: existingUser.ProfileImage,
             }, "Profile updated successfully")
         );
-
     } catch (error) {
         throw new ApiError(500, error.message || "Failed to update profile");
     }
 });
-
 
 
 module.exports = { register, login, searchUser, getAllUsers, updateProfile };

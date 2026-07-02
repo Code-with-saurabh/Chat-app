@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../../Utilities/axios.js";
 import { useNavigate } from "react-router-dom";
 import "./UpdateProfile.css";
+import { addUser } from "../../../store/userSlice.js";
+import { useDispatch } from "react-redux";
 
 const UpdateProfile = () => {
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,13 +24,14 @@ const UpdateProfile = () => {
             try {
                 const currentUsername = localStorage.getItem("name");
 
-                const res = await axios.get(
-                    `/users/search?username=${currentUsername}`
-                );
+                const res = await axios.get(`/users/search?username=${currentUsername}`);
+                if (!res.data?.data) {
+                    throw new Error("Unexpected response shape");
+                }
 
-                setUsername(res.data.data.username);
-                setEmail(res.data.data.email);
-                setProfileImage(res.data.data.profileImage);
+                setUsername(res?.data?.data?.username);
+                setEmail(res?.data?.data?.email);
+                setProfileImage(res?.data?.data?.profileImage);
             } catch (error) {
                 console.error(error);
                 setFormErr("Failed to load profile.");
@@ -60,22 +63,35 @@ const UpdateProfile = () => {
                 formData.append("file", file);
             }
 
-            const res = await axios.put(
+            const res = await axios.post(
                 "/users/update-profile",
                 formData,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
-                    withCredentials: true,
                 }
             );
 
             localStorage.setItem("name", res.data.data.username);
 
-            alert("Profile updated successfully!");
+            const updatedUser = res.data.data;
 
-            navigate("/profile");
+            sessionStorage.setItem("Username", updatedUser.username);
+            sessionStorage.setItem("profileImage", updatedUser.profileImage);
+
+            dispatch(
+                addUser({
+                    id: updatedUser.userId,
+                    username: updatedUser.username,
+                    profileImage: updatedUser.profileImage,
+                })
+            );
+
+            // alert("Profile updated successfully!");
+
+            navigate("/");
+
         } catch (error) {
             console.error(error);
 
@@ -90,88 +106,185 @@ const UpdateProfile = () => {
     };
 
     if (fetchLoading) {
-        return <h2>Loading...</h2>;
+        return (
+            <div className="UP-profile-page">
+                <div className="UP-profile-loading">
+                    Loading your profile…
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="Update formcontainer">
-            <div className="Update formWrapper">
+        <div className="UP-profile-page UP-uvp">
+            <div className="UP-profile-card">
 
-                <span className="logoup">Logo</span>
-                <span className="logoups">Update Profile</span>
-
-                {profileImage && (
-                    <img
-                        src={profileImage}
-                        alt="Profile"
-                        style={{
-                            width: "120px",
-                            height: "120px",
-                            borderRadius: "50%",
-                            objectFit: "cover",
-                            marginBottom: "15px",
-                        }}
-                    />
-                )}
-
-                <form onSubmit={handleSubmit}>
-
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="New Password (optional)"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-
-                    <input
-                        id="file"
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        onChange={(e) => setFile(e.target.files[0])}
-                    />
-
-                    <label htmlFor="file">
-                        <span>Change Profile Picture</span>
-                    </label>
-
-                    <button type="submit" disabled={loading}>
-                        {loading ? "Updating..." : "Update Profile"}
-                    </button>
-
-                </form>
-
-                {formErr && (
-                    <p
-                        style={{
-                            color: "red",
-                            marginTop: "10px",
-                            fontSize: "14px",
-                        }}
+                <button
+                    type="button"
+                    className="UP-back-btn"
+                    onClick={() => navigate(-1)}
+                    aria-label="Go back"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="18"
+                        height="18"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
                     >
-                        {formErr}
-                    </p>
-                )}
+                        <path
+                            d="M15 18l-6-6 6-6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                </button>
 
+                {/* LEFT — identity panel */}
+                <aside className="UP-profile-side">
+                    <div className="UP-side-dots" />
+                    <div className="UP-side-glow" />
+
+                    <span className="UP-side-eyebrow">
+                        Logo
+                    </span>
+
+                    <div className="UP-avatar-wrap">
+                        <img
+                            src={profileImage || "/default-avatar.png"}
+                            alt="Profile"
+                            className="UP-avatar-img"
+                        />
+
+                        <label
+                            htmlFor="file"
+                            className="UP-avatar-edit"
+                            title="Change profile picture"
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="16"
+                                height="16"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            >
+                                <path d="M4 8h3l2-2h6l2 2h3v11H4z" />
+                                <circle cx="12" cy="13.5" r="3.2" />
+                            </svg>
+                        </label>
+
+                        <input
+                            id="file"
+                            type="file"
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            onChange={(e) => setFile(e.target.files[0])}
+                        />
+                    </div>
+
+                    <h2 className="UP-side-username">
+                        {username || "Your name"}
+                    </h2>
+
+                    <p className="UP-side-email">
+                        {email || "your@email.com"}
+                    </p>
+
+                    {file && (
+                        <p className="UP-side-hint">
+                            New photo selected — save to apply
+                        </p>
+                    )}
+                </aside>
+
+                {/* RIGHT — edit form panel */}
+                <section className="UP-profile-form-panel">
+
+                    <div className="UP-form-header">
+                        <span className="UP-form-eyebrow">
+                            Account
+                        </span>
+
+                        <h1>Update profile</h1>
+
+                        <p>
+                            Your changes apply across your account right away.
+                        </p>
+                    </div>
+
+                    <div className="UP-form-divider" />
+
+                    <form
+                        onSubmit={handleSubmit}
+                        className="UP-profile-form"
+                    >
+
+                        <div className="UP-field">
+                            <label htmlFor="username">
+                                Username
+                            </label>
+
+                            <input
+                                id="username"
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div className="UP-field">
+                            <label htmlFor="email">
+                                Email
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+
+
+                        <div className="UP-field">
+                            <label htmlFor="password">
+                                New password
+                            </label>
+
+                            <input
+                                id="password"
+                                type="password"
+                                name="password"
+                                placeholder="Leave blank to keep current password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+
+                        {formErr && (
+                            <p className="UP-form-error">
+                                {formErr}
+                            </p>
+                        )}
+
+                        <button
+                            type="submit"
+                            className="UP-submit-btn"
+                            disabled={loading}
+                        >
+                            {loading ? "Saving…" : "Save changes"}
+                        </button>
+
+                    </form>
+                </section>
             </div>
         </div>
     );

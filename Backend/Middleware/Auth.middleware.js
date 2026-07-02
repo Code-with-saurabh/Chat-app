@@ -48,7 +48,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
     // 4️⃣ Attach user to request
     // =========================
     req.user = user;
-
+    
     next();
 });
 
