@@ -10,13 +10,19 @@ import SidebarSkeleton from "../Skeleton/SidebarSkeleton.jsx";
 import ChatSkeleton from "../Skeleton/ChatSkeleton.jsx";
 import { addNotification } from "../../store/notificationSlice.js";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // import { useSelector } from 'react-redux';
 // Home_Components
 // import io from 'socket.io-client';
 function Home() {
   // const socket = io('http://localhost:5000');
+
+
+  const activeConversation = useSelector(
+    (state) => state.chat.activeConversation
+  );
+  const isChatOpen = Boolean(activeConversation);
 
   const dispatch = useDispatch();
 
@@ -26,26 +32,26 @@ function Home() {
     return () => socket.disconnect();
   }, []);
 
-useEffect(() => {
-  socket.on("newNotification", (data) => {
-    dispatch(addNotification(data));
-  });
+  useEffect(() => {
+    socket.on("newNotification", (data) => {
+      dispatch(addNotification(data));
+    });
 
-  return () => {
-    socket.off("newNotification");
-  };
-}, []);
+    return () => {
+      socket.off("newNotification");
+    };
+  }, []);
 
 
   return (
     <div className="Home">
-      <div className="container">
-          <Suspense fallback={<SidebarSkeleton/>}>
-        <Sidebar  />
-        
+      <div className={`container ${isChatOpen ? "chat-open" : ""}`}>
+        <Suspense fallback={<SidebarSkeleton />}>
+          <Sidebar />
+
           {/* <Chat /> */}
         </Suspense>
-        <Suspense fallback={<ChatSkeleton/>}>
+        <Suspense fallback={<ChatSkeleton />}>
           <Chat />
         </Suspense>
       </div>

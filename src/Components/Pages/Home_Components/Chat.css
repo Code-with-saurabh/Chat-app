@@ -45,8 +45,6 @@
 	border-radius: 50%;
 }
 
-/* ---------- Back button (mobile-only, controlled by .chat-open on parent .container) ---------- */
-
 .Chat .ChatInfo .backToSidebar {
 	display: none;
 	align-items: center;
@@ -54,8 +52,6 @@
 	cursor: pointer;
 	margin-right: 4px;
 }
-
-/* ---------- Responsive additions (no color/value changes above) ---------- */
 
 @media (max-width: 768px) {
 	.Chat {

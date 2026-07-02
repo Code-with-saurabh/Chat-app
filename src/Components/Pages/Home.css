@@ -2,22 +2,6 @@
 	.Home .container {
 		flex-direction: row;
 	}
-
-	.Sidebar {
-		flex: 0 0 42%;
-		max-width: 42%;
-	}
-
-	.Chat {
-		flex: 1;
-		min-width: 0;
-		/* flex item ko shrink hone do, text wrap sahi rahega */
-	}
-
-	.Navbar .user button {
-		padding: 4px 6px;
-		font-size: 10px;
-	}
 }
 
 /* Tablet media query */
@@ -33,16 +17,35 @@
 	.Home .container {
 		width: 100%;
 		height: 100%;
+		position: relative;
+		overflow: hidden;
 	}
 
 	.Sidebar {
-		flex: 0 0 38%;
-		max-width: 320px;
+		flex: 0 0 100%;
+		max-width: 100%;
+		width: 100%;
+		transition: transform 0.3s ease;
 	}
 
 	.Chat {
-		flex: 1;
+		flex: 0 0 100%;
+		max-width: 100%;
+		width: 100%;
+		position: absolute;
+		top: 0;
+		left: 100%;
+		height: 100%;
+		transition: transform 0.3s ease;
 		min-width: 0;
+	}
+
+	.Home .container.chat-open .Sidebar {
+		transform: translateX(-100%);
+	}
+
+	.Home .container.chat-open .Chat {
+		transform: translateX(-100%);
 	}
 }
 
