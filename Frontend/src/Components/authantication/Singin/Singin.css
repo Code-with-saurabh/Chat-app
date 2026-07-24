@@ -1,0 +1,77 @@
+.formcontainer{
+	background-color:#66a2c8;
+	height:100vh;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+}
+.formcontainer .formWrapper{
+	background-color:white;
+	padding:20px 60px;
+	border-radius:10px;
+	display:flex;
+	flex-direction:column;
+	gap:10px;
+	align-items:center;
+}
+.formcontainer .formWrapper form{
+	display:flex;
+	flex-direction:column;
+	gap:15px;
+}
+
+.logoup{
+	 color:#5b708d;
+	 font-weight:bold;
+	 font-size:24px;
+}
+.logoups{
+	 color:#5d5b8d;
+	 font-size:12px;
+}
+
+.formcontainer .formWrapper form input{
+	padding:15px;
+	border:none;
+	border-bottom:1px solid #a7e1ff;
+	width:250px;
+	outline:none;
+}
+
+.formcontainer .formWrapper form input::placeholder{
+	color:rgb(175,175,175);
+}
+.formcontainer .formWrapper form input::fous{
+	color:rgb(175,175,175);
+}
+
+.formcontainer .formWrapper form button{
+	background-color:#7bc0ec;
+	color:white;
+	padding:10px;
+	font-weight:bold;
+	border:none;
+	cursor:pointer;
+}
+
+.formcontainer .formWrapper form p{
+	color:#5d5b8d;
+	font-size:12px;
+	margin-top:10px;
+}
+.formcontainer .formWrapper label{
+	 cursor:pointer;
+	 display:flex;
+	 align-items:center;
+	 gap:10px;
+	 /* color:#8da4f1; */
+	 color:#8dcbf1;
+	 font-size:12px;
+}
+
+.formcontainer .formWrapper a{
+    color: #8da4f1;  
+    text-decoration: none;
+    padding: 2px 8px;  
+    transition: background-color 0.3s ease
+}

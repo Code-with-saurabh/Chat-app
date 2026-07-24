@@ -1,0 +1,124 @@
+.Navbar {
+	display: flex;
+	align-items: center;
+	background-color: #2d4352;
+	height: 50px;
+	padding: 10px;
+	justify-content: space-between;
+	color: #ddddf7;
+}
+
+.Navbar .navLogo {
+	font-weight: bold;
+}
+
+.Navbar .user {
+	display: flex;
+	align-items: center;
+	gap: 10;
+	padding: 6px;
+}
+
+.Navbar .user img {
+	background-color: #ddddf7;
+	height: 24px;
+	width: 24px;
+	border-radius: 50%;
+	object-fit: cover;
+	cursor: pointer;
+
+}
+
+.Navbar .user span {
+	display: flex;
+	/* margin-top:12px; */
+	margin: 0px 5px;
+	font-size: 14px;
+}
+
+.Navbar .user button {
+	background-color: #5b748d;
+	color: #ddeaf7;
+	border: none;
+	/* padding:4px; */
+	border-radius: 4px;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.Navbar button a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.profile-link {
+	text-decoration: none;
+	color: inherit;
+}
+
+/* ---------- Responsive additions (no color/value changes above) ---------- */
+
+@media (max-width: 768px) {
+	.Navbar {
+		height: 46px;
+		padding: 8px;
+	}
+
+	.Navbar .navLogo {
+		font-size: 15px;
+	}
+
+	.Navbar .user {
+		gap: 8px;
+		padding: 4px;
+	}
+
+	.Navbar .user img {
+		height: 22px;
+		width: 22px;
+	}
+
+	.Navbar .user span {
+		font-size: 12px;
+		margin: 0px 3px;
+		max-width: 90px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.Navbar .user button {
+		font-size: 12px;
+		padding: 5px 8px;
+	}
+}
+
+@media (max-width: 480px) {
+	.Navbar {
+		height: 42px;
+		padding: 6px 8px;
+	}
+
+	.Navbar .navLogo {
+		font-size: 13px;
+	}
+
+	.Navbar .user {
+		gap: 6px;
+	}
+
+	.Navbar .user img {
+		height: 20px;
+		width: 20px;
+	}
+
+	.Navbar .user span {
+		max-width: 60px;
+		font-size: 11px;
+	}
+
+	.Navbar .user button {
+		font-size: 11px;
+		padding: 4px 6px;
+	}
+}

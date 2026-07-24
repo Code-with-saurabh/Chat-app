@@ -1,0 +1,115 @@
+.Chat {
+	flex: 2;
+
+}
+
+.Chat .ChatInfo {
+	display: flex;
+	height: 50px;
+	background-color: #5b748d;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px;
+	color: #d1dce5;
+
+}
+
+.Chat .ChatInfo .nameP {
+	color: #d1dce5;
+}
+
+.Chat .ChatInfo .nameP {}
+
+.Chat .ChatInfo .ChatIcon {
+	display: flex;
+	gap: 10px;
+	cursor: pointer;
+}
+
+.Chat .ChatInfo .ChatIcon span {}
+
+.Chat .ChatInfo .ChatIcon svg {}
+
+.notification {
+	position: relative;
+}
+
+.badge {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	background: red;
+	color: white;
+	font-size: 12px;
+	padding: 2px 6px;
+	border-radius: 50%;
+}
+
+.Chat .ChatInfo .backToSidebar {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	margin-right: 4px;
+}
+
+@media (max-width: 768px) {
+	.Chat {
+		flex: 1;
+		width: 100%;
+	}
+
+	.Chat .ChatInfo {
+		height: 46px;
+		padding: 8px 10px;
+	}
+
+	.Chat .ChatInfo .nameP {
+		font-size: 14px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 55%;
+	}
+
+	.Chat .ChatInfo .ChatIcon {
+		gap: 8px;
+	}
+
+	.Chat .ChatInfo .ChatIcon svg {
+		width: 18px;
+		height: 18px;
+	}
+
+	.Home .container.chat-open .Chat .ChatInfo .backToSidebar {
+		display: inline-flex;
+	}
+}
+
+@media (max-width: 480px) {
+	.Chat .ChatInfo {
+		height: 42px;
+		padding: 6px 8px;
+	}
+
+	.Chat .ChatInfo .nameP {
+		font-size: 13px;
+		max-width: 50%;
+	}
+
+	.Chat .ChatInfo .ChatIcon {
+		gap: 6px;
+	}
+
+	.Chat .ChatInfo .ChatIcon svg {
+		width: 16px;
+		height: 16px;
+	}
+
+	.badge {
+		font-size: 10px;
+		padding: 1px 5px;
+		top: -4px;
+		right: -4px;
+	}
+}
