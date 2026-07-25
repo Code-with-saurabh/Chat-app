@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { clearSecondUser } from "../../../store/secondUserSlice";
 import { removeUser } from "../../../store/userSlice";
-
+import axios from '../../../Utilities/axios.js';
 function Navbar() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
