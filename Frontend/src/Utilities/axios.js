@@ -5,6 +5,8 @@ const instance = axios.create({
   withCredentials: true,
 });
 
+console.log({API})
+
 // REQUEST INTERCEPTOR (already hai)
 instance.interceptors.request.use((config) => {
   const token = sessionStorage.getItem("accessToken");
