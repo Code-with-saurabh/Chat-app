@@ -190,6 +190,13 @@ Chat-App
 
 ![User Search](./Readme/search-user.png)
 
+ 
+---
+
+## 💬 | User Chat
+
+![User Search](./Readme/image.png)
+
 ---
 
 ## 👤 User Profile
