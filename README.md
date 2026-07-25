@@ -178,7 +178,7 @@ Chat-App
 ## 🔐 Login Page
 
 ```md
-![Login](./ReadmeImages/login.png)
+![Login](./Readme/login.png)
 ```
 
 ---
@@ -186,7 +186,7 @@ Chat-App
 ## 📝 Register Page
 
 ```md
-![Register](./ReadmeImages/register.png)
+![Register](./Readme/signup.png)
 ```
 
 ---
