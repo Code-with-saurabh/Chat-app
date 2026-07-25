@@ -186,12 +186,6 @@ Chat-App
 
 ---
 
-## 💬 Chat Dashboard
-
-![Chat Dashboard](./Readme/chat.png)
-
----
-
 ## 👥 User Search
 
 ![User Search](./Readme/search-user.png)
@@ -204,27 +198,15 @@ Chat-App
 
 ---
 
-## ✏️ Edit Profile
-
-![Edit Profile](./Readme/edit-profile.png)
-
----
-
-## 📱 Mobile Responsive
-
-![Mobile View](./Readme/mobile.png)
-
----
-
 ## 🖥 Frontend Structure
 
-![Frontend Structure](./Readme/frontend-structure.png)
+![Frontend Structure](./Readme/Frontend.png)
 
 ---
 
 ## ⚙️ Backend Structure
 
-![Backend Structure](./Readme/backend-structure.png)
+![Backend Structure](./Readme/Backend.png)
 
 ---
 
