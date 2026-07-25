@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import socketIOClient from "socket.io-client";
 import { setMessage } from '../../../store/userChat.js';
 import { addMessage } from '../../../store/chatSlice.js';
+ 
+const API = import.meta.env.VITE_API_URL;
 
 function Input() {
 
@@ -36,7 +38,7 @@ function Input() {
 	// const socket = socketIOClient("http://localhost:5000/");
 	useEffect(() => {
 		if (!socket.current) {
-			socket.current = socketIOClient("http://localhost:5000/");
+			socket.current = socketIOClient(API || "http://localhost:5000/");
 		}
 
 
