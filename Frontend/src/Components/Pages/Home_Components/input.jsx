@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./Input.css";
+import "./input.css";
 import { useSelector, useDispatch } from 'react-redux';
 import socketIOClient from "socket.io-client";
 import { setMessage } from '../../../store/userChat.js';
