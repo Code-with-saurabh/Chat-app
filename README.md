@@ -172,87 +172,77 @@ Chat-App
 ```
 
 ---
-
 # 📸 Screenshots
 
 ## 🔐 Login Page
 
-```md
-![Login](./Readme/login.png)
-```
+![Login Page](./Readme/login.png)
 
 ---
 
 ## 📝 Register Page
 
-```md
-![Register](./Readme/signup.png)
-```
+![Register Page](./Readme/signup.png)
 
 ---
 
 ## 💬 Chat Dashboard
 
-```md
-![Chat](./ReadmeImages/chat.png)
-```
+![Chat Dashboard](./Readme/chat.png)
 
 ---
 
-## 👥 User List
+## 👥 User Search
 
-```md
-![Users](./ReadmeImages/users.png)
-```
+![User Search](./Readme/search-user.png)
+
+---
+
+## 👤 User Profile
+
+![User Profile](./Readme/profile.png)
+
+---
+
+## ✏️ Edit Profile
+
+![Edit Profile](./Readme/edit-profile.png)
 
 ---
 
 ## 📱 Mobile Responsive
 
-```md
-![Responsive](./ReadmeImages/mobile.png)
-```
+![Mobile View](./Readme/mobile.png)
 
 ---
 
-## 🖥 Frontend Folder Structure
+## 🖥 Frontend Structure
 
-```md
-![Frontend](./ReadmeImages/frontend-structure.png)
-```
+![Frontend Structure](./Readme/frontend-structure.png)
 
 ---
 
-## ⚙ Backend Folder Structure
+## ⚙️ Backend Structure
 
-```md
-![Backend](./ReadmeImages/backend-structure.png)
-```
+![Backend Structure](./Readme/backend-structure.png)
 
 ---
 
-## 🗄 MongoDB Collections
+## 🗄️ Database
 
-```md
-![Database](./ReadmeImages/database.png)
-```
+![Database](./Readme/database.png)
 
 ---
 
 ## 🔌 API Testing
 
-```md
-![Postman](./ReadmeImages/postman.png)
-```
+![Postman](./Readme/postman.png)
 
 ---
 
 ## ⚡ Socket.IO Flow
 
-```md
-![Socket](./ReadmeImages/socket.png)
-```
-
+![Socket.IO](./Readme/socket.png)
 ---
 
 # 🚀 Installation
