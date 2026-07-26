@@ -66,7 +66,7 @@ function Singin() {
 						name="file"
 						type="file"
 						id="file"
-						required
+						// required
 						accept="image/*"
 					/>
 

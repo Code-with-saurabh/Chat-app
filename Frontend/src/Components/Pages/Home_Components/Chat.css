@@ -69,7 +69,10 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		max-width: 55%;
+		/* max-width: 55%; */
+		width: 100%;
+		justify-self: flex-start;
+		margin-left: 2px;
 	}
 
 	.Chat .ChatInfo .ChatIcon {
@@ -94,7 +97,10 @@
 
 	.Chat .ChatInfo .nameP {
 		font-size: 13px;
-		max-width: 50%;
+		/* max-width: 50%; */
+		width: 100%;
+		justify-self: flex-start;
+		margin-left: 2px;
 	}
 
 	.Chat .ChatInfo .ChatIcon {

@@ -79,6 +79,8 @@
 	.Navbar .user {
 		gap: 8px;
 		padding: 4px;
+		justify-content: space-between;
+        width: 100%;
 	}
 
 	.Navbar .user img {

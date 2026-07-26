@@ -21,6 +21,8 @@ function Chat() {
   );
 
   useEffect(() => {
+   
+    
     if (activeConversation?._id) {
       dispatch(markConversationRead(activeConversation._id));
     }

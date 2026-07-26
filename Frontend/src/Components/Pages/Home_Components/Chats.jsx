@@ -10,7 +10,7 @@ import {
 import { setLoadingMessages } from "../../../store/chatSlice";
 import axios from "../../../Utilities/axios.js";
 
-function Chats({ img, username, message, userId,unreadCount  }) {
+function Chats({ img, username, message, userId, unreadCount }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +23,7 @@ function Chats({ img, username, message, userId,unreadCount  }) {
 
       //  Create OR Get Conversation
       dispatch(setLoadingMessages(true)); // ✅ START LOADER
-    dispatch(setMessages([])); // optional clear
+      dispatch(setMessages([])); // optional clear
 
       const { data } = await axios.post("/messages/conversation", {
         receiverId: userId,
@@ -39,7 +39,9 @@ function Chats({ img, username, message, userId,unreadCount  }) {
                2️⃣ Save Active Conversation
             ============================== */
       console.log("Active Conversation:", conversation);
-      dispatch(setActiveConversation(conversation));
+      dispatch(
+        setActiveConversation({ ...conversation, username, profileImage: img }),
+      );
 
       /* ==============================
                3️⃣ Fetch Messages
@@ -65,13 +67,12 @@ function Chats({ img, username, message, userId,unreadCount  }) {
       );
     } finally {
       dispatch(setLoadingMessages(false)); // ✅ STOP LOADER
-    setLoading(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className="Chats">
-      
       <div
         className={`userChat ${loading ? "disabled" : ""}`}
         onClick={handleParticularUser}
@@ -81,11 +82,7 @@ function Chats({ img, username, message, userId,unreadCount  }) {
         <div className="userInfo">
           <span>{username}</span>
           <p className="lastMessage">{message || "Start conversation..."}</p>
-          {unreadCount > 0 && (
-  <div className="chatBadge">
-    {unreadCount}
-  </div>
-)}
+          {unreadCount > 0 && <div className="chatBadge">{unreadCount}</div>}
         </div>
       </div>
     </div>
