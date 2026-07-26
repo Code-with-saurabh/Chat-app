@@ -29,6 +29,41 @@ function Chat() {
   }, [activeConversation?._id]);
 
 
+
+  const getLastSeen = (lastSeen) => {
+  if (!lastSeen) return "";
+
+  const date = new Date(lastSeen);
+  const today = new Date();
+
+  const isToday = date.toDateString() === today.toDateString();
+
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  const isYesterday = date.toDateString() === yesterday.toDateString();
+
+  const time = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  if (isToday) {
+    return `last seen today at ${time}`;
+  }
+
+  if (isYesterday) {
+    return `last seen yesterday at ${time}`;
+  }
+
+  return `last seen ${date.toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "short",
+  })}`;
+};
+
+
+
   return (
     <div className="Chat">
       {/* HEADER */}
@@ -55,8 +90,11 @@ function Chat() {
             activeConversation?.username ||
             "Chat"}
             </span>
-         { activeConversation?.username ?
-           <span className="online-Status">{"online"}</span> : ""}
+         { (activeConversation?.username) && 
+         (activeConversation?.online) ?
+           <span className="online-Status">{"online"}</span> : 
+           <span className="online-Status">{getLastSeen(activeConversation?.lastSeen)}</span> 
+           }
         </span>
 
         <div className="ChatIcon">

@@ -80,6 +80,8 @@ function Sidebar() {
                   userId={user.id}
                   message={user.lastMessage?.text} // 🔥 latest message
                   unreadCount={conversationUnread[user.conversationId] || 0}
+                  online={user.isOnline}
+                  lastSeen={user.lastSeen}
                 />
               </div>
             );

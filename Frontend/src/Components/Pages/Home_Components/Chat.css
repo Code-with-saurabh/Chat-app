@@ -135,5 +135,6 @@
  }
 
  .nameP-text{
-	align-self:flex-start
+	align-self:flex-start;
+	    margin-left: 4px;
  }

@@ -10,7 +10,7 @@ import {
 import { setLoadingMessages } from "../../../store/chatSlice";
 import axios from "../../../Utilities/axios.js";
 
-function Chats({ img, username, message, userId, unreadCount }) {
+function Chats({ img, username, message, userId, unreadCount,online,lastSeen }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
@@ -40,7 +40,7 @@ function Chats({ img, username, message, userId, unreadCount }) {
             ============================== */
       console.log("Active Conversation:", conversation);
       dispatch(
-        setActiveConversation({ ...conversation, username, profileImage: img }),
+        setActiveConversation({ ...conversation, username, profileImage: img,online,lastSeen }),
       );
 
       /* ==============================
