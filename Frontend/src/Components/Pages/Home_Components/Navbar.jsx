@@ -63,6 +63,9 @@ function Navbar() {
 			<span className="navLogo">Logo</span>
 
 			<div className="user">
+				<div className="section-user-div">
+
+				
 				<Link to="/update-profile" className="profile-link">
 					<img
 						src={profileImage || "/default-avatar.png"}
@@ -73,7 +76,7 @@ function Navbar() {
 				<Link to="/update-profile" className="profile-link">
 					<span>{usernameSession || usernameRedux}</span>
 				</Link>
-
+		</div>
 				<button onClick={handleLogout}>
 					Logout
 				</button>

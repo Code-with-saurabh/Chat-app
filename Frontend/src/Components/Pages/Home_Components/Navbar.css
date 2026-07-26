@@ -17,6 +17,7 @@
 	align-items: center;
 	gap: 10;
 	padding: 6px;
+	 
 }
 
 .Navbar .user img {
@@ -34,6 +35,13 @@
 	/* margin-top:12px; */
 	margin: 0px 5px;
 	font-size: 14px;
+}
+
+.section-user-div{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.5px;
 }
 
 .Navbar .user button {
@@ -81,7 +89,7 @@
 	.Navbar .user span {
 		font-size: 12px;
 		margin: 0px 3px;
-		max-width: 90px;
+		min-width: 90px;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -105,6 +113,8 @@
 
 	.Navbar .user {
 		gap: 6px;
+		justify-content: space-between;
+        width: 100%;
 	}
 
 	.Navbar .user img {
@@ -113,7 +123,7 @@
 	}
 
 	.Navbar .user span {
-		max-width: 60px;
+		min-width: 60px;
 		font-size: 11px;
 	}
 
