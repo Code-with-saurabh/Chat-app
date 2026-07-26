@@ -49,9 +49,14 @@ function Chat() {
         </span>
 
         <span className="nameP">
+          <span className="nameP-text">
+
           {activeConversation?.groupName ||
             activeConversation?.username ||
             "Chat"}
+            </span>
+         { activeConversation?.username ?
+           <span className="online-Status">{"online"}</span> : ""}
         </span>
 
         <div className="ChatIcon">

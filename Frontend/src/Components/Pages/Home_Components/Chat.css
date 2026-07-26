@@ -119,3 +119,21 @@
 		right: -4px;
 	}
 }
+
+ .nameP{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+ }
+
+ .online-Status{
+	font-size: 0.9em;
+	align-self: self-start;
+	margin-left: 4px;
+	opacity: 0.5;
+ }
+
+ .nameP-text{
+	align-self:flex-start
+ }
