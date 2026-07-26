@@ -1,7 +1,7 @@
 const ApiError = require("../Utilities/ApiError");
 const ApiResponse = require("../Utilities/ApiResponse");
 const asyncHandler = require("../Utilities/AsyncHandler");
-
+const path = require("path")
 
 
 const { uploadOnCloudinary } = require("../Utilities/Cloudinary");
@@ -285,7 +285,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
         })
         .populate({
             path: "members",
-            select: "Username ProfileImage"
+            select: "Username ProfileImage isOnline lastSeen"
         })
         .sort({ updatedAt: -1 });
 
@@ -297,11 +297,15 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
         if (!otherUser) return null;
 
+        const DefaultImagePath = path.join(__dirname,"..","uploads","default-avatar-profile-icon.jpg")
+        
         return {
             conversationId: conv._id,
             id: otherUser._id,
             username: otherUser.Username,
-            profileImage: otherUser.ProfileImage || null,
+            profileImage: otherUser.ProfileImage || DefaultImagePath || null,
+            isOnline: otherUser.isOnline,
+            lastSeen: otherUser.lastSeen,
             lastMessage: conv.lastMessage
                 ? {
                     text: conv.lastMessage.text || "",
@@ -315,7 +319,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
     // 🔥 3. Get ALL users except current user
     const allUsers = await User.find({
         _id: { $ne: currentUserId }
-    }).select("Username ProfileImage");
+    }).select("Username ProfileImage isOnline lastSeen");
 
     // 🔥 4. Find users with NO conversation
     const conversationUserIds = conversationUsers.map(u => u.id.toString());
