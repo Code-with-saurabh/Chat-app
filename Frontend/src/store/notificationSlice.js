@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   notifications: [],
   unreadCount: 0,
-  conversationUnread: {} // 🔥 NEW (conversation wise)
+  conversationUnread: {}
 };
 
 const notificationSlice = createSlice({

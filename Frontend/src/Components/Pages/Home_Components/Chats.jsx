@@ -1,31 +1,29 @@
 import React, { useState } from "react";
 import "./Chats.css";
 import { setSecondUser } from "../../../store/secondUserSlice";
-
 import { useDispatch } from "react-redux";
 import {
   setActiveConversation,
   setMessages,
+  setLoadingMessages,
 } from "../../../store/chatSlice.js";
-import { setLoadingMessages } from "../../../store/chatSlice";
 import axios from "../../../Utilities/axios.js";
+import { ENDPOINTS } from "../../../constants/api.js";
+import Avatar from "../../common/Avatar.jsx";
 
-function Chats({ img, username, message, userId, unreadCount,online,lastSeen }) {
+function Chats({ img, username, message, userId, unreadCount, online, lastSeen }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   const handleParticularUser = async () => {
-    // prevent double click requests
     if (loading) return;
 
     try {
       setLoading(true);
+      dispatch(setLoadingMessages(true));
+      dispatch(setMessages([]));
 
-      //  Create OR Get Conversation
-      dispatch(setLoadingMessages(true)); // ✅ START LOADER
-      dispatch(setMessages([])); // optional clear
-
-      const { data } = await axios.post("/messages/conversation", {
+      const { data } = await axios.post(ENDPOINTS.MESSAGES.CONVERSATION, {
         receiverId: userId,
       });
 
@@ -35,17 +33,9 @@ function Chats({ img, username, message, userId, unreadCount,online,lastSeen }) 
         throw new Error("Conversation not found");
       }
 
-      /* ==============================
-               2️⃣ Save Active Conversation
-            ============================== */
-      console.log("Active Conversation:", conversation);
       dispatch(
-        setActiveConversation({ ...conversation, username, profileImage: img,online,lastSeen }),
+        setActiveConversation({ ...conversation, username, profileImage: img, online, lastSeen }),
       );
-
-      /* ==============================
-               3️⃣ Fetch Messages
-            ============================== */
 
       dispatch(
         setSecondUser({
@@ -56,17 +46,14 @@ function Chats({ img, username, message, userId, unreadCount,online,lastSeen }) 
       );
 
       const messagesRes = await axios.get(
-        `/messages/conversation/${conversation._id}`,
+        ENDPOINTS.MESSAGES.BY_CONVERSATION(conversation._id),
       );
 
       dispatch(setMessages(messagesRes.data.data || []));
     } catch (error) {
-      console.error(
-        "❌ Conversation error:",
-        error.response?.data || error.message,
-      );
+      console.error("Conversation error:", error.response?.data || error.message);
     } finally {
-      dispatch(setLoadingMessages(false)); // ✅ STOP LOADER
+      dispatch(setLoadingMessages(false));
       setLoading(false);
     }
   };
@@ -77,7 +64,7 @@ function Chats({ img, username, message, userId, unreadCount,online,lastSeen }) 
         className={`userChat ${loading ? "disabled" : ""}`}
         onClick={handleParticularUser}
       >
-        <img src={img} alt={username} loading="lazy" />
+        <Avatar src={img} alt={username} size={40} />
 
         <div className="userInfo">
           <span>{username}</span>

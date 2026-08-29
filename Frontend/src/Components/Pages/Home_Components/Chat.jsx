@@ -5,12 +5,8 @@ import Input from "./input.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { markConversationRead } from "../../../store/notificationSlice.js";
 import { setActiveConversation } from "../../../store/chatSlice.js";
-// ⚠️ VERIFY: upar wala import path + action name aapke chatSlice.js se match hona chahiye.
-// Agar action ka naam alag hai (e.g. clearActiveConversation, resetChat, etc),
-// to yahan import aur neeche wala dispatch() call dono me naam badal do.
 
 function Chat() {
-
   const dispatch = useDispatch();
 
   const unreadCount = useSelector(
@@ -21,52 +17,45 @@ function Chat() {
   );
 
   useEffect(() => {
-   
-    
     if (activeConversation?._id) {
       dispatch(markConversationRead(activeConversation._id));
     }
   }, [activeConversation?._id]);
 
-
-
   const getLastSeen = (lastSeen) => {
-  if (!lastSeen) return "";
+    if (!lastSeen) return "";
 
-  const date = new Date(lastSeen);
-  const today = new Date();
+    const date = new Date(lastSeen);
+    const today = new Date();
 
-  const isToday = date.toDateString() === today.toDateString();
+    const isToday = date.toDateString() === today.toDateString();
 
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
 
-  const isYesterday = date.toDateString() === yesterday.toDateString();
+    const isYesterday = date.toDateString() === yesterday.toDateString();
 
-  const time = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+    const time = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-  if (isToday) {
-    return `last seen today at ${time}`;
-  }
+    if (isToday) {
+      return `last seen today at ${time}`;
+    }
 
-  if (isYesterday) {
-    return `last seen yesterday at ${time}`;
-  }
+    if (isYesterday) {
+      return `last seen yesterday at ${time}`;
+    }
 
-  return `last seen ${date.toLocaleDateString("en-US", {
-    day: "2-digit",
-    month: "short",
-  })}`;
-};
-
-
+    return `last seen ${date.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short",
+    })}`;
+  };
 
   return (
     <div className="Chat">
-      {/* HEADER */}
       <div className="ChatInfo">
         <span
           className="backToSidebar"
@@ -85,16 +74,15 @@ function Chat() {
 
         <span className="nameP">
           <span className="nameP-text">
-
-          {activeConversation?.groupName ||
-            activeConversation?.username ||
-            "Chat"}
-            </span>
-         { (activeConversation?.username) && 
-         (activeConversation?.online) ?
-           <span className="online-Status">{"online"}</span> : 
-           <span className="online-Status">{getLastSeen(activeConversation?.lastSeen)}</span> 
-           }
+            {activeConversation?.groupName ||
+              activeConversation?.username ||
+              "Chat"}
+          </span>
+          {(activeConversation?.username) &&
+            (activeConversation?.online) ?
+            <span className="online-Status">{"online"}</span> :
+            <span className="online-Status">{getLastSeen(activeConversation?.lastSeen)}</span>
+          }
         </span>
 
         <div className="ChatIcon">
@@ -142,7 +130,6 @@ function Chat() {
           <p>Select a user to start chatting...</p>
         </div> : <Messages />
       }
-      {/* BODY */}
 
       <Input />
     </div>

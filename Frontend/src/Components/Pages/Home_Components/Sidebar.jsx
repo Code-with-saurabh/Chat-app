@@ -1,20 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-
 import "./Sidebar.css";
 import Navbar from "./Navbar.jsx";
 import Search from "./Search.jsx";
 import Chats from "./Chats.jsx";
-// import IMGP from'../../../assets/img/profile.jpg';
-// import axios from 'axios';
 import { useVirtualizer } from "@tanstack/react-virtual";
 import axios from "../../../Utilities/axios.js";
 import { useSelector } from "react-redux";
+import { ENDPOINTS } from "../../../constants/api.js";
 
 function Sidebar() {
   const parentRef = useRef(null);
-  // const [username, setUsersname] = useState("Saurabh");
   const [users, setUsers] = useState([]);
-  const [message, setMessage] = useState("Hello");
 
   const conversationUnread = useSelector(
     (state) => state.notification.conversationUnread,
@@ -22,13 +18,13 @@ function Sidebar() {
 
   const handlaUsers = async () => {
     try {
-      const res = await axios.get("/users/allUsers");
-      console.log("%cUSER : ", "color:lightblue", res.data);
+      const res = await axios.get(ENDPOINTS.USERS.ALL);
       setUsers(res.data.data || []);
     } catch (error) {
       console.log("Error fetching users:", error);
     }
   };
+
   const rowVirtualizer = useVirtualizer({
     count: users.length,
     getScrollElement: () => parentRef.current,
@@ -38,13 +34,8 @@ function Sidebar() {
 
   useEffect(() => {
     handlaUsers();
-  }, []); // i wnat that this one only run once in whole page on user login and user logout // user ke massage ka bad me dekhege // vesebhi vo might be dusre route se aayega
-  //this one may be only work once when new user added
+  }, []);
 
-  function setUsernamforChat(e) {
-    // sessionStorage.setItem("Username",username);
-    // console.log(e);
-  }
   return (
     <div className="Sidebar">
       <Navbar />
@@ -78,7 +69,7 @@ function Sidebar() {
                   username={user.username}
                   img={user.profileImage}
                   userId={user.id}
-                  message={user.lastMessage?.text} // 🔥 latest message
+                  message={user.lastMessage?.text}
                   unreadCount={conversationUnread[user.conversationId] || 0}
                   online={user.isOnline}
                   lastSeen={user.lastSeen}

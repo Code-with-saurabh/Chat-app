@@ -2,38 +2,28 @@ const multer = require("multer");
 const ApiError = require("../Utilities/ApiError");
 const path = require("path");
 
-
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, "../uploads/"));
     },
     filename: function (req, file, cb) {
-        const uniqueName = `${Date.now()}-${file.originalname.replace(/\s+/g, "-").replace(/[^\w.-]/g, "")}`;//  remove spaces & unsafe chars
+        const uniqueName = `${Date.now()}-${file.originalname.replace(/\s+/g, "-").replace(/[^\w.-]/g, "")}`;
         cb(null, uniqueName);
     },
 });
 
-// Allowed mime types for chat app
 const allowedMimeTypes = [
-    // Images
     "image/jpeg",
     "image/png",
     "image/webp",
-
-    // Videos
     "video/mp4",
     "video/webm",
-
-    // Audio
     "audio/mpeg",
     "audio/wav",
     "audio/ogg",
-
-    // Documents
     "application/pdf",
 ];
 
-// File filter
 const fileFilter = (req, file, cb) => {
     if (allowedMimeTypes.includes(file.mimetype)) {
         cb(null, true);
@@ -52,7 +42,7 @@ const upload = multer({
     storage,
     fileFilter,
     limits: {
-        fileSize: 25 * 1024 * 1024, // 25MB limit  
+        fileSize: 25 * 1024 * 1024,
     },
 });
 

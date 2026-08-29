@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import './Search.css';
-// import IMGP from'../../../assets/img/profile.jpg';
-// import axios from 'axios';
 import axios from '../../../Utilities/axios.js';
 import { useDispatch } from 'react-redux';
 import { setSecondUser } from '../../../store/secondUserSlice.js';
 import { setActiveConversation, setLoadingMessages, setMessages } from '../../../store/chatSlice.js';
+import { ENDPOINTS } from '../../../constants/api.js';
+import Avatar from '../../common/Avatar.jsx';
 
 function Search() {
 	const dispatch = useDispatch();
@@ -16,37 +15,16 @@ function Search() {
 	const [err, setErr] = useState(null);
 	const [SecondUserId, SetsecondUserId] = useState(null);
 
-
-	// const handleKey = async (e) => {
-	// 	if (e.code === "Enter" && username) {
-	// 		e.target.value = "";
-	// 		try {
-	// 			const res = await axios.get(`http://localhost:5000/api/users/search?username=${username}`);
-	// 			// setUser(res.data.user);
-	// 			setUser(res.data.Username);
-	// 			SetsecondUserId(res.data.id);
-	// 			setprofileImage(res.data.profileImage);
-	// 			// const profileIMG = res.data.profileImage;
-	// 			setErr(null);
-
-	// 			// console.log(res.data);
-	// 		} catch (error) {
-	// 			setErr(error.response?.data?.message || "Failed to search user");
-	// 			setUser(null);
-	// 		}
-	// 	}
-
-	// }
 	const handleKey = async (e) => {
 		if (e.code === "Enter" && username) {
 			e.target.value = "";
 
 			try {
 				const res = await axios.get(
-					`/users/search?username=${username}`
+					`${ENDPOINTS.USERS.SEARCH}?username=${username}`
 				);
 
-				const userData = res.data.data; // 👈 IMPORTANT
+				const userData = res.data.data;
 
 				setUser(userData.username);
 				SetsecondUserId(userData.id);
@@ -59,6 +37,7 @@ function Search() {
 			}
 		}
 	};
+
 	const handlaUser = async (e) => {
 		const userChat = e.currentTarget;
 		const usernameNode = userChat.childNodes[1]?.childNodes[0];
@@ -68,25 +47,18 @@ function Search() {
 			dispatch(setLoadingMessages(true));
 			dispatch(setMessages([]));
 
-			console.log("SecondUserId:", SecondUserId);
-			// 1. Create / Get conversation
-			const { data } = await axios.post("/messages/conversation", {
+			const { data } = await axios.post(ENDPOINTS.MESSAGES.CONVERSATION, {
 				receiverId: SecondUserId,
 			});
 
-
-
-			console.log("Conversation API:", data);
 			const conversation = data.data;
 
 			if (!conversation?._id) {
 				throw new Error("Conversation not found");
 			}
 
-			// 2. Save active conversation
 			dispatch(setActiveConversation(conversation));
 
-			// 3. Save second user
 			dispatch(
 				setSecondUser({
 					id: SecondUserId,
@@ -95,9 +67,8 @@ function Search() {
 				})
 			);
 
-			// 4. Load old messages
 			const messagesRes = await axios.get(
-				`/messages/conversation/${conversation._id}`
+				ENDPOINTS.MESSAGES.BY_CONVERSATION(conversation._id)
 			);
 
 			dispatch(setMessages(messagesRes.data.data || []));
@@ -109,6 +80,7 @@ function Search() {
 			dispatch(setLoadingMessages(false));
 		}
 	};
+
 	return (
 		<div className="Search">
 			<div className="Serachfor">
@@ -116,17 +88,13 @@ function Search() {
 			</div>
 			{err && <span className="EPS">User not found!</span>}
 			{user && <div className="userChat" onClick={handlaUser}>
-				{/*} <img src={IMGP}/> //loading="lazy"*/}
-				<img src={profileImage} alt="Profile" />
+				<Avatar src={profileImage} alt={username} size={40} />
 				<div className="userInfo">
-					<span>
-						{username}
-					</span>
+					<span>{username}</span>
 				</div>
 			</div>}
 		</div>
 	);
 }
-
 
 export default React.memo(Search);
