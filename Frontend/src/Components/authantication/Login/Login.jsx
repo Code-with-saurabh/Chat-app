@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-// import axios from "axios";
-import axios from '../../../Utilities/axios.js'
+import axios from '../../../Utilities/axios.js';
 import { useDispatch } from "react-redux";
 import { addUser } from "../../../store/userSlice";
+import { ENDPOINTS } from "../../../constants/api.js";
 
 function Login() {
 	const dispatch = useDispatch();
@@ -24,16 +24,13 @@ function Login() {
 
 		try {
 			const res = await axios.post(
-				"/users/login",
+				ENDPOINTS.USERS.LOGIN,
 				{ username, password }
 			);
 
 			if (res.status === 200) {
-				console.log(res);//maybe parse into
-
 				const { profileImage, username, id, accessToken, refreshToken } = res.data.data;
 
-				// Store in session
 				sessionStorage.setItem("profileImage", profileImage);
 				sessionStorage.setItem("Username", username);
 				sessionStorage.setItem("id", id);
@@ -41,11 +38,9 @@ function Login() {
 				sessionStorage.setItem("refreshToken", refreshToken);
 
 				localStorage.setItem("name", res.data.data.username);
-				// Store in Redux
+
 				dispatch(addUser({ id, username, profileImage }));
 
-
-				// Redirect to home
 				navigate("/");
 			}
 		} catch (error) {
@@ -102,7 +97,7 @@ function Login() {
 				)}
 
 				<p>
-					Don’t have an account? <Link to="/signup">Sign Up</Link>
+					Don't have an account? <Link to="/signup">Sign Up</Link>
 				</p>
 			</div>
 		</div>

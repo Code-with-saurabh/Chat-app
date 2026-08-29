@@ -1,69 +1,39 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
 import './Message.css';
-import MessageIMGP from '../../../assets/img/profile.jpg';
-import IMGP from '../../../assets/img/profile.jpg';
 import { useSelector } from 'react-redux';
+import Avatar from '../../common/Avatar.jsx';
 
 function Message({ message, senderId, isOwner, timestamp }) {
-
-
-
-  console.log("%c\n\nfrom   massage : " ,"color:green" ,message);
-  console.log("%cfrom  id sender : " ,"color:yellow", senderId);
-  console.log("%c\n\n\nIs Ownaer : " ,"color:pink", isOwner);
-
-
-
-
   const profileImage = sessionStorage.getItem("profileImage");
-
   const userData = useSelector(
     (state) => state.secondUser || {}
   );
-  // sessionStorage.removeItem('SecondUserData');
-
-  /*	const formatTimestamp = (timestamp) => {
-      const messageDate = new Date(timestamp); 
-      
-      let hours = messageDate.getHours();
-      const minutes = messageDate.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      
-      // Convert hours from 24-hour to 12-hour format
-      hours = hours % 12;
-      hours = hours ? hours : 12; // 12:00 AM/PM instead of 0:00
-      const minutesFormatted = minutes < 10 ? `0${minutes}` : minutes;
-      
-      return `${hours}:${minutesFormatted} ${ampm}`; // Format as HH:MM AM/PM
-    };*/
 
   const formatTimestamp = (timestamp) => {
     const messageDate = new Date(timestamp);
     if (isNaN(messageDate)) {
-      return "Invalid time";  // Handle invalid date
+      return "Invalid time";
     }
     let hours = messageDate.getHours();
     const minutes = messageDate.getMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
 
     hours = hours % 12;
-    hours = hours ? hours : 12;  // 12:00 AM/PM instead of 0:00
+    hours = hours ? hours : 12;
     const minutesFormatted = minutes < 10 ? `0${minutes}` : minutes;
 
-    console.log(`The TIme : ${hours}:${minutesFormatted} ${ampm}`);
-
-    return `${hours}:${minutesFormatted} ${ampm}`;  // HH:MM AM/PM
+    return `${hours}:${minutesFormatted} ${ampm}`;
   };
+
+  const avatarSrc = isOwner ? profileImage : userData.profileImage;
+  const avatarName = isOwner
+    ? sessionStorage.getItem("Username")
+    : userData.username;
 
   return (
     <div className={isOwner ? "Owner" : "Message"}>
       <div className="messageInfo">
-        <img
-          src={isOwner ? profileImage : userData.profileImage || MessageIMGP}
-          alt="Profile"
-           loading="lazy"
-        />
+        <Avatar src={avatarSrc} alt={avatarName} size={36} />
         <span className="timestamp">
           {timestamp ? formatTimestamp(timestamp) : ""}
         </span>
@@ -74,6 +44,5 @@ function Message({ message, senderId, isOwner, timestamp }) {
     </div>
   );
 }
-
 
 export default Message;

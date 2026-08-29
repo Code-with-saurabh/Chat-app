@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "./UpdateProfile.css";
 import { addUser } from "../../../store/userSlice.js";
 import { useDispatch } from "react-redux";
+import { ENDPOINTS } from "../../../constants/api.js";
+import Avatar from "../../common/Avatar.jsx";
 
 const UpdateProfile = () => {
     const navigate = useNavigate();
@@ -18,13 +20,12 @@ const UpdateProfile = () => {
     const [fetchLoading, setFetchLoading] = useState(true);
     const [formErr, setFormErr] = useState("");
 
-    // Fetch current user details
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const currentUsername = localStorage.getItem("name");
 
-                const res = await axios.get(`/users/search?username=${currentUsername}`);
+                const res = await axios.get(`${ENDPOINTS.USERS.SEARCH}?username=${currentUsername}`);
                 if (!res.data?.data) {
                     throw new Error("Unexpected response shape");
                 }
@@ -64,7 +65,7 @@ const UpdateProfile = () => {
             }
 
             const res = await axios.post(
-                "/users/update-profile",
+                ENDPOINTS.USERS.UPDATE_PROFILE,
                 formData,
                 {
                     headers: {
@@ -88,8 +89,6 @@ const UpdateProfile = () => {
                 })
             );
 
-            // alert("Profile updated successfully!");
-
             navigate("/");
 
         } catch (error) {
@@ -109,7 +108,7 @@ const UpdateProfile = () => {
         return (
             <div className="UP-profile-page">
                 <div className="UP-profile-loading">
-                    Loading your profile…
+                    Loading your profile...
                 </div>
             </div>
         );
@@ -141,7 +140,6 @@ const UpdateProfile = () => {
                     </svg>
                 </button>
 
-                {/* LEFT — identity panel */}
                 <aside className="UP-profile-side">
                     <div className="UP-side-dots" />
                     <div className="UP-side-glow" />
@@ -151,10 +149,11 @@ const UpdateProfile = () => {
                     </span>
 
                     <div className="UP-avatar-wrap">
-                        <img
-                            src={profileImage || "/default-avatar.png"}
-                            alt="Profile"
+                        <Avatar
+                            src={profileImage}
+                            alt={username}
                             className="UP-avatar-img"
+                            size={100}
                         />
 
                         <label
@@ -194,12 +193,11 @@ const UpdateProfile = () => {
 
                     {file && (
                         <p className="UP-side-hint">
-                            New photo selected — save to apply
+                            New photo selected -- save to apply
                         </p>
                     )}
                 </aside>
 
-                {/* RIGHT — edit form panel */}
                 <section className="UP-profile-form-panel">
 
                     <div className="UP-form-header">
@@ -280,7 +278,7 @@ const UpdateProfile = () => {
                             className="UP-submit-btn"
                             disabled={loading}
                         >
-                            {loading ? "Saving…" : "Save changes"}
+                            {loading ? "Saving..." : "Save changes"}
                         </button>
 
                     </form>

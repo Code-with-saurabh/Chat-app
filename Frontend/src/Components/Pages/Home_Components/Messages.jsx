@@ -6,30 +6,21 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 
 function Messages() {
   const parentRef = useRef(null);
-const loadingMessages = useSelector(
-  (state) => state.chat.loadingMessages
-);
+  const loadingMessages = useSelector(
+    (state) => state.chat.loadingMessages
+  );
   const messages = useSelector((state) => state.chat.messages);
-
-  const userMessages = useSelector((state) => state.userChat?.messages || []);
   const activeConversation = useSelector(
     (state) => state.chat.activeConversation,
   );
-  // const filteredMessages = messages.filter(
-  //   msg => msg.conversationId === activeConversation?._id
-  // );
+
   const filteredMessages = useMemo(() => {
     return messages.filter(
       (msg) => msg.conversationId === activeConversation?._id,
     );
   }, [messages, activeConversation]);
-  // ✅ Safe Redux selector (prevents undefined error)
 
-  // ✅ Current logged-in user
   const currentUser = sessionStorage.getItem("id");
-
-  // ✅ Auto scroll reference
-  const messagesEndRef = useRef(null);
 
   const rowVirtualizer = useVirtualizer({
     count: filteredMessages.length,
@@ -39,43 +30,42 @@ const loadingMessages = useSelector(
     measureElement: (el) => el.getBoundingClientRect().height,
   });
 
-  // ✅ Scroll to bottom when new message arrives
   useEffect(() => {
     if (filteredMessages.length > 0) {
       rowVirtualizer.scrollToIndex(filteredMessages.length - 1);
     }
-  }, [filteredMessages.length,rowVirtualizer]);
+  }, [filteredMessages.length, rowVirtualizer]);
 
-   if (loadingMessages) {
-  return (
-    <div className="Messages">
-      <div className="Skeltoe-message-wrapper">
-        {Array.from({ length: 12 }).map((_, index) => {
-          const isOwner = index % 2 === 0; // alternate left-right
+  if (loadingMessages) {
+    return (
+      <div className="Messages">
+        <div className="Skeltoe-message-wrapper">
+          {Array.from({ length: 12 }).map((_, index) => {
+            const isOwner = index % 2 === 0;
 
-          return (
-            <div
-              key={index}
-              className={`Skeltoe-message-row ${
-                isOwner ? "owner" : "receiver"
-              }`}
-            >
-              {!isOwner && (
-                <div className="Skeltoe-message-avatar"></div>
-              )}
+            return (
+              <div
+                key={index}
+                className={`Skeltoe-message-row ${
+                  isOwner ? "owner" : "receiver"
+                }`}
+              >
+                {!isOwner && (
+                  <div className="Skeltoe-message-avatar"></div>
+                )}
 
-              <div className="Skeltoe-message-bubble"></div>
+                <div className="Skeltoe-message-bubble"></div>
 
-              {isOwner && (
-                <div className="Skeltoe-message-avatar"></div>
-              )}
-            </div>
-          );
-        })}
+                {isOwner && (
+                  <div className="Skeltoe-message-avatar"></div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div className="Messages" ref={parentRef}>

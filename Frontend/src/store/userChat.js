@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  messages: [], //  messages array  
+  messages: [],
 };
 
 export const ChatSlice = createSlice({
@@ -14,12 +14,11 @@ export const ChatSlice = createSlice({
     setMessage: (state, action) => {
       const { senderId, receiverId, reciverId, message, time } = action.payload;
 
-      // Use correct key names inside messages[]
       state.messages.push({
         sender: senderId,
-        receiver: receiverId || reciverId,  // ? supports both spellings
+        receiver: receiverId || reciverId,
         message,
-        time,  // ? this fixes 12:00 AM issue
+        time,
       });
     },
     removeMessage: (state) => {

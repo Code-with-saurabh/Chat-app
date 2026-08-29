@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import axios from "axios";
 import axios from "../../../Utilities/axios.js";
+import { ENDPOINTS } from "../../../constants/api.js";
 import "./Singin.css";
 
 function Singin() {
@@ -30,7 +30,7 @@ function Singin() {
 
 		try {
 			const res = await axios.post(
-				"/users/register",
+				ENDPOINTS.USERS.REGISTER,
 				formData
 			);
 
@@ -66,7 +66,6 @@ function Singin() {
 						name="file"
 						type="file"
 						id="file"
-						// required
 						accept="image/*"
 					/>
 

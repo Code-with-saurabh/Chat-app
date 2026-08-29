@@ -1,6 +1,6 @@
+const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const mongoose = require("mongoose")
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const userSchema = new mongoose.Schema({
@@ -32,7 +32,6 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-
 userSchema.pre('save', function (next) {
     if (this.isModified('Password')) {
         this.Password = bcrypt.hashSync(this.Password, 10);
@@ -42,7 +41,7 @@ userSchema.pre('save', function (next) {
 
 userSchema.methods.comparePassword = function (candidatePassword) {
     return bcrypt.compareSync(candidatePassword, this.Password);
-}
+};
 
 userSchema.methods.accessToken = async function () {
     const payload = {
@@ -50,9 +49,8 @@ userSchema.methods.accessToken = async function () {
         username: this.Username,
         email: this.Email,
     };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
-    return token;
-}
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+};
 
 userSchema.methods.refershhToken = async function () {
     const payload = {
@@ -60,9 +58,7 @@ userSchema.methods.refershhToken = async function () {
         username: this.Username,
         email: this.Email,
     };
-    const token = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '30d' });
-    return token;
-}
+    return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '30d' });
+};
 
-
-module.exports = mongoose.model("MainUser", userSchema)
+module.exports = mongoose.model("MainUser", userSchema);

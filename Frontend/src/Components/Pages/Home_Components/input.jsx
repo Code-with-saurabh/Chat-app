@@ -2,19 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import "./input.css";
 import { useSelector, useDispatch } from 'react-redux';
 import socketIOClient from "socket.io-client";
-import { setMessage } from '../../../store/userChat.js';
 import { addMessage } from '../../../store/chatSlice.js';
- 
-const API = import.meta.env.VITE_API_URL;
+import { SOCKET_URL } from '../../../constants/api.js';
 
 function Input() {
-
-
 	const activeConversation = useSelector(
 		(state) => state.chat.activeConversation
 	);
 	const currentUserId = sessionStorage.getItem("id");
-
 	const conversationId = activeConversation?._id;
 
 	const secondUserId =
@@ -22,65 +17,22 @@ function Input() {
 			(id) => id.toString() !== currentUserId.toString()
 		);
 
-
-
-
 	const [currentMessage, setCurrentMessage] = useState("");
-	// const currentUserId = useSelector((state) => state.user.id);
-	// const senderUsername = sessionStorage.getItem("Username");
-	// const timestamp = new Date.now();
-	// const timestamp = new Date().toISOString();
-
-	// const secondUserId = useSelector((state) => state.secondUser?.id);
-
 	const dispatch = useDispatch();
-	const socket = useRef(null)
-	// const socket = socketIOClient("http://localhost:5000/");
+	const socket = useRef(null);
+
 	useEffect(() => {
 		if (!socket.current) {
-			socket.current = socketIOClient(API || "http://localhost:5000/");
+			socket.current = socketIOClient(SOCKET_URL);
 		}
 
-
 		socket.current.on('connect', () => {
-
-			console.log("Socket connected! ID: ", socket.current.id);
-
-			// socket.current.emit("join", {
-			// 	userId: currentUserId,
-			// });
-
 			if (currentUserId) {
 				socket.current.emit("join", currentUserId);
 			}
-
-
-			// socket.current.emit('userConnected', currentUserId);  // Inform the server that this user is connected
 		});
 
-
-
-
-		// socket.current.on("receiveMessage", (data) => {
-		// 	if (
-		// 		data.receiverId === currentUserId ||
-		// 		data.senderId === currentUserId
-		// 	) {
-
-		// 		dispatch(
-		// 			setMessage({
-		// 				senderId: data.senderId,
-		// 				receiverId: data.receiverId,
-		// 				message: data.message,
-		// 				time: data.time,
-		// 			})
-		// 		);
-		// 	}
-		// 	console.log("Data From Another User : ", data);
-		// });
-		// Cleanup on unmount
 		socket.current.on("receiveMessage", (data) => {
-
 			dispatch(addMessage({
 				_id: data._id,
 				senderId: data.sender,
@@ -88,43 +40,22 @@ function Input() {
 				timestamp: data.createdAt,
 				conversationId: data.conversationId
 			}));
-
-			console.log("Realtime message:", data);
 		});
 
 		return () => {
 			socket.current.off("receiveMessage");
 		};
-
-		// return () => {
-		// 	socket.current.disconnect();
-		// 	console.log("Socket disconnected!");
-		// };
 	}, []);
 
-
-
 	function handleMessage() {
-		if (!conversationId) {
-			console.log("No conversation selected");
-			return;
-		}
-
+		if (!conversationId) return;
 		if (!currentMessage.trim()) return;
 
 		const timestamp = new Date().toISOString();
 
-		// console.log(
-		// 	{
-		// 		senderId: currentUserId,
-		// 		message: currentMessage,
-		// 		time: timestamp,
-		// 		conversationId,
-
-		// 	})
 		dispatch(
 			addMessage({
-				_id: Date.now(), // temporary id
+				_id: Date.now(),
 				senderId: currentUserId,
 				message: currentMessage,
 				timestamp: timestamp,
@@ -139,25 +70,17 @@ function Input() {
 			messageType: "text"
 		});
 
-
-
-
 		setCurrentMessage("");
-
 	}
 
 	function handleKeyDown(e) {
 		if (e.key === "Enter") {
 			handleMessage();
-
-			console.log("User1:", currentUserId);
-			console.log("User2:", secondUserId);
 		}
 	}
 
 	function handleCurrentMessage(e) {
 		if (!socket.current) return;
-
 		setCurrentMessage(e.target.value);
 		e.preventDefault();
 
@@ -167,14 +90,6 @@ function Input() {
 		});
 	}
 
-	// function handleKeyDown(e) {
-	// 	if (e.key === "Enter") {
-	// 		handleMessage();
-
-	// 		console.log("fromInput Componet\nid User1 :" + currentUserId);
-	// 		console.log("fromInput Componet\nid User2 :" + secondUserId);
-	// 	}
-	// }
 	return (
 		<div className="input">
 			<input type="text"
@@ -197,6 +112,5 @@ function Input() {
 		</div>
 	);
 }
-
 
 export default React.memo(Input);

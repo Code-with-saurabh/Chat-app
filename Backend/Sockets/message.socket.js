@@ -4,7 +4,6 @@ const Notification = require("../models/notificationSchema.model");
 const { onlineUsers } = require("./user.socket");
 
 module.exports = (io, socket) => {
-
     socket.on("sendMessage", async ({
         conversationId,
         senderId,
@@ -12,17 +11,7 @@ module.exports = (io, socket) => {
         media,
         messageType
     }) => {
-
         try {
-
-            console.log("\n\n\n............Received message:", {
-                conversationId,
-                senderId,
-                text,
-                media,
-                messageType
-            });
-            // 1️⃣ Save Message
             const newMessage = await Message.create({
                 conversationId,
                 sender: senderId,
@@ -31,19 +20,16 @@ module.exports = (io, socket) => {
                 messageType,
             });
 
-            // 2️⃣ Update conversation lastMessage
             await Conversation.findByIdAndUpdate(conversationId, {
                 lastMessage: newMessage._id
             });
 
-            // 3️⃣ Get conversation members
             const conversation = await Conversation.findById(conversationId);
 
             const receivers = conversation.members.filter(
                 member => member.toString() !== senderId.toString()
             );
 
-            // 4️⃣ Emit to all receivers
             receivers.forEach(receiverId => {
                 const receiverSocketId = onlineUsers.get(receiverId.toString());
 
@@ -51,7 +37,6 @@ module.exports = (io, socket) => {
                     io.to(receiverSocketId).emit("receiveMessage", newMessage);
                 }
 
-                // Notification
                 Notification.create({
                     recipient: receiverId,
                     sender: senderId,

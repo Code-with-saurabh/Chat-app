@@ -1,13 +1,11 @@
 import axios from "axios";
-const API = import.meta.env.VITE_API_URL;
+import { API_URL, ENDPOINTS } from "../constants/api";
+
 const instance = axios.create({
-  baseURL: API ? `${API}/api` :  "http://localhost:5000/api",
+  baseURL: API_URL,
   withCredentials: true,
 });
 
-console.log({API})
-
-// REQUEST INTERCEPTOR (already hai)
 instance.interceptors.request.use((config) => {
   const token = sessionStorage.getItem("accessToken");
   if (token) {
@@ -16,7 +14,6 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
-// RESPONSE INTERCEPTOR (NEW ADD THIS)
 instance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -29,7 +26,7 @@ instance.interceptors.response.use(
         const refreshToken = sessionStorage.getItem("refreshToken");
 
         const res = await axios.post(
-          "http://localhost:5000/api/refresh-token",
+          `${API_URL}${ENDPOINTS.AUTH.REFRESH_TOKEN}`,
           { refreshToken }
         );
 
@@ -42,7 +39,6 @@ instance.interceptors.response.use(
         return instance(originalRequest);
 
       } catch (err) {
-        console.log("Refresh failed → Logout user");
         sessionStorage.clear();
         window.location.href = "/login";
       }
