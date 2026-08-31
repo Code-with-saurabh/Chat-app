@@ -33,6 +33,10 @@
 	background-color: #2d4752;
 }
 
+.Search .userChat.searchFocused {
+	background-color: #3a5a6e;
+}
+
 .Search .userChat img {
 	width: 50px;
 	height: 50px;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Search.css';
 import axios from '../../../Utilities/axios.js';
 import { useDispatch } from 'react-redux';
@@ -10,45 +10,83 @@ import Avatar from '../../common/Avatar.jsx';
 function Search() {
 	const dispatch = useDispatch();
 	const [username, setUsername] = useState("");
-	const [user, setUser] = useState(null);
-	const [profileImage, setprofileImage] = useState(null);
+	const [users, setUsers] = useState([]);
 	const [err, setErr] = useState(null);
-	const [SecondUserId, SetsecondUserId] = useState(null);
+	const [focusedIndex, setFocusedIndex] = useState(-1);
+	const debounceRef = useRef(null);
+	const inputRef = useRef(null);
 
-	const handleKey = async (e) => {
-		if (e.code === "Enter" && username) {
-			e.target.value = "";
+	const searchUser = async (query) => {
+		if (!query) {
+			setUsers([]);
+			setErr(null);
+			return;
+		}
 
-			try {
-				const res = await axios.get(
-					`${ENDPOINTS.USERS.SEARCH}?username=${username}`
-				);
+		try {
+			const res = await axios.get(
+				`${ENDPOINTS.USERS.SEARCH}?username=${query}`
+			);
 
-				const userData = res.data.data;
+			setUsers(res.data.data || []);
+			setFocusedIndex(-1);
+			setErr(null);
 
-				setUser(userData.username);
-				SetsecondUserId(userData.id);
-				setprofileImage(userData.profileImage);
-				setErr(null);
-
-			} catch (error) {
-				setErr(error.response?.data?.message || "Failed to search user");
-				setUser(null);
-			}
+		} catch (error) {
+			setErr(error.response?.data?.message || "Failed to search user");
+			setUsers([]);
+			setFocusedIndex(-1);
 		}
 	};
 
-	const handlaUser = async (e) => {
-		const userChat = e.currentTarget;
-		const usernameNode = userChat.childNodes[1]?.childNodes[0];
-		const profileImageNode = userChat.childNodes[0];
+	const handleKey = (e) => {
+		if (!users.length && e.code !== "Enter") return;
 
+		if (e.code === "ArrowDown") {
+			e.preventDefault();
+			setFocusedIndex((prev) => (prev < users.length - 1 ? prev + 1 : 0));
+		} else if (e.code === "ArrowUp") {
+			e.preventDefault();
+			setFocusedIndex((prev) => (prev > 0 ? prev - 1 : users.length - 1));
+		} else if (e.code === "Enter") {
+			e.preventDefault();
+			if (focusedIndex >= 0 && focusedIndex < users.length) {
+				handlaUser(users[focusedIndex]);
+			} else if (username) {
+				if (debounceRef.current) clearTimeout(debounceRef.current);
+				searchUser(username);
+			}
+		} else if (e.code === "Escape") {
+			setUsers([]);
+			setFocusedIndex(-1);
+		}
+	};
+
+	const handleChange = (e) => {
+		const value = e.target.value;
+		setUsername(value);
+		setFocusedIndex(-1);
+
+		if (debounceRef.current) clearTimeout(debounceRef.current);
+
+		debounceRef.current = setTimeout(() => {
+			searchUser(value);
+		}, 400);
+	};
+
+	useEffect(() => {
+		return () => {
+			if (debounceRef.current) clearTimeout(debounceRef.current);
+		};
+	}, []);
+
+	const handlaUser = async (selectedUser) => {
 		try {
 			dispatch(setLoadingMessages(true));
 			dispatch(setMessages([]));
 
 			const { data } = await axios.post(ENDPOINTS.MESSAGES.CONVERSATION, {
-				receiverId: SecondUserId,
+				receiverId: selectedUser.id,
 			});
 
 			const conversation = data.data;
@@ -61,9 +99,9 @@ function Search() {
 
 			dispatch(
 				setSecondUser({
-					id: SecondUserId,
-					username: usernameNode.textContent,
-					profileImage: profileImageNode.src,
+					id: selectedUser.id,
+					username: selectedUser.username,
+					profileImage: selectedUser.profileImage,
 				})
 			);
 
@@ -73,7 +111,8 @@ function Search() {
 
 			dispatch(setMessages(messagesRes.data.data || []));
 
-			setUser(null);
+			setUsers([]);
+			setUsername("");
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -84,15 +123,28 @@ function Search() {
 	return (
 		<div className="Search">
 			<div className="Serachfor">
-				<input type="text" placeholder="find user" onKeyDown={handleKey} onChange={e => { setUsername(e.target.value) }} />
+				<input
+					ref={inputRef}
+					type="text"
+					placeholder="find user"
+					onKeyDown={handleKey}
+					onChange={handleChange}
+				/>
 			</div>
 			{err && <span className="EPS">User not found!</span>}
-			{user && <div className="userChat" onClick={handlaUser}>
-				<Avatar src={profileImage} alt={username} size={40} />
-				<div className="userInfo">
-					<span>{username}</span>
+			{users.map((u, i) => (
+				<div
+					className={`userChat ${i === focusedIndex ? "searchFocused" : ""}`}
+					key={u.id}
+					onMouseEnter={() => setFocusedIndex(i)}
+					onClick={() => handlaUser(u)}
+				>
+					<Avatar src={u.profileImage} alt={u.username} size={40} />
+					<div className="userInfo">
+						<span>{u.username}</span>
+					</div>
 				</div>
-			</div>}
+			))}
 		</div>
 	);
 }
