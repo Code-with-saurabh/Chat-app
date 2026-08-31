@@ -1,6 +1,8 @@
 .Chat {
 	flex: 2;
-
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 
 .Chat .ChatInfo {
@@ -137,4 +139,22 @@
  .nameP-text{
 	align-self:flex-start;
 	    margin-left: 4px;
+ }
+
+ .noChatSelected {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #e8f0f8 0%, #d1dce5 100%);
+ }
+
+ .noChatSelected p {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-size: 1.25rem;
+	font-weight: 500;
+	color: #5b748d;
+	letter-spacing: 0.3px;
+	text-align: center;
+	padding: 0 20px;
  }

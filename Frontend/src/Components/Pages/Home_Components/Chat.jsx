@@ -125,13 +125,16 @@ function Chat() {
           </span>
         </div>
       </div>
-      {
-        !activeConversation ? <div className="Chat noChatSelected">
+      {!activeConversation ? (
+        <div className="Chat noChatSelected">
           <p>Select a user to start chatting...</p>
-        </div> : <Messages />
-      }
-
-      <Input />
+        </div>
+      ) : (
+        <>
+          <Messages />
+          <Input />
+        </>
+      )}
     </div>
   );
 }
