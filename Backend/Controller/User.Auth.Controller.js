@@ -111,22 +111,24 @@ const searchUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Username query parameter is required");
     }
 
-    const user = await User.findOne({ Username: username });
+    const users = await User.find({
+        Username: { $regex: username, $options: "i" }
+    }).limit(5);
 
-    if (!user) {
+    if (!users.length) {
         throw new ApiError(404, "User not found");
     }
 
     return res.status(200).json(
         new ApiResponse(
             200,
-            {
+            users.map(user => ({
                 id: user._id,
                 username: user.Username,
                 profileImage: user.ProfileImage,
                 email: user.Email,
-            },
-            `User found: ${user.Username}`
+            })),
+            `Users found`
         )
     );
 });
