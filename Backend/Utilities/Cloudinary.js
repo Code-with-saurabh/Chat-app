@@ -13,7 +13,6 @@ const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) return null;
 
-        const fileBuffer = fs.readFileSync(localFilePath);
         const isImage = IMAGE_MIME_TYPES.some(type =>
             localFilePath.toLowerCase().endsWith(type.replace("image/", "."))
         );

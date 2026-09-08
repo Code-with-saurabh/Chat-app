@@ -23,12 +23,7 @@ function Home() {
 
     socket.connect();
 
-    socket.on("connect", () => {
-      socket.emit("join", userId);
-    });
-
     return () => {
-      socket.off("connect");
       socket.disconnect();
     };
   }, []);

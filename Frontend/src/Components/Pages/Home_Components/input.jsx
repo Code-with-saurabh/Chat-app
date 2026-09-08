@@ -23,11 +23,10 @@ function Input() {
 	const stopTyping = useCallback(() => {
 		if (socket.connected && secondUserId) {
 			socket.emit("stopTyping", {
-				senderId: currentUserId,
 				receiverId: secondUserId
 			});
 		}
-	}, [currentUserId, secondUserId]);
+	}, [secondUserId]);
 
 	useEffect(() => {
 		const handleMessage = (data) => {
@@ -65,7 +64,6 @@ function Input() {
 
 		socket.emit("sendMessage", {
 			conversationId: conversationId,
-			senderId: currentUserId,
 			text: currentMessage,
 			messageType: "text"
 		});
@@ -85,7 +83,6 @@ function Input() {
 
 		if (socket.connected) {
 			socket.emit("typing", {
-				senderId: currentUserId,
 				receiverId: secondUserId
 			});
 
