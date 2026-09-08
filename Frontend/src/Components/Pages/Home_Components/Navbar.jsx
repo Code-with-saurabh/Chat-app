@@ -4,8 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { clearSecondUser } from "../../../store/secondUserSlice";
 import { removeUser } from "../../../store/userSlice";
+import { clearChat } from "../../../store/chatSlice";
+import { clearNotifications } from "../../../store/notificationSlice";
 import axios from '../../../Utilities/axios.js';
 import { ENDPOINTS } from '../../../constants/api.js';
+import { socket } from '../../../socket.js';
 import Avatar from "../../common/Avatar.jsx";
 
 function Navbar() {
@@ -33,9 +36,12 @@ function Navbar() {
 			console.log("Logout API failed:", error);
 		}
 
+		socket.disconnect();
 		sessionStorage.clear();
 		dispatch(removeUser());
 		dispatch(clearSecondUser());
+		dispatch(clearChat());
+		dispatch(clearNotifications());
 		navigate("/login");
 	};
 

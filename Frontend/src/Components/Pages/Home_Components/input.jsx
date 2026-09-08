@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./input.css";
 import { useSelector, useDispatch } from 'react-redux';
-import socketIOClient from "socket.io-client";
 import { addMessage } from '../../../store/chatSlice.js';
-import { SOCKET_URL } from '../../../constants/api.js';
+import { socket } from '../../../socket.js';
 
 function Input() {
 	const activeConversation = useSelector(
@@ -19,20 +18,19 @@ function Input() {
 
 	const [currentMessage, setCurrentMessage] = useState("");
 	const dispatch = useDispatch();
-	const socket = useRef(null);
+	const typingTimeoutRef = useRef(null);
+
+	const stopTyping = useCallback(() => {
+		if (socket.connected && secondUserId) {
+			socket.emit("stopTyping", {
+				senderId: currentUserId,
+				receiverId: secondUserId
+			});
+		}
+	}, [currentUserId, secondUserId]);
 
 	useEffect(() => {
-		if (!socket.current) {
-			socket.current = socketIOClient(SOCKET_URL);
-		}
-
-		socket.current.on('connect', () => {
-			if (currentUserId) {
-				socket.current.emit("join", currentUserId);
-			}
-		});
-
-		socket.current.on("receiveMessage", (data) => {
+		const handleMessage = (data) => {
 			dispatch(addMessage({
 				_id: data._id,
 				senderId: data.sender,
@@ -40,12 +38,14 @@ function Input() {
 				timestamp: data.createdAt,
 				conversationId: data.conversationId
 			}));
-		});
+		};
+
+		socket.on("receiveMessage", handleMessage);
 
 		return () => {
-			socket.current.off("receiveMessage");
+			socket.off("receiveMessage", handleMessage);
 		};
-	}, []);
+	}, [dispatch]);
 
 	function handleMessage() {
 		if (!conversationId) return;
@@ -63,7 +63,7 @@ function Input() {
 			})
 		);
 
-		socket.current.emit("sendMessage", {
+		socket.emit("sendMessage", {
 			conversationId: conversationId,
 			senderId: currentUserId,
 			text: currentMessage,
@@ -80,14 +80,23 @@ function Input() {
 	}
 
 	function handleCurrentMessage(e) {
-		if (!socket.current) return;
 		setCurrentMessage(e.target.value);
 		e.preventDefault();
 
-		socket.current.emit("typing", {
-			senderId: currentUserId,
-			receiverId: secondUserId
-		});
+		if (socket.connected) {
+			socket.emit("typing", {
+				senderId: currentUserId,
+				receiverId: secondUserId
+			});
+
+			if (typingTimeoutRef.current) {
+				clearTimeout(typingTimeoutRef.current);
+			}
+
+			typingTimeoutRef.current = setTimeout(() => {
+				stopTyping();
+			}, 2000);
+		}
 	}
 
 	return (

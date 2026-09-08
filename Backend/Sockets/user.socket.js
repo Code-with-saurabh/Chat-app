@@ -2,7 +2,7 @@ const User = require("../models/userSchema.models");
 
 const onlineUsers = new Map();
 
-module.exports = (io, socket) => {
+const userSocket = (io, socket) => {
     socket.on("join", async (userId) => {
         onlineUsers.set(userId, socket.id);
         socket.userId = userId;
@@ -10,6 +10,20 @@ module.exports = (io, socket) => {
         await User.findByIdAndUpdate(userId, {
             isOnline: true
         });
+    });
+
+    socket.on("typing", ({ senderId, receiverId }) => {
+        const receiverSocketId = onlineUsers.get(receiverId.toString());
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("userTyping", { senderId });
+        }
+    });
+
+    socket.on("stopTyping", ({ senderId, receiverId }) => {
+        const receiverSocketId = onlineUsers.get(receiverId.toString());
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("userStopTyping", { senderId });
+        }
     });
 
     socket.on("disconnect", async () => {
@@ -24,4 +38,5 @@ module.exports = (io, socket) => {
     });
 };
 
+module.exports = userSocket;
 module.exports.onlineUsers = onlineUsers;

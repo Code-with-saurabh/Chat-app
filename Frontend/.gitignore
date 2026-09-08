@@ -23,3 +23,5 @@ topic.txt
 *.njsproj
 *.sln
 *.sw?
+
+.env

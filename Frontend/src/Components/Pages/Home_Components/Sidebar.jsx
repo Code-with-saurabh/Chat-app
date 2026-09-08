@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./Sidebar.css";
 import Navbar from "./Navbar.jsx";
 import Search from "./Search.jsx";
@@ -7,10 +7,12 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import axios from "../../../Utilities/axios.js";
 import { useSelector } from "react-redux";
 import { ENDPOINTS } from "../../../constants/api.js";
+import { socket } from "../../../socket.js";
 
 function Sidebar() {
   const parentRef = useRef(null);
   const [users, setUsers] = useState([]);
+  const refreshTimeoutRef = useRef(null);
 
   const conversationUnread = useSelector(
     (state) => state.notification.conversationUnread,
@@ -24,6 +26,30 @@ function Sidebar() {
       console.log("Error fetching users:", error);
     }
   };
+
+  const debouncedRefresh = useCallback(() => {
+    if (refreshTimeoutRef.current) {
+      clearTimeout(refreshTimeoutRef.current);
+    }
+    refreshTimeoutRef.current = setTimeout(() => {
+      handlaUsers();
+    }, 500);
+  }, []);
+
+  useEffect(() => {
+    const handleMessage = () => {
+      debouncedRefresh();
+    };
+
+    socket.on("receiveMessage", handleMessage);
+
+    return () => {
+      socket.off("receiveMessage", handleMessage);
+      if (refreshTimeoutRef.current) {
+        clearTimeout(refreshTimeoutRef.current);
+      }
+    };
+  }, [debouncedRefresh]);
 
   const rowVirtualizer = useVirtualizer({
     count: users.length,
