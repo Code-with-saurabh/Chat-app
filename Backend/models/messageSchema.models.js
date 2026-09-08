@@ -15,13 +15,21 @@ const messageSchema = new mongoose.Schema({
         type: String,
     },
     media: {
-        type: String, // Cloudinary URL
+        type: String,
         default: null,
     },
     messageType: {
         type: String,
         enum: ["text", "image", "video", "audio", "file"],
         default: "text",
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    isEdited: {
+        type: Boolean,
+        default: false,
     },
     seenBy: [{
         type: mongoose.Schema.Types.ObjectId,

@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import "./Messages.css";
 import Message from "./Message.jsx";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { deleteMessage, editMessage } from "../../../store/chatSlice.js";
+import { socket } from "../../../socket.js";
 
 function Messages() {
   const parentRef = useRef(null);
+  const dispatch = useDispatch();
   const loadingMessages = useSelector(
     (state) => state.chat.loadingMessages
   );
@@ -21,6 +24,28 @@ function Messages() {
   }, [messages, activeConversation]);
 
   const currentUser = sessionStorage.getItem("id");
+
+  useEffect(() => {
+    const handleMessageDeleted = ({ messageId, conversationId }) => {
+      if (conversationId === activeConversation?._id) {
+        dispatch(deleteMessage({ messageId }));
+      }
+    };
+
+    const handleMessageEdited = ({ messageId, text, conversationId }) => {
+      if (conversationId === activeConversation?._id) {
+        dispatch(editMessage({ messageId, text }));
+      }
+    };
+
+    socket.on("messageDeleted", handleMessageDeleted);
+    socket.on("messageEdited", handleMessageEdited);
+
+    return () => {
+      socket.off("messageDeleted", handleMessageDeleted);
+      socket.off("messageEdited", handleMessageEdited);
+    };
+  }, [activeConversation?._id, dispatch]);
 
   const rowVirtualizer = useVirtualizer({
     count: filteredMessages.length,
@@ -93,10 +118,13 @@ function Messages() {
               }}
             >
               <Message
+                messageId={msg._id}
                 senderId={msg?.senderId || msg?.sender}
                 isOwner={(msg?.senderId || msg?.sender) === currentUser}
-                message={msg?.message || msg?.text}
+                message={msg?.isDeleted ? "This message was deleted" : (msg?.message || msg?.text)}
                 timestamp={msg?.timestamp || msg?.createdAt}
+                isDeleted={msg?.isDeleted}
+                isEdited={msg?.isEdited}
               />
             </div>
           );

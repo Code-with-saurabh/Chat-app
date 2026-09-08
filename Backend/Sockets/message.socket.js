@@ -52,4 +52,46 @@ module.exports = (io, socket) => {
             console.error("Message error:", error);
         }
     });
+
+    socket.on("deleteMessage", async ({ messageId }) => {
+        try {
+            const senderId = socket.user._id;
+
+            const message = await Message.findById(messageId);
+            if (!message || message.sender.toString() !== senderId.toString()) {
+                return;
+            }
+
+            message.isDeleted = true;
+            message.text = "This message was deleted";
+            await message.save();
+
+            io.emit("messageDeleted", { messageId, conversationId: message.conversationId });
+
+        } catch (error) {
+            console.error("Delete message error:", error);
+        }
+    });
+
+    socket.on("editMessage", async ({ messageId, text }) => {
+        try {
+            const senderId = socket.user._id;
+
+            if (!text || !text.trim()) return;
+
+            const message = await Message.findById(messageId);
+            if (!message || message.sender.toString() !== senderId.toString()) {
+                return;
+            }
+
+            message.text = text;
+            message.isEdited = true;
+            await message.save();
+
+            io.emit("messageEdited", { messageId, text, conversationId: message.conversationId });
+
+        } catch (error) {
+            console.error("Edit message error:", error);
+        }
+    });
 };

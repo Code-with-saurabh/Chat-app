@@ -15,7 +15,11 @@ export const ENDPOINTS = {
   MESSAGES: {
     CONVERSATION: "/messages/conversation",
     BY_CONVERSATION: (id) => `/messages/conversation/${id}`,
-    LEGACY: (user1, user2) => `/messages/${user1}/${user2}`,
+    SEARCH: (id) => `/messages/search/${id}`,
+    EDIT: (id) => `/messages/edit/${id}`,
+    DELETE: (id) => `/messages/delete/${id}`,
+    NOTIFICATIONS: "/messages/notifications",
+    MARK_READ: "/messages/notifications/read",
   },
   AUTH: {
     REFRESH_TOKEN: "/refresh-token",
