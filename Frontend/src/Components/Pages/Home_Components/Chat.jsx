@@ -4,7 +4,7 @@ import Messages from "./Messages.jsx";
 import Input from "./input.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { markConversationRead } from "../../../store/notificationSlice.js";
-import { setActiveConversation } from "../../../store/chatSlice.js";
+import { setActiveConversation, updateActiveUserStatus } from "../../../store/chatSlice.js";
 import { socket } from "../../../socket.js";
 
 function Chat() {
@@ -37,14 +37,26 @@ function Chat() {
       }
     };
 
+    const handleUserOnline = ({ userId }) => {
+      dispatch(updateActiveUserStatus({ userId, isOnline: true }));
+    };
+
+    const handleUserOffline = ({ userId, lastSeen }) => {
+      dispatch(updateActiveUserStatus({ userId, isOnline: false, lastSeen }));
+    };
+
     socket.on("userTyping", handleTyping);
     socket.on("userStopTyping", handleStopTyping);
+    socket.on("userOnline", handleUserOnline);
+    socket.on("userOffline", handleUserOffline);
 
     return () => {
       socket.off("userTyping", handleTyping);
       socket.off("userStopTyping", handleStopTyping);
+      socket.off("userOnline", handleUserOnline);
+      socket.off("userOffline", handleUserOffline);
     };
-  }, [activeConversation?.username]);
+  }, [activeConversation?.username, dispatch]);
 
   const getLastSeen = (lastSeen) => {
     if (!lastSeen) return "";

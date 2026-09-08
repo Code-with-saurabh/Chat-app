@@ -10,6 +10,8 @@ const userSocket = (io, socket) => {
         await User.findByIdAndUpdate(userId, {
             isOnline: true
         });
+
+        socket.broadcast.emit("userOnline", { userId });
     });
 
     socket.on("typing", ({ senderId, receiverId }) => {
@@ -30,10 +32,13 @@ const userSocket = (io, socket) => {
         if (socket.userId) {
             onlineUsers.delete(socket.userId);
 
+            const lastSeen = new Date();
             await User.findByIdAndUpdate(socket.userId, {
                 isOnline: false,
-                lastSeen: new Date()
+                lastSeen
             });
+
+            socket.broadcast.emit("userOffline", { userId: socket.userId, lastSeen });
         }
     });
 };
