@@ -208,17 +208,23 @@
 	background: #4a6580;
 }
 
+.deletedBubble {
+	background-color: #ccc !important;
+	border-radius: 10px !important;
+}
+
+.Owner .deletedBubble {
+	background-color: rgba(255,255,255,0.2) !important;
+}
+
 .deletedMsg {
 	font-style: italic;
-	color: #888 !important;
-	background: #ccc !important;
-	padding: 10px;
-	border-radius: 10px;
+	color: #666;
+	margin: 0;
 }
 
 .Owner .deletedMsg {
-	color: #aaa !important;
-	background: rgba(255,255,255,0.2) !important;
+	color: #aaa;
 }
 
 .editedTag {

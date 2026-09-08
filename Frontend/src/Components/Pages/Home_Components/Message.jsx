@@ -66,7 +66,9 @@ function Message({ message, senderId, isOwner, timestamp, isDeleted, isEdited, m
         <Avatar src={avatarSrc} alt={avatarName} size={36} />
         <div className="messageContenet">
           {isDeleted ? (
-            <p className="deletedMsg">{message}</p>
+            <div className="msgBubble deletedBubble">
+              <p className="deletedMsg">{message}</p>
+            </div>
           ) : isEditing ? (
             <div className="editInput">
               <input
