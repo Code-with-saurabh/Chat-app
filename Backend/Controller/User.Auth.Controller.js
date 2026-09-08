@@ -111,8 +111,10 @@ const searchUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Username query parameter is required");
     }
 
+    const escaped = username.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
     const users = await User.find({
-        Username: { $regex: username, $options: "i" }
+        Username: { $regex: escaped, $options: "i" }
     }).limit(5);
 
     if (!users.length) {
@@ -126,7 +128,6 @@ const searchUser = asyncHandler(async (req, res) => {
                 id: user._id,
                 username: user.Username,
                 profileImage: user.ProfileImage,
-                email: user.Email,
             })),
             `Users found`
         )

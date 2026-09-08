@@ -21,8 +21,8 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
 const refreshTokenRoutes = require("./routes/refreshToken.routes");
 app.use("/api", refreshTokenRoutes);
@@ -43,7 +43,6 @@ app.use((err, req, res, next) => {
   return res.status(statusCode).json({
     success: false,
     message: err.message || "Internal Server Error",
-    errors: err.errors || [],
   });
 });
 

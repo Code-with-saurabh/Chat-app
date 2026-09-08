@@ -6,12 +6,18 @@ const { onlineUsers } = require("./user.socket");
 module.exports = (io, socket) => {
     socket.on("sendMessage", async ({
         conversationId,
-        senderId,
         text,
         media,
         messageType
     }) => {
         try {
+            const senderId = socket.user._id;
+
+            const conversation = await Conversation.findById(conversationId);
+            if (!conversation || !conversation.members.some(m => m.toString() === senderId.toString())) {
+                return;
+            }
+
             const newMessage = await Message.create({
                 conversationId,
                 sender: senderId,
@@ -23,8 +29,6 @@ module.exports = (io, socket) => {
             await Conversation.findByIdAndUpdate(conversationId, {
                 lastMessage: newMessage._id
             });
-
-            const conversation = await Conversation.findById(conversationId);
 
             const receivers = conversation.members.filter(
                 member => member.toString() !== senderId.toString()

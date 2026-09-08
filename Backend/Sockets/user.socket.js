@@ -3,43 +3,37 @@ const User = require("../models/userSchema.models");
 const onlineUsers = new Map();
 
 const userSocket = (io, socket) => {
-    socket.on("join", async (userId) => {
-        onlineUsers.set(userId, socket.id);
-        socket.userId = userId;
+    const userId = socket.user._id.toString();
+    socket.userId = userId;
+    onlineUsers.set(userId, socket.id);
 
-        await User.findByIdAndUpdate(userId, {
-            isOnline: true
-        });
+    User.findByIdAndUpdate(userId, { isOnline: true }).exec();
+    socket.broadcast.emit("userOnline", { userId });
 
-        socket.broadcast.emit("userOnline", { userId });
-    });
-
-    socket.on("typing", ({ senderId, receiverId }) => {
+    socket.on("typing", ({ receiverId }) => {
         const receiverSocketId = onlineUsers.get(receiverId.toString());
         if (receiverSocketId) {
-            io.to(receiverSocketId).emit("userTyping", { senderId });
+            io.to(receiverSocketId).emit("userTyping", { senderId: userId });
         }
     });
 
-    socket.on("stopTyping", ({ senderId, receiverId }) => {
+    socket.on("stopTyping", ({ receiverId }) => {
         const receiverSocketId = onlineUsers.get(receiverId.toString());
         if (receiverSocketId) {
-            io.to(receiverSocketId).emit("userStopTyping", { senderId });
+            io.to(receiverSocketId).emit("userStopTyping", { senderId: userId });
         }
     });
 
     socket.on("disconnect", async () => {
-        if (socket.userId) {
-            onlineUsers.delete(socket.userId);
+        onlineUsers.delete(userId);
 
-            const lastSeen = new Date();
-            await User.findByIdAndUpdate(socket.userId, {
-                isOnline: false,
-                lastSeen
-            });
+        const lastSeen = new Date();
+        await User.findByIdAndUpdate(userId, {
+            isOnline: false,
+            lastSeen
+        });
 
-            socket.broadcast.emit("userOffline", { userId: socket.userId, lastSeen });
-        }
+        socket.broadcast.emit("userOffline", { userId, lastSeen });
     });
 };
 
