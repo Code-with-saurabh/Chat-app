@@ -19,6 +19,22 @@ const chatSlice = createSlice({
         addMessage: (state, action) => {
             state.messages.push(action.payload);
         },
+        deleteMessage: (state, action) => {
+            const { messageId } = action.payload;
+            const msg = state.messages.find(m => m._id === messageId);
+            if (msg) {
+                msg.isDeleted = true;
+                msg.text = "This message was deleted";
+            }
+        },
+        editMessage: (state, action) => {
+            const { messageId, text } = action.payload;
+            const msg = state.messages.find(m => m._id === messageId);
+            if (msg) {
+                msg.text = text;
+                msg.isEdited = true;
+            }
+        },
         clearChat: (state) => {
             state.activeConversation = null;
             state.messages = [];
@@ -48,6 +64,8 @@ export const {
     setActiveConversation,
     setMessages,
     addMessage,
+    deleteMessage,
+    editMessage,
     clearChat,
     setLoadingMessages,
     updateActiveUserStatus
