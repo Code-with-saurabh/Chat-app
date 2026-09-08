@@ -41,10 +41,26 @@ function Sidebar() {
       debouncedRefresh();
     };
 
+    const handleUserOnline = ({ userId }) => {
+      setUsers(prev => prev.map(u =>
+        u.id === userId ? { ...u, isOnline: true } : u
+      ));
+    };
+
+    const handleUserOffline = ({ userId, lastSeen }) => {
+      setUsers(prev => prev.map(u =>
+        u.id === userId ? { ...u, isOnline: false, lastSeen } : u
+      ));
+    };
+
     socket.on("receiveMessage", handleMessage);
+    socket.on("userOnline", handleUserOnline);
+    socket.on("userOffline", handleUserOffline);
 
     return () => {
       socket.off("receiveMessage", handleMessage);
+      socket.off("userOnline", handleUserOnline);
+      socket.off("userOffline", handleUserOffline);
       if (refreshTimeoutRef.current) {
         clearTimeout(refreshTimeoutRef.current);
       }
