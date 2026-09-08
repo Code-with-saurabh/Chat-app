@@ -18,8 +18,19 @@ function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const userId = sessionStorage.getItem("id");
+    if (!userId) return;
+
     socket.connect();
-    return () => socket.disconnect();
+
+    socket.on("connect", () => {
+      socket.emit("join", userId);
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {

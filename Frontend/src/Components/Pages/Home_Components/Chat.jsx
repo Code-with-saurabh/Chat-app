@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Chat.css";
 import Messages from "./Messages.jsx";
 import Input from "./input.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { markConversationRead } from "../../../store/notificationSlice.js";
 import { setActiveConversation } from "../../../store/chatSlice.js";
+import { socket } from "../../../socket.js";
 
 function Chat() {
   const dispatch = useDispatch();
+  const [isTyping, setIsTyping] = useState(false);
 
   const unreadCount = useSelector(
     (state) => state.notification.unreadCount
@@ -21,6 +23,28 @@ function Chat() {
       dispatch(markConversationRead(activeConversation._id));
     }
   }, [activeConversation?._id]);
+
+  useEffect(() => {
+    const handleTyping = ({ senderId }) => {
+      if (senderId === activeConversation?.username) {
+        setIsTyping(true);
+      }
+    };
+
+    const handleStopTyping = ({ senderId }) => {
+      if (senderId === activeConversation?.username) {
+        setIsTyping(false);
+      }
+    };
+
+    socket.on("userTyping", handleTyping);
+    socket.on("userStopTyping", handleStopTyping);
+
+    return () => {
+      socket.off("userTyping", handleTyping);
+      socket.off("userStopTyping", handleStopTyping);
+    };
+  }, [activeConversation?.username]);
 
   const getLastSeen = (lastSeen) => {
     if (!lastSeen) return "";
@@ -80,7 +104,9 @@ function Chat() {
           </span>
           {(activeConversation?.username) &&
             (activeConversation?.online) ?
-            <span className="online-Status">{"online"}</span> :
+            <span className="online-Status">
+              {isTyping ? "typing..." : "online"}
+            </span> :
             <span className="online-Status">{getLastSeen(activeConversation?.lastSeen)}</span>
           }
         </span>

@@ -7,19 +7,31 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+const IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) return null;
 
-        const response = await cloudinary.uploader.upload(localFilePath, {
+        const fileBuffer = fs.readFileSync(localFilePath);
+        const isImage = IMAGE_MIME_TYPES.some(type =>
+            localFilePath.toLowerCase().endsWith(type.replace("image/", "."))
+        );
+
+        const uploadOptions = {
             resource_type: "auto",
             folder: "chat-app",
-            quality: "auto:best",
-            fetch_format: "auto",
-            transformation: [
+        };
+
+        if (isImage) {
+            uploadOptions.quality = "auto:best";
+            uploadOptions.fetch_format = "auto";
+            uploadOptions.transformation = [
                 { width: 500, height: 500, crop: "limit" }
-            ]
-        });
+            ];
+        }
+
+        const response = await cloudinary.uploader.upload(localFilePath, uploadOptions);
 
         if (fs.existsSync(localFilePath)) {
             fs.unlinkSync(localFilePath);

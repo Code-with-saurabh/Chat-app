@@ -42,4 +42,23 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = { refreshAccessToken };
+const logout = asyncHandler(async (req, res) => {
+    const { refreshToken } = req.body;
+
+    if (refreshToken) {
+        await RefreshToken.deleteOne({ token: refreshToken });
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, null, "Logged out successfully")
+    );
+});
+
+const cleanupExpiredTokens = asyncHandler(async () => {
+    const result = await RefreshToken.deleteMany({
+        expiresAt: { $lt: new Date() }
+    });
+    return result.deletedCount;
+});
+
+module.exports = { refreshAccessToken, logout, cleanupExpiredTokens };
