@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const config = require("../config/env");
 const User = require("../models/userSchema.models");
 const userSocket = require("./user.socket");
 const messageSocket = require("./message.socket");
@@ -11,7 +12,7 @@ module.exports = (io) => {
         }
 
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const decoded = jwt.verify(token, config.jwt.secret);
             const user = await User.findById(decoded.id).select("-Password");
             if (!user) {
                 return next(new Error("User not found"));

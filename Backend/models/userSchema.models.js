@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
+const config = require("../config/env");
 
 const userSchema = new mongoose.Schema({
     Username: {
@@ -49,7 +49,7 @@ userSchema.methods.accessToken = async function () {
         username: this.Username,
         email: this.Email,
     };
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+    return jwt.sign(payload, config.jwt.secret, { expiresIn: '7d' });
 };
 
 userSchema.methods.refershhToken = async function () {
@@ -58,7 +58,7 @@ userSchema.methods.refershhToken = async function () {
         username: this.Username,
         email: this.Email,
     };
-    return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '30d' });
+    return jwt.sign(payload, config.jwt.refreshSecret, { expiresIn: '30d' });
 };
 
 module.exports = mongoose.model("MainUser", userSchema);

@@ -1,5 +1,5 @@
-require("dotenv").config();
 const mongoose = require("mongoose");
+const config = require("../config/env");
 const User = require("../models/userSchema.models");
 const Conversation = require("../models/conversationSchema.models");
 const Message = require("../models/messageSchema.models");
@@ -14,7 +14,7 @@ const users = [
 
 const seed = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
+        await mongoose.connect(config.mongoUri);
         console.log("MongoDB connected for seeding");
 
         await User.deleteMany({});

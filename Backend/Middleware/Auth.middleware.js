@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const config = require("../config/env");
 const ApiError = require("../Utilities/ApiError.js");
 const asyncHandler = require("../Utilities/AsyncHandler");
 const User = require("../models/userSchema.models.js");
@@ -15,7 +16,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
     let decoded;
 
     try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET);
+        decoded = jwt.verify(token, config.jwt.secret);
     } catch (error) {
         throw new ApiError(401, "Invalid or expired token");
     }

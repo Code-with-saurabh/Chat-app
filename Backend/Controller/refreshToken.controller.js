@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const config = require("../config/env");
 const ApiError = require("../Utilities/ApiError");
 const ApiResponse = require("../Utilities/ApiResponse");
 const asyncHandler = require("../Utilities/AsyncHandler");
@@ -20,7 +21,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
     let decoded;
     try {
-        decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        decoded = jwt.verify(refreshToken, config.jwt.refreshSecret);
     } catch (error) {
         throw new ApiError(403, "Refresh token expired or invalid");
     }

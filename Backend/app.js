@@ -1,13 +1,19 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+
+const config = require("./config/env");
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 const allowedOrigins = [
   "http://localhost:5173",
-  process.env.FRONTEND_URL,
-].filter(Boolean);
+  ...config.frontendUrl
+    .split(",")
+    .map((url) => url.trim())
+    .filter(Boolean),
+];
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -35,6 +41,16 @@ app.use('/api/messages', messagesRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello from the server!");
+});
+
+app.get("/api/health", (req, res) => {
+  const mongoose = require("mongoose");
+  res.status(200).json({
+    status: "ok",
+    db: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 });
 
 app.use((err, req, res, next) => {
