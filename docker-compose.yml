@@ -6,6 +6,8 @@ services:
         VITE_API_URL: http://localhost:5000
     ports:
       - "3000:80"
+    environment:
+      - PORT=80
     depends_on:
       - backend
     restart: unless-stopped
@@ -15,10 +17,14 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - ./Backend/.env
+      - path: ./Backend/.env
+        required: false
     environment:
+      - PORT=5000
+      - HOST=0.0.0.0
       - MONGO_URI=mongodb://mongo:27017/chatapp
       - FRONTEND_URL=http://localhost:3000
+      - CLIENT_URL=http://localhost:3000
     depends_on:
       - mongo
     restart: unless-stopped
